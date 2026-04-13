@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Review Report — rqillp-lp</title>
+  <title>Code Review Report — rqillp-lp</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -192,8 +192,8 @@
       align-items: flex-start;
     }
     .coverage-box li::before { flex-shrink: 0; margin-top: 2px; }
-    .coverage-box.good li::before { content: '✓'; color: #16a34a; font-weight: 700; }
-    .coverage-box.weak li::before { content: '○'; color: #d97706; font-weight: 700; }
+    .coverage-box.good li::before { content: '\2713'; color: #16a34a; font-weight: 700; }
+    .coverage-box.weak li::before { content: '\25CB'; color: #d97706; font-weight: 700; }
     .coverage-box li code {
       font-family: 'SFMono-Regular', Consolas, monospace;
       font-size: 11px;
@@ -209,7 +209,7 @@
 
 <header>
   <div class="badge">Code Review</div>
-  <h1>rqillp-lp</h1>
+  <h1>rqillp-lp &mdash;/h1>
   <p>Review across all feature modules, integrations, repositories, and shared utilities</p>
   <div class="meta">
     <div class="meta-item">
@@ -221,39 +221,41 @@
       <span class="value">release/0.1.0</span>
     </div>
     <div class="meta-item">
-      <span class="label">Reviewed</span>
-      <span class="value">11 April 2026</span>
+      <span class="label">Date</span>
+      <span class="value">13 April 2026</span>
     </div>
     <div class="meta-item">
       <span class="label">Scope</span>
-      <span class="value">src/api/v1/ · src/integrations/ · src/common/</span>
+      <span class="value">Entire codebase (committed code only)</span>
     </div>
   </div>
 </header>
 
+<!-- Summary cards -->
 <div class="summary">
   <div class="card red">
-    <div class="num">4</div>
+    <div class="num">7</div>
     <div class="lbl">Must Fix</div>
   </div>
   <div class="card amber">
-    <div class="num">6</div>
+    <div class="num">15</div>
     <div class="lbl">Should Fix</div>
   </div>
   <div class="card green">
-    <div class="num">5</div>
+    <div class="num">12</div>
     <div class="lbl">Nice to Have</div>
   </div>
   <div class="card blue">
-    <div class="num">5</div>
+    <div class="num">7</div>
     <div class="lbl">Test Gaps</div>
   </div>
 </div>
 
+<!-- Verdict -->
 <div class="verdict">
   <div class="verdict-inner">
-    <span class="icon">⚠️</span>
-    <span class="text"><strong>Verdict: Needs Changes</strong> — One security issue and two correctness bugs each have straightforward fixes. Performance improvements and dead code cleanup are lower priority but worth a pass before release.</span>
+    <span class="icon">&#9888;</span>
+    <span class="text"><strong>Needs Changes</strong> &mdash; 8 security findings (3 high severity) and 7 must-fix issues require attention before production release.</span>
   </div>
 </div>
 
@@ -262,49 +264,134 @@
   <!-- Must Fix -->
   <div class="section">
     <div class="section-header">
-      <div class="dot red-dot"></div>
+      <span class="dot red-dot"></span>
       <h2>Must Fix</h2>
-      <span class="count count-red">4 issues</span>
+      <span class="count count-red">7</span>
     </div>
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th>Severity</th>
-            <th>Module</th>
-            <th>Location</th>
-            <th>Issue</th>
-            <th>Suggested Fix</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Severity</th><th>Module</th><th>Location</th><th>Issue</th><th>Suggested Fix</th></tr></thead>
         <tbody>
           <tr>
-            <td><span class="sev-badge red">Security</span></td>
-            <td class="module">Token Service</td>
-            <td class="location"><code>token.service.ts:321</code></td>
-            <td class="desc"><strong><code>decryptUniqueId</code> silently falls back to empty-string key when JWT secret is missing.</strong> <code>encryptUniqueId</code> correctly throws on a missing secret, but <code>decryptUniqueId</code> uses <code>?? ''</code>, allowing decryption with a predictable empty key. If the secret is ever unset, an attacker who can craft a dispatch token could exploit this.</td>
-            <td class="fix">Mirror <code>encryptUniqueId</code>: check for a missing secret and throw <code>InternalServerErrorException</code> before proceeding — same as the encrypt path.</td>
+            <td><span class="sev-badge red">Must Fix</span></td>
+            <td class="module">Dispatch</td>
+            <td class="location"><code>dispatch.service.ts:85-222</code></td>
+            <td class="desc"><code>validateProduct</code> fetches ALL products for an org, then loops through the entire array in memory via <code>Array.find()</code> (line 125) to match a single <code>vdrSubscriptionId</code>. This is inefficient &mdash; wastes bandwidth, memory, and CPU for orgs with many products. Additionally, only the first page of results is checked, so if the target product falls on page 2+, validation incorrectly returns false, blocking legitimate users.</td>
+            <td class="fix">Avoid the loop entirely by filtering server-side: <code>GET /organizations/{orgId}/products?filter[id]={vdrSubscriptionId}</code>. Returns only the matching product &mdash; no pagination issue, no in-memory scan, single result.</td>
           </tr>
           <tr>
             <td><span class="sev-badge red">Must Fix</span></td>
             <td class="module">Dispatch</td>
-            <td class="location"><code>dispatch.service.ts:492</code></td>
-            <td class="desc"><strong>URL injection — <code>uniqueId</code> not encoded.</strong> The parameter is directly interpolated into a URL string. If <code>uniqueId</code> contains <code>&amp;</code>, <code>#</code>, <code>=</code>, or <code>%</code> (e.g. an email or corporate ID), it can break or alter the query string sent to rqillp.</td>
-            <td class="fix">Use <code>URLSearchParams</code>: <code>const url = new URL(`.../users`); url.searchParams.set('unique_id', uniqueid);</code></td>
+            <td class="location"><code>vendor-auth-request.dto.ts:43-44</code></td>
+            <td class="desc"><code>userName</code> has <code>@IsString()</code> but no <code>@IsNotEmpty()</code>. Empty string <code>""</code> passes validation, causing <code>split(',')</code> to produce empty name fields in registration tokens.</td>
+            <td class="fix">Add <code>@IsNotEmpty()</code> decorator to <code>userName</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge red">Must Fix</span></td>
+            <td class="module">Common</td>
+            <td class="location"><code>user-license.repository.ts:65-82</code></td>
+            <td class="desc"><code>getOrCreateUserLicense</code> has a TOCTOU race condition. Concurrent requests for the same (user_id, org_id, course_id) both find no license, both create &mdash; Prisma P2002 duplicate key error bubbles up as 500.</td>
+            <td class="fix">Catch P2002 errors and retry <code>findFirst</code> to return the existing record created by the other request.</td>
           </tr>
           <tr>
             <td><span class="sev-badge red">Must Fix</span></td>
             <td class="module">External Auth</td>
-            <td class="location"><code>external-auth.service.ts:126</code></td>
-            <td class="desc"><strong>User tokens cached with wrong TTL.</strong> <code>getOrCreateUserToken</code> caches the token using the default Valkey TTL instead of the actual <code>expires_at</code> from the rqillp API. If the token expires in 15 minutes but the default TTL is 1 hour, the cache will serve a stale expired token for 45 minutes.</td>
-            <td class="fix">Derive TTL from <code>expiresAt</code>:<br><code>const ttl = expiresAt ? expiresAt - Math.floor(Date.now()/1000) : undefined;</code><br><code>await this.cacheService.set(userKey, token, ttl);</code></td>
+            <td class="location"><code>external-auth.service.ts:173-176</code></td>
+            <td class="desc">Gateway auth token <code>cacheTtl = configuredTtl - bufferTime</code> can go negative when configuredTtl &lt; 300. <code>redis.setex</code> with negative TTL throws. Same issue for content service auth (line 253, bufferTime=60).</td>
+            <td class="fix"><code>const cacheTtl = Math.max(configuredTtl - bufferTime, 1);</code></td>
           </tr>
           <tr>
             <td><span class="sev-badge red">Must Fix</span></td>
+            <td class="module">Axios</td>
+            <td class="location"><code>axios.service.ts:58-63</code></td>
+            <td class="desc"><code>httpCall</code> destructures <code>{ method, url, data, ...config }</code> but callers inconsistently pass <code>data</code> inside config or as the 4th arg. Config spread can override explicit <code>data</code> parameter. <code>curriculum.service.ts:378-382</code> passes data inside config.</td>
+            <td class="fix">Strip <code>data</code> from config before spreading: <code>const { data: _ignored, ...restConfig } = config ?? {};</code> then spread restConfig.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge red">Must Fix</span></td>
+            <td class="module">External Auth</td>
+            <td class="location"><code>external-auth.service.ts:85</code></td>
+            <td class="desc"><code>getOrCreateAuthToken</code> caches with default Redis TTL, not the token's actual expiry (<code>expires_at</code>). If token expires sooner than the default TTL, requests will fail with stale tokens. Gateway and content service methods correctly apply buffer times, but the primary auth token does not.</td>
+            <td class="fix">Parse <code>expires_at</code> from response and compute <code>cacheTtl = expiresAt - now - bufferTime</code>, similar to gateway/content auth methods.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge red">Must Fix</span></td>
+            <td class="module">Common</td>
+            <td class="location"><code>user-license.repository.ts:101-139</code></td>
+            <td class="desc"><code>getAndExpireLicense</code> has a race between <code>findFirst</code> and <code>update</code>. Another process could change the license status between check and update, and the update would overwrite that change.</td>
+            <td class="fix">Add the status condition to the update's <code>where</code> clause: <code>where: { id: licenseId, status: 'activated' }</code>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Security Findings -->
+  <div class="section">
+    <div class="section-header">
+      <span class="dot red-dot"></span>
+      <h2>Security Findings</h2>
+      <span class="count count-red">8</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Severity</th><th>Module</th><th>Location</th><th>Issue</th><th>Suggested Fix</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="sev-badge red">Security</span></td>
+            <td class="module">Dispatch</td>
+            <td class="location"><code>dispatch.service.ts:257</code></td>
+            <td class="desc">Vendor secret key included as plaintext in Redis cache key <code>vendor:${vendorId}:${vendorKey}</code>. Visible in Redis key scans, slow-query logs, and monitoring tools.</td>
+            <td class="fix">Hash the vendorKey before using in cache key: <code>createHash('sha256').update(vendorKey).digest('hex').slice(0,16)</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge red">Security</span></td>
             <td class="module">Auth</td>
-            <td class="location"><code>auth.service.ts:364–379</code></td>
-            <td class="desc">Duplicate JSDoc block — the same comment for <code>exchangeExternalServiceToken</code> appears twice in a row, left over from a previous edit.</td>
-            <td class="fix">Remove one of the two identical JSDoc blocks.</td>
+            <td class="location"><code>jwt.strategy.ts:19</code></td>
+            <td class="desc">Hardcoded fallback JWT secret <code>'your-secret-key'</code>. In a misconfigured deployment, tokens signed with this public string would be accepted.</td>
+            <td class="fix">Throw an error if the secret is missing: <code>if (!secret) throw new Error('auth.jwt.secret is required')</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge red">Security</span></td>
+            <td class="module">Dispatch</td>
+            <td class="location"><code>dispatch.service.ts:492</code></td>
+            <td class="desc"><code>uniqueid</code> interpolated directly into URL query string without <code>encodeURIComponent()</code>. Characters like <code>&amp;</code>, <code>#</code>, or spaces cause URL malformation and potential query parameter injection.</td>
+            <td class="fix">Use <code>encodeURIComponent(uniqueid)</code> or build URL with <code>URL</code> + <code>searchParams.append()</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge red">Security</span></td>
+            <td class="module">Auth</td>
+            <td class="location"><code>token.service.ts:322</code></td>
+            <td class="desc"><code>decryptUniqueId</code> falls back to empty string as key when <code>auth.jwt.secret</code> is missing. Uses a predictable, well-known key. Contrasts with <code>encryptUniqueId</code> (line 302) which correctly throws.</td>
+            <td class="fix">Mirror <code>encryptUniqueId</code> behavior: throw <code>InternalServerErrorException</code> if secret is missing.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge red">Security</span></td>
+            <td class="module">Auth</td>
+            <td class="location"><code>token.service.ts:436-478</code></td>
+            <td class="desc">CacheService silent failure undermines launch token single-use guarantee. When Valkey is down, <code>exists()</code> returns false and <code>set()</code> silently fails &mdash; launch tokens can be replayed indefinitely.</td>
+            <td class="fix">Treat cache failures as errors for security-critical operations. At minimum, log a warning when the used-check may be unreliable.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge red">Security</span></td>
+            <td class="module">License</td>
+            <td class="location"><code>license.controller.ts:31-44</code></td>
+            <td class="desc"><code>GET /licenses</code> takes <code>filter[userId]</code> as query param without verifying the authenticated user matches. Any authenticated user can enumerate any other user's licenses.</td>
+            <td class="fix">Verify <code>query.filter.userId === req.user.userId</code>, or extract userId from JWT instead of query params.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge red">Security</span></td>
+            <td class="module">Curriculum</td>
+            <td class="location"><code>curriculum.service.ts:482-486</code></td>
+            <td class="desc"><code>launchCourse</code> returns <code>oauth_consumer_key</code>, <code>oauth_nonce</code>, and other OAuth fields in the response body. <code>getCourseList</code> correctly strips these via <code>removeOAuthFields()</code>, but <code>launchCourse</code> does not.</td>
+            <td class="fix">Verify this is intentional for LTI form POST. If not needed by client, apply <code>removeOAuthFields()</code> consistently.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge red">Security</span></td>
+            <td class="module">Dispatch</td>
+            <td class="location"><code>dispatch.controller.ts:108-115</code></td>
+            <td class="desc"><code>getCourseStatus</code> logs full JSON-serialized response via <code>JSON.stringify(response)</code>. Can inadvertently capture sensitive data as the response shape grows.</td>
+            <td class="fix">Log only non-sensitive identifiers using structured logging with explicit fields.</td>
           </tr>
         </tbody>
       </table>
@@ -314,63 +401,118 @@
   <!-- Should Fix -->
   <div class="section">
     <div class="section-header">
-      <div class="dot amber-dot"></div>
+      <span class="dot amber-dot"></span>
       <h2>Should Fix</h2>
-      <span class="count count-amber">6 issues</span>
+      <span class="count count-amber">15</span>
     </div>
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th>Severity</th>
-            <th>Module</th>
-            <th>Location</th>
-            <th>Issue</th>
-            <th>Suggested Fix</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Severity</th><th>Module</th><th>Location</th><th>Issue</th><th>Suggested Fix</th></tr></thead>
         <tbody>
           <tr>
             <td><span class="sev-badge amber">Performance</span></td>
-            <td class="module">LIS Completion</td>
-            <td class="location"><code>lis-completion.service.ts:44–64</code></td>
-            <td class="desc"><code>getECardFromRQILLPService</code> is fetched unconditionally in <code>processCertificateClaim</code> even when eCard is disabled. The <code>Promise.all</code> always fires 4 API calls, then immediately exits early at line 70 when <code>isEcardEnabled === false</code> — wasting one round trip every time.</td>
-            <td class="fix">Fetch the first 3 items in parallel, check <code>isEcardEnabled</code>, then conditionally fetch eCard master data only if needed.</td>
+            <td class="module">Auth</td>
+            <td class="location"><code>auth.service.ts:137-148</code></td>
+            <td class="desc"><code>storeRefreshTokenJti</code>, <code>getTokens</code>, and <code>getOrgLanguage</code> are awaited sequentially but are independent. Same pattern in <code>refreshAccessToken</code> and <code>registration.controller.ts:247-252</code>.</td>
+            <td class="fix">Use <code>Promise.all()</code> for independent async operations.</td>
           </tr>
           <tr>
             <td><span class="sev-badge amber">Performance</span></td>
-            <td class="module">Auth Service</td>
-            <td class="location"><code>auth.service.ts:181–187, 337–344</code></td>
-            <td class="desc"><code>storeRefreshTokenJti</code> and <code>getOrgLanguage</code> run sequentially after <code>generateAuthTokens</code> (synchronous), but are fully independent of each other. Affects both <code>createRegisteredUserResponse</code> and <code>refreshAccessToken</code>.</td>
-            <td class="fix"><code>await Promise.all([storeRefreshTokenJti(...), getOrgLanguage(...)])</code></td>
+            <td class="module">External Auth</td>
+            <td class="location"><code>external-auth.service.ts:55-96</code></td>
+            <td class="desc">Classic thundering herd: concurrent requests all see "no cached token", all fetch from external service simultaneously. Applies to all <code>getOrCreate*</code> methods.</td>
+            <td class="fix">Implement a local mutex/lock per cache key (in-memory Map of Promises) so only one request fetches while others await.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge amber">Code Quality</span></td>
+            <td class="module">Auth</td>
+            <td class="location"><code>auth.service.ts:100-130</code></td>
+            <td class="desc"><code>createUnregisteredUserResponse</code> and <code>createRegisteredUserResponse</code> accept <code>vendorDetails: any</code> and build <code>meta: any</code>, bypassing all type checking.</td>
+            <td class="fix">Use <code>LaunchTokenPayload</code> interface from <code>token.service.ts</code> instead of <code>any</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge amber">Code Quality</span></td>
+            <td class="module">Dispatch</td>
+            <td class="location"><code>vendor-auth-response.dto.ts</code></td>
+            <td class="desc">DTO is missing fields assigned in service: <code>planId</code>, <code>paymentMode</code>, <code>registerUrl</code>, <code>reccurenceCycle</code> (typo: should be <code>recurrenceCycle</code>), <code>suspendData</code>. Bracket notation assignment bypasses type checking.</td>
+            <td class="fix">Add missing fields to DTO and fix the typo.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge amber">Code Quality</span></td>
+            <td class="module">Auth + Registration</td>
+            <td class="location"><code>auth.service.ts</code> + <code>registration.controller.ts:96-113</code></td>
+            <td class="desc">Duplicate <code>extractBearerToken</code> logic in both modules. Auth version validates JWT structure (3 parts), registration version does not and throws different exception types.</td>
+            <td class="fix">Extract a shared utility function or reuse the auth service's method.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge amber">Code Quality</span></td>
+            <td class="module">Registration</td>
+            <td class="location"><code>registration.controller.ts</code></td>
+            <td class="desc">Controller has 7 direct dependencies and contains significant business logic (license creation, token generation, cookie handling). Violates thin-controller pattern.</td>
+            <td class="fix">Move registration business logic (lines 180-282) into <code>RegistrationService</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge amber">Code Quality</span></td>
+            <td class="module">Dispatch</td>
+            <td class="location"><code>dispatch-course-status.dto.ts</code></td>
+            <td class="desc">Dead DTO: replaced by <code>CourseStatusRequestDto</code>. Also has type inconsistency: <code>usrSubscriptionId</code> declared as <code>string</code> but decorated with <code>@IsNumber()</code> and parseInt transform.</td>
+            <td class="fix">Remove the dead DTO and its export from the barrel file.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge amber">Correctness</span></td>
+            <td class="module">Cache</td>
+            <td class="location"><code>cache.service.ts:33-35</code></td>
+            <td class="desc"><code>get()</code> uses naive JSON detection (<code>startsWith('{')</code>). A plain string starting with <code>{</code> is incorrectly parsed. Failed parse silently returns null, hiding data corruption.</td>
+            <td class="fix">Always attempt <code>JSON.parse()</code>, fall back to raw string in catch block.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge amber">Correctness</span></td>
+            <td class="module">Common</td>
+            <td class="location"><code>http-error.handler.ts:23</code></td>
+            <td class="desc"><code>handleHttpError</code> maps HTTP 403 (Forbidden) to <code>UnauthorizedException</code> (401). Different semantics: 403 means valid credentials but insufficient permission.</td>
+            <td class="fix">Map 403 to <code>ForbiddenException</code> instead of <code>UnauthorizedException</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge amber">Correctness</span></td>
+            <td class="module">Common</td>
+            <td class="location"><code>system-settings.util.ts:86-89</code></td>
+            <td class="desc"><code>getSystemSetting</code> silently swallows ALL errors including auth failures and programming bugs. Root cause of failures hidden from callers.</td>
+            <td class="fix">Re-throw non-transient errors (auth failures, 4xx). Only catch and return null for network/cache failures.</td>
           </tr>
           <tr>
             <td><span class="sev-badge amber">Performance</span></td>
-            <td class="module">Registration</td>
-            <td class="location"><code>registration.controller.ts:218–252</code></td>
-            <td class="desc"><code>getCoursesByCourseIdWithCache</code> and <code>getOrgLanguage</code> are called sequentially after <code>authToken</code> is obtained, but both are independent and only need <code>authToken</code>.</td>
-            <td class="fix">Run both in a single <code>Promise.all</code> once <code>authToken</code> is available.</td>
+            <td class="module">License</td>
+            <td class="location"><code>lis-completion.service.ts:188-209</code></td>
+            <td class="desc"><code>triggerPostCompletionActions</code> is awaited in <code>processLisCompletion</code>. HTTP response is blocked until certificate claim (multiple external API calls) completes. Can cause timeouts.</td>
+            <td class="fix">Fire as fire-and-forget: <code>this.triggerPostCompletionActions(...).catch(err => this.logger.error(...))</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge amber">Correctness</span></td>
+            <td class="module">Curriculum</td>
+            <td class="location"><code>curriculum.service.ts:156-165</code></td>
+            <td class="desc"><code>getCourseList</code> continues with <code>userLicense?.version</code> when <code>getAndExpireLicense</code> returns null. External API calls proceed even without a license. Unclear if intentional.</td>
+            <td class="fix">If license is required, throw <code>NotFoundException</code> when null. If optional, document this behavior.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge amber">Correctness</span></td>
+            <td class="module">Common</td>
+            <td class="location"><code>lti-oauth.util.ts:65-67</code></td>
+            <td class="desc"><code>buildCommonLtiFields</code> creates <code>lis_person_name_full</code> with trailing/leading spaces when only first or last name is present. No <code>.trim()</code> applied.</td>
+            <td class="fix"><code>[first_name, last_name].filter(Boolean).join(' ')</code></td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge amber">Correctness</span></td>
+            <td class="module">Dispatch</td>
+            <td class="location"><code>dispatch.service.ts:398-454</code></td>
+            <td class="desc"><code>getOrgLanguage</code>: empty API response fallback is cached, but error fallback is not. Error-case requests keep hitting the external service on every call.</td>
+            <td class="fix">Either cache both fallbacks or neither &mdash; be consistent.</td>
           </tr>
           <tr>
             <td><span class="sev-badge amber">Code Quality</span></td>
-            <td class="module">Registration</td>
-            <td class="location"><code>registration.service.ts:87–95</code></td>
-            <td class="desc">Pointless try/catch in <code>registerLearner</code> that only re-throws. Adds dead code with zero value — the error propagates identically without it.</td>
-            <td class="fix">Remove the try/catch entirely.</td>
-          </tr>
-          <tr>
-            <td><span class="sev-badge amber">Code Quality</span></td>
-            <td class="module">Course Cache</td>
-            <td class="location"><code>course-list-cache.util.ts:34</code></td>
-            <td class="desc"><code>getCoursesByCourseIdWithCache</code> re-uses <code>app.cache.orgValidationTtl</code> as its TTL, tying course data staleness to org validation config. They have different semantics and should be independently configurable.</td>
-            <td class="fix">Add a dedicated <code>app.cache.courseListTtl</code> config key with its own default.</td>
-          </tr>
-          <tr>
-            <td><span class="sev-badge amber">Code Quality</span></td>
-            <td class="module">System Settings</td>
-            <td class="location"><code>system-settings.util.ts:59</code></td>
-            <td class="desc"><code>systemKey</code> is interpolated directly into a URL query string without encoding — inconsistent with the rest of the codebase where <code>URLSearchParams</code> or <code>new URL()</code> is used.</td>
-            <td class="fix">Use <code>URLSearchParams</code> to append <code>filter[system_key]</code>.</td>
+            <td class="module">Certificates</td>
+            <td class="location"><code>certificates.service.ts:449</code> + <code>lis-completion.service.ts:83</code></td>
+            <td class="desc">Duplicate <code>fullName</code> construction logic: <code>full_name?.trim() || [first, middle, last].filter(Boolean).join(' ')</code> in two places.</td>
+            <td class="fix">Extract to a shared utility function: <code>buildFullName(userDetails)</code>.</td>
           </tr>
         </tbody>
       </table>
@@ -380,50 +522,85 @@
   <!-- Nice to Have -->
   <div class="section">
     <div class="section-header">
-      <div class="dot green-dot"></div>
+      <span class="dot green-dot"></span>
       <h2>Nice to Have</h2>
-      <span class="count count-green">5 issues</span>
+      <span class="count count-green">12</span>
     </div>
     <div class="table-wrap">
       <table>
-        <thead>
-          <tr>
-            <th>Severity</th>
-            <th>Module</th>
-            <th>Location</th>
-            <th>Issue</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Severity</th><th>Module</th><th>Location</th><th>Issue</th></tr></thead>
         <tbody>
           <tr>
             <td><span class="sev-badge green">Minor</span></td>
-            <td class="module">Dispatch</td>
-            <td class="location"><code>dispatch.service.ts:583</code></td>
-            <td class="desc"><code>let launchToken: string = ''</code> initialised to an empty-string sentinel. If branching logic ever changes, the silent empty value could be used. Prefer <code>let launchToken: string</code> and let TypeScript enforce that both branches assign before use.</td>
+            <td class="module">Auth</td>
+            <td class="location"><code>auth.service.ts:validateUser</code></td>
+            <td class="desc"><code>validateUser</code> is a pass-through with no actual validation. JSDoc says "Add your custom validation logic here" but none exists.</td>
           </tr>
           <tr>
             <td><span class="sev-badge green">Minor</span></td>
             <td class="module">Dispatch</td>
-            <td class="location"><code>dispatch.service.ts:709–784</code></td>
-            <td class="desc"><code>vendorAuthResponse['field'] = value</code> uses bracket notation to bypass TypeScript's type checker. The response object should be built as a properly-typed object and assigned at the end.</td>
-          </tr>
-          <tr>
-            <td><span class="sev-badge green">Minor</span></td>
-            <td class="module">Curriculum</td>
-            <td class="location"><code>curriculum.service.ts:281–306</code></td>
-            <td class="desc">Three of the four <code>Promise.all</code> HTTP calls omit <code>Accept: 'application/json'</code> headers that every other outbound call in the codebase includes. Inconsistent.</td>
+            <td class="location"><code>dispatch.service.ts:709-785</code></td>
+            <td class="desc"><code>vendorAuthResponse</code> built using bracket notation (<code>response['courseId']</code>), bypassing TypeScript type checking for declared fields.</td>
           </tr>
           <tr>
             <td><span class="sev-badge green">Minor</span></td>
             <td class="module">Auth</td>
-            <td class="location"><code>auth.service.ts:149, 189</code></td>
-            <td class="desc"><code>meta: any</code> used for the response shape in both <code>createUnregisteredUserResponse</code> and <code>createRegisteredUserResponse</code>. The shape is known — typed interfaces would surface API drift at compile time.</td>
+            <td class="location"><code>auth.service.spec.ts:69-70,107-109</code></td>
+            <td class="desc">Redundant <code>jest.clearAllMocks()</code> in both <code>beforeEach</code> and <code>afterEach</code>. One is sufficient.</td>
           </tr>
           <tr>
             <td><span class="sev-badge green">Minor</span></td>
-            <td class="module">Token Service</td>
-            <td class="location"><code>token.service.ts:326</code></td>
-            <td class="desc">The <code>createDecipheriv</code> cast for GCM's <code>setAuthTag</code> is a Node.js typing gap. Extracting an <code>aesGcmDecrypt</code> helper isolates the cast and keeps <code>decryptUniqueId</code> readable.</td>
+            <td class="module">Auth</td>
+            <td class="location"><code>app-refresh-request.dto.ts</code></td>
+            <td class="desc"><code>AppRefreshRequestDto</code> is exported but not used by any controller or service.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge green">Minor</span></td>
+            <td class="module">Dispatch</td>
+            <td class="location"><code>dispatch-query.dto.ts</code> + <code>dispatch-response.dto.ts</code></td>
+            <td class="desc">Dead DTOs: exported from barrel file but not used by controller or service.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge green">Minor</span></td>
+            <td class="module">Curriculum</td>
+            <td class="location"><code>course-launch-request.dto.ts:41-55</code></td>
+            <td class="desc"><code>customDueDate</code>, <code>customStartDate</code>, <code>customCourseName</code> validated in DTO but never used in <code>launchCourse()</code>. Dead validation or missing feature.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge green">Minor</span></td>
+            <td class="module">Curriculum</td>
+            <td class="location"><code>course-list-response.dto.ts:74-91</code></td>
+            <td class="desc">Unused <code>User</code> and <code>EmailPref</code> interfaces defined but never referenced anywhere.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge green">Minor</span></td>
+            <td class="module">Common</td>
+            <td class="location"><code>course-list-cache.util.ts:60-63</code></td>
+            <td class="desc">Cache return casts <code>{ data: cachedCourses } as CourseApiResponse</code> but omits <code>links</code> and <code>meta</code> properties. Callers accessing these get <code>undefined</code>.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge green">Minor</span></td>
+            <td class="module">Common</td>
+            <td class="location"><code>validated-body.decorator.ts</code></td>
+            <td class="desc">Custom <code>ValidatedBody</code> decorator duplicates built-in NestJS <code>ValidationPipe</code> functionality. Not used by any reviewed module.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge green">Minor</span></td>
+            <td class="module">WebSocket</td>
+            <td class="location"><code>aws-websocket-client.ts:104-106</code></td>
+            <td class="desc"><code>sendToAWS</code> triggers reconnection on closed socket but returns <code>false</code> immediately &mdash; the message is lost. Should either be async with retry or let close-event handler manage reconnection.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge green">Minor</span></td>
+            <td class="module">Curriculum</td>
+            <td class="location"><code>curriculum.service.ts:219-229</code></td>
+            <td class="desc"><code>getCourseList</code> mutates <code>response.courses[category]</code> in-place. If the response were cached or reused, mutation affects other consumers.</td>
+          </tr>
+          <tr>
+            <td><span class="sev-badge green">Minor</span></td>
+            <td class="module">Logger</td>
+            <td class="location"><code>logger.service.ts:22-23</code></td>
+            <td class="desc">Uses <code>process.env.LOG_LEVEL</code> and <code>process.env.NODE_ENV</code> directly instead of ConfigService. Acceptable since logger bootstraps before DI, but should be documented.</td>
           </tr>
         </tbody>
       </table>
@@ -433,29 +610,33 @@
   <!-- Test Coverage -->
   <div class="section">
     <div class="section-header">
-      <div class="dot blue-dot"></div>
+      <span class="dot blue-dot"></span>
       <h2>Test Coverage</h2>
-      <span class="count count-blue">5 gaps</span>
+      <span class="count count-blue">7 gaps</span>
     </div>
     <div class="coverage-grid">
       <div class="coverage-box good">
-        <h3>✓ Well Covered</h3>
+        <h3>Well Covered</h3>
         <ul>
-          <li>Token service — access / refresh / launch / dispatch flows</li>
-          <li>JWT auth guard — public route bypass, scope enforcement</li>
-          <li>Cache service — get / set / delete / exists</li>
-          <li>Dispatch service — happy path (vendor → product → user)</li>
-          <li>User license repository — findOne, create, pagination</li>
+          <li><code>token.service.ts</code> &mdash; JWT generation, verification, encryption, expiry conversion, all edge cases</li>
+          <li><code>dispatch.service.ts</code> &mdash; validateVendor, validateProduct, validateUser, validateLaunch, getCourseStatus flows</li>
+          <li><code>auth.controller.ts</code> &mdash; /tokens, /refresh, /app/tokens cookie handling and error paths</li>
+          <li><code>app-auth.service.ts</code> &mdash; client credential validation, bcrypt comparison, token generation</li>
+          <li><code>trace.interceptor.ts</code> &mdash; trace ID extraction, header injection</li>
+          <li><code>cache.service.ts</code> &mdash; get/set/exists/delete with error handling</li>
+          <li><code>external-auth.service.ts</code> &mdash; token caching, error handling for all 3 auth methods</li>
         </ul>
       </div>
       <div class="coverage-box weak">
-        <h3>○ Missing or Thin</h3>
+        <h3>Missing / Thin</h3>
         <ul>
-          <li><code>external-auth.service.ts</code> — no test for <code>expiresAt</code> propagation or TTL correctness</li>
-          <li><code>lis-completion.service.ts</code> — "eCard disabled → skip eCard fetch" path untested</li>
-          <li><code>registration.controller.ts</code> — token rotation after self-registration not covered</li>
-          <li><code>dispatch.service.ts</code> — <code>validateUser</code> URL-encoding edge case missing</li>
-          <li><code>system-settings.util.ts</code> — no test for cache miss → API fetch → store path</li>
+          <li><code>certificates.service.ts</code> &mdash; No tests for <code>sendCertificateMail</code> (complex method with multiple failure modes)</li>
+          <li><code>curriculum.controller.spec.ts</code> &mdash; No tests for <code>launchCourse</code> endpoint (mock missing)</li>
+          <li><code>registration.controller.ts</code> &mdash; Business logic in controller is harder to test in isolation; no unit tests for registration flow error paths</li>
+          <li><code>lis-completion.service.ts</code> &mdash; <code>triggerPostCompletionActions</code> failure paths not covered</li>
+          <li><code>license.service.ts</code> &mdash; Thin coverage: only happy-path license listing tested</li>
+          <li><code>auth.service.spec.ts</code> &mdash; <code>exchangeExternalServiceToken</code> tests use wrong service name (<code>'rqillp'</code> instead of <code>'rqillp-api'</code>), 3 tests currently failing</li>
+          <li><code>aws-websocket-client.ts</code> &mdash; No unit tests for WebSocket reconnection, message loss, or error handling</li>
         </ul>
       </div>
     </div>
@@ -463,9 +644,7 @@
 
 </main>
 
-<footer>
-  rqillp-lp &nbsp;·&nbsp; 11 April 2026
-</footer>
+<footer>rqillp-lp &middot; 13 April 2026</footer>
 
 </body>
 </html>
