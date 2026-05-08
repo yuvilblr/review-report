@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Review Report — lp-ui</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f4f6f9;
+      color: #1a1d23;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: #fff;
+      padding: 48px 40px 36px;
+    }
+    header .badge {
+      display: inline-block;
+      background: #334155;
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+    header h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+    header p  { color: #94a3b8; font-size: 14px; }
+    header .meta { display: flex; gap: 24px; margin-top: 24px; flex-wrap: wrap; }
+    header .meta-item { display: flex; flex-direction: column; gap: 2px; }
+    header .meta-item .label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: .06em; }
+    header .meta-item .value { font-size: 14px; color: #e2e8f0; font-weight: 500; }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      padding: 32px 40px 0;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px 24px;
+      border-top: 4px solid transparent;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .card.red   { border-color: #ef4444; }
+    .card.amber { border-color: #f59e0b; }
+    .card.green { border-color: #22c55e; }
+    .card.blue  { border-color: #3b82f6; }
+    .card .num  { font-size: 36px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+    .card.red   .num { color: #ef4444; }
+    .card.amber .num { color: #f59e0b; }
+    .card.green .num { color: #22c55e; }
+    .card.blue  .num { color: #3b82f6; }
+    .card .lbl  { font-size: 13px; color: #64748b; font-weight: 500; }
+
+    .verdict { max-width: 1100px; margin: 24px auto 0; padding: 0 40px; }
+    .verdict-inner {
+      background: #fef3c7;
+      border: 1px solid #fcd34d;
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .verdict-inner .icon { font-size: 22px; }
+    .verdict-inner .text { font-size: 14px; color: #92400e; }
+    .verdict-inner .text strong { font-weight: 600; }
+
+    main {
+      max-width: 1100px;
+      margin: 32px auto 60px;
+      padding: 0 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .section { display: flex; flex-direction: column; gap: 12px; }
+    .section-header { display: flex; align-items: center; gap: 10px; }
+    .section-header .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+    .section-header h2 { font-size: 16px; font-weight: 700; color: #1e293b; }
+    .section-header .count {
+      margin-left: auto;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    .red-dot   { background: #ef4444; }
+    .amber-dot { background: #f59e0b; }
+    .green-dot { background: #22c55e; }
+    .blue-dot  { background: #3b82f6; }
+
+    .count-red   { background: #fef2f2; color: #dc2626; }
+    .count-amber { background: #fffbeb; color: #d97706; }
+    .count-green { background: #f0fdf4; color: #16a34a; }
+    .count-blue  { background: #eff6ff; color: #2563eb; }
+
+    .table-wrap {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+      overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead tr { background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+    thead th {
+      padding: 11px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: #64748b;
+      white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid #f1f5f9; transition: background .1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f8fafc; }
+    tbody td { padding: 14px 16px; vertical-align: top; color: #334155; }
+
+    td.module { font-weight: 600; color: #1e293b; white-space: nowrap; }
+    td.location code {
+      font-family: 'SFMono-Regular', Consolas, monospace;
+      font-size: 11.5px;
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #0f172a;
+      white-space: nowrap;
+    }
+    td.desc { max-width: 420px; line-height: 1.5; }
+    td.fix  { max-width: 300px; line-height: 1.5; color: #475569; }
+    td.fix code, td.desc code {
+      font-family: 'SFMono-Regular', Consolas, monospace;
+      font-size: 11px;
+      background: #f1f5f9;
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+
+    .sev-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .sev-badge.red   { background: #fef2f2; color: #dc2626; }
+    .sev-badge.amber { background: #fffbeb; color: #d97706; }
+    .sev-badge.green { background: #f0fdf4; color: #16a34a; }
+    .sev-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .coverage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 640px) { .coverage-grid { grid-template-columns: 1fr; } }
+    .coverage-box {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .coverage-box h3 { font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+    .coverage-box.good h3 { color: #16a34a; }
+    .coverage-box.weak h3 { color: #d97706; }
+    .coverage-box ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .coverage-box li {
+      font-size: 13px;
+      color: #475569;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .coverage-box li::before { flex-shrink: 0; margin-top: 2px; }
+    .coverage-box.good li::before { content: '\2713'; color: #16a34a; font-weight: 700; }
+    .coverage-box.weak li::before { content: '\25CB'; color: #d97706; font-weight: 700; }
+    .coverage-box li code {
+      font-family: 'SFMono-Regular', Consolas, monospace;
+      font-size: 11px;
+      background: #f1f5f9;
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+
+    footer { text-align: center; padding: 24px; font-size: 12px; color: #94a3b8; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="badge">Code Review</div>
+  <h1>lp-ui &mdash; Full Codebase Review</h1>
+  <p>React 19 + TanStack Query + Zustand + React Router v7 + Vite + LaunchDarkly</p>
+  <div class="meta">
+    <div class="meta-item">
+      <span class="label">Project</span>
+      <span class="value">lp-ui (Learner Portal Frontend)</span>
+    </div>
+    <div class="meta-item">
+      <span class="label">Branch</span>
+      <span class="value">feature/maintainance-mode</span>
+    </div>
+    <div class="meta-item">
+      <span class="label">Date</span>
+      <span class="value">8 May 2026</span>
+    </div>
+    <div class="meta-item">
+      <span class="label">Scope</span>
+      <span class="value">All features, hooks, lib, components, app routing</span>
+    </div>
+  </div>
+</header>
+
+<!-- Summary cards -->
+<div class="summary">
+  <div class="card red">
+    <div class="num">3</div>
+    <div class="lbl">Must Fix</div>
+  </div>
+  <div class="card amber">
+    <div class="num">9</div>
+    <div class="lbl">Should Fix</div>
+  </div>
+  <div class="card green">
+    <div class="num">7</div>
+    <div class="lbl">Nice to Have</div>
+  </div>
+  <div class="card blue">
+    <div class="num">3</div>
+    <div class="lbl">Test Gaps</div>
+  </div>
+</div>
+
+<div class="verdict">
+  <div class="verdict-inner">
+    <span class="icon">&#9888;</span>
+    <span class="text"><strong>Verdict: Needs changes before next release.</strong> Codebase is well-structured with strong architecture (Bulletproof React layout, TanStack Query, Zustand stores). Three issues need attention: an XSS vector via a home-grown sanitizer, two <code>postMessage</code> calls with wildcard target origin, and a token-refresh race that leaks soon-to-expire tokens into in-flight requests.</span>
+  </div>
+</div>
+
+<main>
+
+<!-- Must Fix -->
+<div class="section">
+  <div class="section-header">
+    <span class="dot red-dot"></span>
+    <h2>Must Fix</h2>
+    <span class="count count-red">3 issues</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Severity</th>
+          <th>Module</th>
+          <th>Location</th>
+          <th>Issue</th>
+          <th>Suggested Fix</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="sev-badge red">Critical</span></td>
+          <td class="module">courses</td>
+          <td class="location"><code>course-info.tsx:35-58</code></td>
+          <td class="desc">
+            <code>course.longDesc</code> and <code>launchDesc</code> are rendered via <code>dangerouslySetInnerHTML</code> after passing through a home-grown <code>sanitizeHtml()</code> that only strips <code>&lt;script/iframe/embed/object&gt;</code> tags and <code>on*</code> attributes. It misses <code>javascript:</code> URLs in <code>href</code>, <code>data:</code> URLs in <code>src</code>, <code>&lt;style&gt;</code> blocks, SVG <code>xlink:href</code> JS execution, and CSS expression attacks. The code's own comment says: "For production with untrusted content, use DOMPurify library."
+          </td>
+          <td class="fix">
+            Replace with <code>DOMPurify.sanitize(html)</code>. Add tightly-scoped allowlist for tags/attrs needed by course HTML (e.g. <code>p</code>, <code>strong</code>, <code>em</code>, <code>a</code>, <code>ul/li</code>). Strip <code>href</code> values that don't start with <code>https?:</code>.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge red">Critical</span></td>
+          <td class="module">courses / socket</td>
+          <td class="location"><code>course-socket.ts:56</code> &mdash; <code>courses-view.tsx:46</code></td>
+          <td class="desc">
+            <code>window.opener?.postMessage('cdp_course_completed', '*')</code> uses a wildcard target origin. Any page that opened the LP UI in a popup can intercept this completion event by listening to <code>message</code> events. While the payload is just a string, an attacker can use this as a signal that a user finished a specific course, leak that to an analytics endpoint, or fire phishing follow-ups timed to completion.
+          </td>
+          <td class="fix">
+            Pass the LMS origin as the second arg: <code>window.opener.postMessage('cdp_course_completed', LMS_ORIGIN)</code>. The opener origin should be configured in env (e.g. <code>VITE_LMS_ORIGIN</code>) or derived from <code>document.referrer</code> at first launch and stored in <code>sessionStorage</code>.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge red">Critical</span></td>
+          <td class="module">api-client</td>
+          <td class="location"><code>api-client.ts:51-56</code></td>
+          <td class="desc">
+            <code>getValidToken()</code> kicks off <code>refreshAccessToken()</code> as a fire-and-forget promise (<code>.catch(() =&gt; {})</code>) and returns the soon-to-expire token to the current request. The request can race with the actual expiry — server sees expired JWT, returns 401, client retries via the 401 handler, but the original logical operation may have side effects already (e.g. cache writes triggered by a stale 200 response that the user-side think succeeded).
+          </td>
+          <td class="fix">
+            Make <code>getValidToken</code> async: <code>await refreshAccessToken()</code> when expiring soon, then return the fresh token. Since <code>refreshAccessToken</code> already deduplicates concurrent calls via <code>refreshPromise</code>, parallel requests share one refresh round-trip.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Security -->
+<div class="section">
+  <div class="section-header">
+    <span class="dot red-dot"></span>
+    <h2>Security Findings</h2>
+    <span class="count count-red">2 issues</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Severity</th>
+          <th>Module</th>
+          <th>Location</th>
+          <th>Issue</th>
+          <th>Suggested Fix</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="sev-badge red">Security</span></td>
+          <td class="module">api-client</td>
+          <td class="location"><code>api-client.ts</code></td>
+          <td class="desc">
+            No CSRF token is sent on state-changing requests (<code>POST /auth/refresh</code>, etc). The flow relies entirely on cookie <code>SameSite</code> mode for CSRF protection. If the backend ever sets the refresh cookie as <code>SameSite=None</code> (e.g. for cross-domain embedding scenarios), a malicious site could trigger a refresh on a victim's behalf and observe the response. Defence-in-depth is missing.
+          </td>
+          <td class="fix">
+            Add a CSRF token round-trip: backend sets a non-HttpOnly <code>csrf_token</code> cookie on auth, frontend reads it via <code>document.cookie</code> and sends it as <code>X-CSRF-Token</code> header on state-changing requests. Backend validates <code>cookie === header</code> (double-submit pattern). Or rely on <code>credentials: 'include'</code> only when origin is whitelisted server-side.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge red">Security</span></td>
+          <td class="module">routing</td>
+          <td class="location"><code>app/router.tsx</code></td>
+          <td class="desc">
+            No client-side auth guard (e.g. <code>RequireAuth</code> wrapper) on protected routes. The only <code>isAuthenticated()</code> check is in <code>self-registration/index.tsx</code>. Other routes (courses, lti, certificates) mount and fire queries before realising the user has no token; if the user lands directly on a protected route without auth, they see error fallbacks and unnecessary 401-then-refresh round-trips. Not a security issue (server still enforces), but degraded UX.
+          </td>
+          <td class="fix">
+            Add a <code>&lt;RequireAuth&gt;</code> wrapper component that checks <code>useAuthStore</code> and redirects to <code>/auth</code> when missing. Wrap protected route definitions consistently. Keeps server-side auth as the source of truth but makes client behaviour predictable.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Should Fix -->
+<div class="section">
+  <div class="section-header">
+    <span class="dot amber-dot"></span>
+    <h2>Should Fix</h2>
+    <span class="count count-amber">9 issues</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Severity</th>
+          <th>Module</th>
+          <th>Location</th>
+          <th>Issue</th>
+          <th>Suggested Fix</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="sev-badge amber">Resilience</span></td>
+          <td class="module">course-socket</td>
+          <td class="location"><code>course-socket.ts:34-77</code></td>
+          <td class="desc">
+            On reconnect, <code>openSocket()</code> creates a new <code>WebSocket</code> and assigns <code>onopen</code>/<code>onmessage</code>/<code>onclose</code>/<code>onerror</code> handlers. The previous socket is dropped via <code>socket = ws</code> without explicit <code>removeAllListeners</code>/<code>close()</code>. Since handlers are property assignments (not <code>addEventListener</code>), reassignment overwrites — but if <code>openSocket</code> is called twice quickly (race between <code>onclose</code> reconnect timer and an external <code>connect()</code> call), the previous socket reference is leaked.
+          </td>
+          <td class="fix">
+            At top of <code>openSocket()</code>, close the previous socket if it exists: <code>if (socket) { socket.onclose = null; socket.close(); }</code>. Also clear any pending <code>reconnectTimer</code> before scheduling a new one.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Resilience</span></td>
+          <td class="module">course-socket</td>
+          <td class="location"><code>course-socket.ts:68</code></td>
+          <td class="desc">
+            <code>reconnectTimer = setInterval(openSocket, RECONNECT_MS)</code> uses <code>setInterval</code>, which keeps firing every 5s. Since <code>openSocket</code> guards via readyState check, repeat calls are no-ops once connected — but the interval is only cleared inside <code>onopen</code>. A failed reconnect attempt (e.g. CORS, DNS) leaves the interval firing every 5s indefinitely.
+          </td>
+          <td class="fix">
+            Use <code>setTimeout</code> for the reconnect: schedule one attempt, let <code>onclose</code> reschedule on subsequent failures. Cap with a max retry count or exponential backoff to avoid infinite hot loops on permanent failures.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Resilience</span></td>
+          <td class="module">course-socket</td>
+          <td class="location"><code>course-socket.ts:39, 50, 65</code></td>
+          <td class="desc">
+            <code>console.log('[CourseSocket] ...')</code> debug statements remain in production code. Each connect/message/disconnect logs to the user's browser console. Looks unprofessional, leaks internal state names, and bloats console output for debugging real issues.
+          </td>
+          <td class="fix">
+            Wrap with <code>if (isDevelopment)</code> from <code>@/lib/constants</code>, or remove. The <code>datadogRum.addAction</code> calls already capture these events for observability.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Type Safety</span></td>
+          <td class="module">api-client</td>
+          <td class="location"><code>api-client.ts:90</code></td>
+          <td class="desc">
+            <code>apiClient&lt;T = any&gt;</code> defaults the generic to <code>any</code>, which silently accepts whatever shape comes back. Most call sites pass a type, but a forgotten one types the response as <code>any</code> with zero compile-time checking.
+          </td>
+          <td class="fix">
+            Default to <code>unknown</code> instead of <code>any</code>. Forces every caller to pass a generic or perform a runtime type check (Zod), catching contract drift earlier.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Type Safety</span></td>
+          <td class="module">api-client</td>
+          <td class="location"><code>api-client.ts:135-138</code></td>
+          <td class="desc">
+            <code>catch (error)</code> throws an object literal <code>{ message, status, code, traceId }</code> not extending <code>Error</code>. Stack traces are lost; <code>error instanceof Error</code> checks downstream return false; React Error Boundary fallbacks may not display them correctly.
+          </td>
+          <td class="fix">
+            Define a custom <code>ApiError extends Error</code> class. Throw instances of it. Preserves <code>stack</code>, plays nicely with logging tools, and consumer <code>instanceof</code> checks work.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Performance</span></td>
+          <td class="module">react-query</td>
+          <td class="location"><code>react-query.ts:1-9</code></td>
+          <td class="desc">
+            Global config sets <code>staleTime: 60_000</code> and <code>refetchOnWindowFocus: false</code> for ALL queries. License/courses/announcements data has different freshness needs. A user switching tabs and coming back doesn't see updated announcements; user-license data may be stale longer than wanted on critical paths.
+          </td>
+          <td class="fix">
+            Keep a sensible default but override per-query in <code>queryOptions</code>: announcements <code>staleTime: 0, refetchOnWindowFocus: true</code>; license/curriculum: longer <code>staleTime</code> as appropriate.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Storage</span></td>
+          <td class="module">i18n</code></td>
+          <td class="location"><code>i18n/config.ts:22-91</code></td>
+          <td class="desc">
+            Five separate <code>localStorage</code> keys (<code>supportedLanguages</code>, <code>languageNames</code>, <code>orgDefaultLanguage</code>, <code>preferredLanguage</code>, etc.) — non-atomic updates can leave the i18n state inconsistent if writes are interrupted. Also no quota-exceeded handling.
+          </td>
+          <td class="fix">
+            Consolidate into a single <code>i18n_config</code> JSON object stored under one key. Wrap reads/writes in try/catch for quota errors, fall back to defaults.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Concurrency</span></td>
+          <td class="module">stores</td>
+          <td class="location"><code>use-auth-store.ts:91-95</code></td>
+          <td class="desc">
+            <code>getAccessToken()</code> performs a side effect (<code>set({ ... })</code> when token is expired) inside a getter. Selectors that subscribe to <code>accessToken</code> will trigger an extra render cycle the moment a getter is called and detects expiry, even if no setter explicitly called.
+          </td>
+          <td class="fix">
+            Move the expiry-clear logic out of the getter into an explicit <code>checkExpiry()</code> action invoked at startup and on token-aware navigation. Getters should be pure reads.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">UX</span></td>
+          <td class="module">errors</td>
+          <td class="location"><code>error-fallback.tsx:127</code></td>
+          <td class="desc">
+            <code>console.error('Error caught:', errorDetails)</code> in the error fallback — but no <code>datadogRum.addError</code> integration, so user-facing errors don't make it to the observability pipeline unless the RUM SDK auto-captures the React error.
+          </td>
+          <td class="fix">
+            Add <code>datadogRum.addError(error, errorDetails)</code> in the fallback so React errors are correlated with the user's session in RUM, and tagged with route/license context.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Nice to Have -->
+<div class="section">
+  <div class="section-header">
+    <span class="dot green-dot"></span>
+    <h2>Nice to Have</h2>
+    <span class="count count-green">7 items</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Severity</th>
+          <th>Module</th>
+          <th>Location</th>
+          <th>Issue</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">course-socket</td>
+          <td class="location"><code>course-socket.ts:73-76</code></td>
+          <td class="desc">
+            <code>onerror = () =&gt; ws.close()</code> closes immediately, triggering <code>onclose</code> which schedules reconnect. Subtle. Worth a code comment: <em>// Errors don't auto-close in browsers; force close to enter the reconnect path</em>.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">course-info</td>
+          <td class="location"><code>course-info.tsx:39</code></td>
+          <td class="desc">
+            <code>if (globalThis.window === undefined)</code> SSR guard inside <code>sanitizeHtml</code> — but this is a Vite SPA (no SSR). The guard is dead code; the function never runs server-side.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">app/provider</td>
+          <td class="location"><code>provider.tsx:61</code></td>
+          <td class="desc">
+            <code>onReset={() =&gt; { window.location.href = '/'; }}</code> &mdash; full page reload on error reset. Loses React state, query cache, in-progress form data. Could use <code>navigate('/', { replace: true })</code> for a soft reset, falling back to hard reload only if state is corrupted.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">use-feature-flags</td>
+          <td class="location"><code>use-feature-flags.ts:15</code></td>
+          <td class="desc">
+            <code>console.warn</code> on type mismatch then silently returns fallback. If a flag is misconfigured, this is silent in prod (no Datadog signal). Mid-severity if the flag gates security/maintenance paths.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">router</td>
+          <td class="location"><code>router.tsx:32-72</code></td>
+          <td class="desc">
+            <code>errorElement: &lt;ErrorFallback /&gt;</code> repeated on every route. Once at the top level is enough &mdash; nested routes inherit parent error boundaries unless they need different handling. Cleanup opportunity.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">datadog</td>
+          <td class="location"><code>datadog/index.ts:24</code></td>
+          <td class="desc">
+            <code>defaultPrivacyLevel: 'mask-user-input'</code> &mdash; good baseline, but RUM still records URL paths (containing <code>licenseId</code> UUIDs in some routes). Consider adding <code>beforeSend</code> hook to strip license IDs from RUM events if they're considered PII-adjacent.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">course-socket</td>
+          <td class="location"><code>course-socket.ts:30</code></td>
+          <td class="desc">
+            <code>userId=${currentLicenseId}_0</code> &mdash; the <code>_0</code> suffix is unexplained. Add a comment or extract to a named constant.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Test Coverage -->
+<div class="section">
+  <div class="section-header">
+    <span class="dot blue-dot"></span>
+    <h2>Test Coverage</h2>
+    <span class="count count-blue">3 gaps</span>
+  </div>
+  <div class="coverage-grid">
+    <div class="coverage-box good">
+      <h3>Well Covered</h3>
+      <ul>
+        <li><code>features/auth</code> &mdash; exchange-token, types, mocks &mdash; comprehensive route + API test coverage</li>
+        <li><code>features/courses</code> &mdash; course-info, courses-view, credential-card all have tests; queries tested</li>
+        <li><code>features/maintenance</code> &mdash; maintenance gate + page tested across LD flag matrix</li>
+        <li><code>features/self-registration</code> &mdash; complex flow well-covered including form validation</li>
+        <li><code>app/routes</code> &mdash; loaders + clientLoader paths tested per route</li>
+        <li><code>lib/api-client</code> &mdash; refresh path, 401 retry, error normalisation tested</li>
+        <li><code>hooks</code> &mdash; <code>use-feature-flags</code>, <code>use-translation</code>, <code>use-maximize-window</code> &mdash; small surface, well-tested</li>
+        <li><code>i18n/config</code> &mdash; persistence and language resolution tested</li>
+      </ul>
+    </div>
+    <div class="coverage-box weak">
+      <h3>Missing / Thin</h3>
+      <ul>
+        <li><code>lib/course-socket.ts</code> &mdash; no unit tests for connect, reconnect, message handling, disconnect, or the leak/race conditions identified above; given this is a real-time feature, highest-priority coverage gap</li>
+        <li><code>lib/datadog</code> integration &mdash; init path, <code>allowedTracingUrls</code>, RUM action capture not exercised</li>
+        <li><code>components/errors/error-fallback</code> &mdash; the visual fallback is tested but the error-logging path (line 127) and reset-button behaviour are not</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>lp-ui &middot; 8 May 2026</footer>
+
+</body>
+</html>
