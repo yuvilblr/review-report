@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Code Review Report — rqillp-lp</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #f4f6f9;
+      color: #1a1d23;
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      color: #fff;
+      padding: 48px 40px 36px;
+    }
+    header .badge {
+      display: inline-block;
+      background: #334155;
+      color: #94a3b8;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 4px;
+      margin-bottom: 16px;
+    }
+    header h1 { font-size: 28px; font-weight: 700; margin-bottom: 6px; }
+    header p  { color: #94a3b8; font-size: 14px; }
+    header .meta { display: flex; gap: 24px; margin-top: 24px; flex-wrap: wrap; }
+    header .meta-item { display: flex; flex-direction: column; gap: 2px; }
+    header .meta-item .label { font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: .06em; }
+    header .meta-item .value { font-size: 14px; color: #e2e8f0; font-weight: 500; }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 16px;
+      padding: 32px 40px 0;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    .card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px 24px;
+      border-top: 4px solid transparent;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .card.red   { border-color: #ef4444; }
+    .card.amber { border-color: #f59e0b; }
+    .card.green { border-color: #22c55e; }
+    .card.blue  { border-color: #3b82f6; }
+    .card .num  { font-size: 36px; font-weight: 700; line-height: 1; margin-bottom: 4px; }
+    .card.red   .num { color: #ef4444; }
+    .card.amber .num { color: #f59e0b; }
+    .card.green .num { color: #22c55e; }
+    .card.blue  .num { color: #3b82f6; }
+    .card .lbl  { font-size: 13px; color: #64748b; font-weight: 500; }
+
+    .verdict { max-width: 1100px; margin: 24px auto 0; padding: 0 40px; }
+    .verdict-inner {
+      background: #fef3c7;
+      border: 1px solid #fcd34d;
+      border-radius: 10px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .verdict-inner .icon { font-size: 22px; }
+    .verdict-inner .text { font-size: 14px; color: #92400e; }
+    .verdict-inner .text strong { font-weight: 600; }
+
+    main {
+      max-width: 1100px;
+      margin: 32px auto 60px;
+      padding: 0 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .section { display: flex; flex-direction: column; gap: 12px; }
+    .section-header { display: flex; align-items: center; gap: 10px; }
+    .section-header .dot { width: 12px; height: 12px; border-radius: 50%; flex-shrink: 0; }
+    .section-header h2 { font-size: 16px; font-weight: 700; color: #1e293b; }
+    .section-header .count {
+      margin-left: auto;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    .red-dot   { background: #ef4444; }
+    .amber-dot { background: #f59e0b; }
+    .green-dot { background: #22c55e; }
+    .blue-dot  { background: #3b82f6; }
+
+    .count-red   { background: #fef2f2; color: #dc2626; }
+    .count-amber { background: #fffbeb; color: #d97706; }
+    .count-green { background: #f0fdf4; color: #16a34a; }
+    .count-blue  { background: #eff6ff; color: #2563eb; }
+
+    .table-wrap {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+      overflow: hidden;
+    }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    thead tr { background: #f8fafc; border-bottom: 1px solid #e2e8f0; }
+    thead th {
+      padding: 11px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: #64748b;
+      white-space: nowrap;
+    }
+    tbody tr { border-bottom: 1px solid #f1f5f9; transition: background .1s; }
+    tbody tr:last-child { border-bottom: none; }
+    tbody tr:hover { background: #f8fafc; }
+    tbody td { padding: 14px 16px; vertical-align: top; color: #334155; }
+
+    td.module { font-weight: 600; color: #1e293b; white-space: nowrap; }
+    td.location code {
+      font-family: 'SFMono-Regular', Consolas, monospace;
+      font-size: 11.5px;
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      color: #0f172a;
+      white-space: nowrap;
+    }
+    td.desc { max-width: 420px; line-height: 1.5; }
+    td.fix  { max-width: 300px; line-height: 1.5; color: #475569; }
+    td.fix code, td.desc code {
+      font-family: 'SFMono-Regular', Consolas, monospace;
+      font-size: 11px;
+      background: #f1f5f9;
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+
+    .sev-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 20px;
+      white-space: nowrap;
+    }
+    .sev-badge.red   { background: #fef2f2; color: #dc2626; }
+    .sev-badge.amber { background: #fffbeb; color: #d97706; }
+    .sev-badge.green { background: #f0fdf4; color: #16a34a; }
+    .sev-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .coverage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 640px) { .coverage-grid { grid-template-columns: 1fr; } }
+    .coverage-box {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px 24px;
+      box-shadow: 0 1px 4px rgba(0,0,0,.06);
+    }
+    .coverage-box h3 { font-size: 13px; font-weight: 600; margin-bottom: 12px; }
+    .coverage-box.good h3 { color: #16a34a; }
+    .coverage-box.weak h3 { color: #d97706; }
+    .coverage-box ul { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .coverage-box li {
+      font-size: 13px;
+      color: #475569;
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+    .coverage-box li::before { flex-shrink: 0; margin-top: 2px; }
+    .coverage-box.good li::before { content: '\2713'; color: #16a34a; font-weight: 700; }
+    .coverage-box.weak li::before { content: '\25CB'; color: #d97706; font-weight: 700; }
+    .coverage-box li code {
+      font-family: 'SFMono-Regular', Consolas, monospace;
+      font-size: 11px;
+      background: #f1f5f9;
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+
+    footer { text-align: center; padding: 24px; font-size: 12px; color: #94a3b8; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="badge">Code Review</div>
+  <h1>rqillp-lp &mdash; Full Codebase Review</h1>
+  <p>Review across all feature modules, integrations, repositories, and shared utilities</p>
+  <div class="meta">
+    <div class="meta-item">
+      <span class="label">Project</span>
+      <span class="value">rqillp-lp (Learner Portal API)</span>
+    </div>
+    <div class="meta-item">
+      <span class="label">Branch</span>
+      <span class="value">feature/maintainance-mode</span>
+    </div>
+    <div class="meta-item">
+      <span class="label">Date</span>
+      <span class="value">8 May 2026</span>
+    </div>
+    <div class="meta-item">
+      <span class="label">Scope</span>
+      <span class="value">Entire codebase (committed + recent feature branches)</span>
+    </div>
+  </div>
+</header>
+
+<!-- Summary cards -->
+<div class="summary">
+  <div class="card red">
+    <div class="num">4</div>
+    <div class="lbl">Must Fix</div>
+  </div>
+  <div class="card amber">
+    <div class="num">10</div>
+    <div class="lbl">Should Fix</div>
+  </div>
+  <div class="card green">
+    <div class="num">8</div>
+    <div class="lbl">Nice to Have</div>
+  </div>
+  <div class="card blue">
+    <div class="num">5</div>
+    <div class="lbl">Test Gaps</div>
+  </div>
+</div>
+
+<div class="verdict">
+  <div class="verdict-inner">
+    <span class="icon">&#9888;</span>
+    <span class="text"><strong>Verdict: Needs changes before next release.</strong> Codebase is structurally healthy and well-tested overall, but four issues — a WebSocket listener leak, a singleton-logger context bug, a userId/uniqueId conflation that can send wrong data to CS API, and a fail-soft pattern that makes CS errors invisible to monitoring — should be fixed before merging this branch to <code>release/0.1.0</code>.</span>
+  </div>
+</div>
+
+<main>
+
+<!-- Must Fix -->
+<div class="section">
+  <div class="section-header">
+    <span class="dot red-dot"></span>
+    <h2>Must Fix</h2>
+    <span class="count count-red">4 issues</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Severity</th>
+          <th>Module</th>
+          <th>Location</th>
+          <th>Issue</th>
+          <th>Suggested Fix</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="sev-badge red">Critical</span></td>
+          <td class="module">websocket</td>
+          <td class="location"><code>aws-websocket-client.ts:51-85</code></td>
+          <td class="desc">
+            <code>connectToAWS()</code> is called on every reconnect, creating a new <code>WebSocket</code> and attaching three listeners (<code>open</code>, <code>close</code>, <code>error</code>) without removing them from the previous instance. The old WS sticks around long enough for its <code>close_A</code> handler to fire after <code>this.ws = wsB</code>, where it mutates shared state (<code>reconnectAttempts</code>, <code>reconnectTimer</code>) and the <code>error_A</code> handler closes the wrong socket via <code>this.ws.close()</code>. Causes cascading reconnects and orphaned socket allocations.
+          </td>
+          <td class="fix">
+            At the top of <code>connectToAWS()</code>, call <code>this.ws.removeAllListeners()</code> and close the old socket if still open/connecting before creating a new one. Also clear <code>this.reconnectTimer</code> to prevent the race where <code>sendToAWS()</code> initiates a connect while a backoff timer is still pending.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge red">Critical</span></td>
+          <td class="module">logger</td>
+          <td class="location"><code>logger.service.ts:80-91</code></td>
+          <td class="desc">
+            <code>AppLogger</code> is <code>@Injectable()</code> with default singleton scope. <code>setContext()</code> mutates a shared <code>this.context</code> field, so every controller/service that calls <code>setContext(MyClass.name)</code> overwrites the previous value. The last constructor to run wins, and every subsequent log line — across <em>all</em> services — is stamped with that context. Confirmed with the <code>GET /maintenance/access</code> log line showing <code>context: "LicenseController"</code>.
+          </td>
+          <td class="fix">
+            Mark <code>AppLogger</code> as <code>Scope.TRANSIENT</code> so each consumer gets its own instance. One-line change: <code>@Injectable({ scope: Scope.TRANSIENT })</code>. No call-site updates required.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge red">Critical</span></td>
+          <td class="module">dispatch</td>
+          <td class="location"><code>dispatch.service.ts:725-729</code></td>
+          <td class="desc">
+            In the existing-user flow, <code>userId</code> is resolved as <code>tokenPayload.userId ?? tokenPayload.uniqueId ?? null</code>. <code>uniqueId</code> is the unauthenticated identifier used in self-registration (typically an email). If a token is missing <code>userId</code> but has <code>uniqueId</code>, the email is sent as the <code>userId</code> header to the CS API — wrong data, possibly failing CS validation.
+          </td>
+          <td class="fix">
+            Drop the fallback. Existing-user tokens always carry <code>userId</code> after launch — if they don't, that's a contract violation, not data to coerce. Use <code>userId: tokenPayload.userId ?? null</code> and let the downstream null check return <code>incomplete</code>.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge red">Critical</span></td>
+          <td class="module">dispatch</td>
+          <td class="location"><code>dispatch.service.ts:776-781</code></td>
+          <td class="desc">
+            Any non-5xx error from the CS API or the DB silently maps to <code>{ courseStatus: 'incomplete' }</code> with HTTP 200. Datadog parent span stays green, the only signal is a <code>warn</code>-level log line that most alerting pipelines ignore. A user who actually completed the course gets reported as incomplete during transient failures — silent data corruption, invisible to monitoring.
+          </td>
+          <td class="fix">
+            Bump the log to <code>error</code> level so log-based monitors fire. Tag the active dd-trace span as errored: <code>tracer.scope().active()?.setTag('error', true)</code>. Optionally distinguish 4xx-not-found (legit incomplete) from 4xx-auth/timeout (real failure) and propagate the latter as 5xx.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Security -->
+<div class="section">
+  <div class="section-header">
+    <span class="dot red-dot"></span>
+    <h2>Security Findings</h2>
+    <span class="count count-red">2 issues</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Severity</th>
+          <th>Module</th>
+          <th>Location</th>
+          <th>Issue</th>
+          <th>Suggested Fix</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="sev-badge red">Security</span></td>
+          <td class="module">main</td>
+          <td class="location"><code>main.ts:27</code></td>
+          <td class="desc">
+            <code>expressApp.set('trust proxy', true)</code> trusts <em>any</em> upstream and accepts <code>X-Forwarded-For</code> from direct clients. <code>req.ip</code> is therefore spoofable, which can let an attacker forge a VPN-allowlisted IP to bypass the maintenance-mode VPN check, and to evade per-IP rate limits by rotating forged IPs. Compare with <code>core-cdp-api</code>'s <code>TrustProxies.php</code> which lists explicit cluster CIDRs.
+          </td>
+          <td class="fix">
+            Switch to env-specific CIDR allowlists matching the K8s cluster networks (e.g. <code>['10.10.0.0/16', '10.100.0.0/16', ...]</code>). At minimum, set <code>'trust proxy', 1</code> if the ingress is the only proxy hop. Acknowledged as deferred by team — track as a hardening task.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge red">Security</span></td>
+          <td class="module">throttler</td>
+          <td class="location"><code>.env.example:76</code> &mdash; <code>app.module.ts:42-56</code></td>
+          <td class="desc">
+            <code>THROTTLE_ENABLED=false</code> in the example env disables the global rate limiter via <code>skipIf</code>. If prod env vars inherit the example default and don't explicitly set <code>true</code>, the API is unprotected from per-IP request floods (including auth flooding on <code>/auth/tokens</code> which does bcrypt 12-rounds).
+          </td>
+          <td class="fix">
+            Verify deployed environments set <code>THROTTLE_ENABLED=true</code>. Consider flipping the default to <code>true</code> and require explicit opt-out for local dev. Add a tighter named throttler for auth routes (e.g. 30/min/IP) to protect against credential stuffing on bcrypt-bound endpoints.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Should Fix -->
+<div class="section">
+  <div class="section-header">
+    <span class="dot amber-dot"></span>
+    <h2>Should Fix</h2>
+    <span class="count count-amber">10 issues</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Severity</th>
+          <th>Module</th>
+          <th>Location</th>
+          <th>Issue</th>
+          <th>Suggested Fix</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="sev-badge amber">Performance</span></td>
+          <td class="module">axios</td>
+          <td class="location"><code>axios.service.ts:9</code></td>
+          <td class="desc">
+            <code>axios.create({ timeout: 30000 })</code> uses default HTTP/HTTPS agents with no <code>keepAlive</code>. Every outbound call to RQI/CS/MS opens a fresh TCP+TLS connection (~50&ndash;100ms wasted per call), and sockets pile up in <code>TIME_WAIT</code> &mdash; on a busy pod, ephemeral ports can exhaust.
+          </td>
+          <td class="fix">
+            Add <code>httpAgent: new HttpAgent({ keepAlive: true, maxSockets: 50 })</code> and the equivalent <code>httpsAgent</code>. Reuses connections and dramatically reduces socket churn.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Lifecycle</span></td>
+          <td class="module">cache</td>
+          <td class="location"><code>cache.module.ts</code></td>
+          <td class="desc">
+            <code>CacheModule</code> creates a <code>ioredis</code> client via <code>useFactory</code> but has no <code>onModuleDestroy</code> to call <code>client.quit()</code>. On SIGTERM, the Redis socket lingers until the process exits — K8s may force-kill the pod past the grace period, and any in-flight pipelines aren't drained cleanly.
+          </td>
+          <td class="fix">
+            Add a small <code>@Injectable() ValkeyDisposer implements OnModuleDestroy</code> provider that injects <code>'VALKEY_CLIENT'</code> and calls <code>await client.quit()</code> in <code>onModuleDestroy</code>.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Correctness</span></td>
+          <td class="module">announcements</td>
+          <td class="location"><code>announcements.controller.ts:25-32</code></td>
+          <td class="desc">
+            Endpoint takes <code>@CurrentUser() user: JwtUserPayload</code> but only uses <code>user.userId</code> for a log line. The actual response is identical for every authenticated user — globally fetched announcements filtered to <code>student</code> role + LMS org type 102. Cache key is global. Docstring claims "active announcements <strong>for the authenticated user</strong>" which is misleading.
+          </td>
+          <td class="fix">
+            Confirm with stakeholders whether org-scoped filtering is intended. If yes, include <code>user.organizationId</code> in cache key and read-time filter. If not, drop <code>@CurrentUser()</code> and fix the docstring to describe the IP/role-only behavior.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Resilience</span></td>
+          <td class="module">announcements</td>
+          <td class="location"><code>announcements.service.ts:383</code></td>
+          <td class="desc">
+            <code>fetchAnnouncementsWithLimitedRetry</code> uses a bare <code>setTimeout</code> for backoff — not stored in <code>this.retryTimeoutId</code>, so it can't be cancelled on shutdown. Inconsistent with <code>fetchAnnouncementsWithRetry</code> which does register the timeout. In-flight user-facing requests block module destruction for up to ~7s on shutdown.
+          </td>
+          <td class="fix">
+            Store the timeout in <code>this.retryTimeoutId</code>, clear it in <code>onModuleDestroy</code>, and check <code>this.isShuttingDown</code> after each await — same pattern already used by the background job retry.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Resilience</span></td>
+          <td class="module">license</td>
+          <td class="location"><code>license.service.ts:372</code></td>
+          <td class="desc">
+            Same pattern: <code>await new Promise((resolve) => setTimeout(resolve, 500 * attempt))</code> inside a CS PUT retry loop. Bare <code>setTimeout</code>, unstoppable on shutdown. Up to ~7.5s of hang per in-flight request during graceful shutdown.
+          </td>
+          <td class="fix">
+            Wrap with cancellation token similar to <code>announcements.service.ts</code> pattern, or accept the short delay as bounded and document it.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Correctness</span></td>
+          <td class="module">dispatch</td>
+          <td class="location"><code>dispatch.service.ts:760</code></td>
+          <td class="desc">
+            <code>const cacheKey = `course-status:${licenseId}`;</code> &mdash; cache key omits <code>userId</code>. Today licenses are user-scoped so this is safe, but any future flow that shares licenses across users (proxy launches, vendor pooling) would leak completion status between users.
+          </td>
+          <td class="fix">
+            Include <code>userId</code> in the key for defensive isolation: <code>course-status:${licenseId}:${userId}</code>.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Brittleness</span></td>
+          <td class="module">announcements</td>
+          <td class="location"><code>announcements.service.ts:441</code></td>
+          <td class="desc">
+            <code>org_type.id === 102</code> — magic number for "learner" org type. If RQI seeds change between envs (different IDs in dev vs prod) or RQI changes the ID, this filter silently returns 0 announcements with no error.
+          </td>
+          <td class="fix">
+            Match by <code>org_type.code</code> or <code>org_type.name</code> (string), or move the ID to env config (e.g. <code>RQI_LMS_ORG_TYPE_ID</code>) so it can be tuned per environment without redeploy.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Brittleness</span></td>
+          <td class="module">announcements</td>
+          <td class="location"><code>announcements.service.ts:103-117</code></td>
+          <td class="desc">
+            <code>new Date(announcement.starts_at.replace(' ', 'T') + 'Z')</code> appends <code>Z</code> regardless of what RQI sends. If RQI starts including offsets (<code>2026-05-04 12:00:00+05:30</code>), this produces an invalid date string and silently filters out all announcements.
+          </td>
+          <td class="fix">
+            Validate the input shape with a regex first. If the format changes, fail loudly with an error log rather than silently dropping data.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Inefficiency</span></td>
+          <td class="module">content-service</td>
+          <td class="location"><code>content.service.ts:218</code></td>
+          <td class="desc">
+            <code>tcId = this.configService.get&lt;string&gt;('app.csToolConsumerGuid')</code> is re-read from config on every <code>fetchCourseStatusFromCsApi</code> call. The constructor at line 41 already validates it exists. Wasted lookups, and TS type is <code>string | undefined</code> which leaks into the headers object.
+          </td>
+          <td class="fix">
+            Store as a private field <code>this.csToolConsumerGuid: string</code> set in the constructor — same pattern as <code>this.csApiCompletionStatusUrl</code> already uses.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Type Safety</span></td>
+          <td class="module">auth</td>
+          <td class="location"><code>auth.service.ts:382-388</code></td>
+          <td class="desc">
+            Proxy refresh path uses <code>const tokenPayload: any = { ... }</code> and conditionally adds <code>source</code>/<code>proxiedBy</code>. Same pattern repeats for <code>meta: any</code>. Loses TS coverage on a security-relevant field (proxy provenance) — a typo or wrong property name would compile silently.
+          </td>
+          <td class="fix">
+            Use a discriminated union or extend <code>UserAuthTokenPayload</code> with optional <code>source?</code>/<code>proxiedBy?</code> fields, then build the object with proper types.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Nice to Have -->
+<div class="section">
+  <div class="section-header">
+    <span class="dot green-dot"></span>
+    <h2>Nice to Have</h2>
+    <span class="count count-green">8 items</span>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Severity</th>
+          <th>Module</th>
+          <th>Location</th>
+          <th>Issue</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">logger</td>
+          <td class="location"><code>logger.service.ts:59-60</code></td>
+          <td class="desc">
+            <code>process.env.LOG_LEVEL</code> and <code>process.env.NODE_ENV</code> read directly. Project convention is to use <code>configService.get&lt;T&gt;('namespace.key')</code>. Mild — these are bootstrap-time reads, not in service code paths.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">license / proxy</td>
+          <td class="location"><code>proxy-launch.dto.ts:20</code></td>
+          <td class="desc">
+            <code>@IsIn(['admin-portal'])</code> on <code>provider</code>. Fine today (only admin-portal uses this endpoint), but other providers like <code>lp-console</code>/<code>console</code> exist in test fixtures. Add a TODO comment so the next dev knows this is a deliberate allow-list, not an oversight.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">announcements</td>
+          <td class="location"><code>cache.constants.ts</code></td>
+          <td class="desc">
+            <code>MAX_ANNOUNCEMENTS = 2</code> is a constant but the value is also hardcoded in JSDoc and PR description. If the limit changes, three places to update.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">announcements</td>
+          <td class="location"><code>announcements.service.ts:434-465</code></td>
+          <td class="desc">
+            <code>filterAnnouncementsByStudentRole</code> emits <code>logger.debug</code> per announcement. With 100 cached announcements, that's 100 debug lines per request. Default log level masks these in prod, but if debug is enabled for troubleshooting, the output floods.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">dispatch</td>
+          <td class="location"><code>dispatch.service.ts</code></td>
+          <td class="desc">
+            Logger format inconsistency: <code>org=${orgId}, course=${courseId}</code> in some logs, <code>orgId=..., courseId=...</code> in others. Makes Datadog grepping harder.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">announcements</td>
+          <td class="location"><code>announcements.service.ts:225</code></td>
+          <td class="desc">
+            Cache key contains spaces and full timestamps: <code>announcements:active:2026-05-08 00:00:00:2026-05-08 23:59:59</code>. Functional, but cleaner as <code>announcements:active:2026-05-08</code> since fromDate/toDate always span the same UTC day.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">content-service</td>
+          <td class="location"><code>content.service.ts:39-43</code></td>
+          <td class="desc">
+            Multiple sequential <code>if</code> constructor checks. Could be a single validation block listing all required configs at once for cleaner failure messages.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">announcements</td>
+          <td class="location"><code>announcements.service.ts:145</code></td>
+          <td class="desc">
+            <code>cacheService.set</code> caches even empty arrays for 30 minutes. A transient RQI bug returning 0 results suppresses banners for the full TTL. Intentional per recent commit, but worth a code comment explaining the trade-off.
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Test Coverage -->
+<div class="section">
+  <div class="section-header">
+    <span class="dot blue-dot"></span>
+    <h2>Test Coverage</h2>
+    <span class="count count-blue">5 gaps</span>
+  </div>
+  <div class="coverage-grid">
+    <div class="coverage-box good">
+      <h3>Well Covered</h3>
+      <ul>
+        <li><code>announcements.service.ts</code> &mdash; comprehensive specs added in PR #122 covering retry, cache, filter, sort, shutdown</li>
+        <li><code>maintenance.guard.ts</code> &mdash; covers skip-decorator, LD off, allow-VPN matrix</li>
+        <li><code>auth.service.ts</code> &mdash; including proxy refresh and exchangeExternalServiceToken paths</li>
+        <li><code>dispatch.service.ts</code> &mdash; validateVendor/Product/User and getCourseStatus refactor</li>
+        <li><code>external-auth.service.ts</code> &mdash; cached path including <code>{ token, expiresAt }</code> shape</li>
+        <li><code>content.service.ts</code> &mdash; <code>fetchCourseStatusFromCsApi</code> happy + error paths</li>
+        <li><code>cache.service.ts</code>, <code>app-auth.service.ts</code>, <code>token.service.ts</code> &mdash; thorough unit coverage</li>
+        <li><code>trace.interceptor.ts</code> &mdash; trace ID extraction and proxy-source enrichment</li>
+      </ul>
+    </div>
+    <div class="coverage-box weak">
+      <h3>Missing / Thin</h3>
+      <ul>
+        <li><code>aws-websocket-client.ts</code> &mdash; no unit tests for reconnect, listener cleanup, or sendToAWS race; given the leak findings above, this is the highest-priority gap</li>
+        <li><code>certificates.service.ts</code> &mdash; no tests for <code>sendCertificateMail</code>, complex method with multiple failure modes (template rendering, email sending, MS-gateway calls)</li>
+        <li><code>license.service.ts</code> &mdash; CS PUT retry loop (line 372) and <code>handleLicenseDeletion</code> error paths thinly covered</li>
+        <li><code>registration.controller.ts</code> &mdash; business logic in controller harder to test in isolation; no unit tests for registration flow error paths</li>
+        <li><code>lis-completion.service.ts</code> &mdash; <code>triggerPostCompletionActions</code> failure paths not covered</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>rqillp-lp &middot; 8 May 2026</footer>
+
+</body>
+</html>
