@@ -1,44 +1,47 @@
-// Intentional bugs for Claude review test
+// Intentional bugs for Claude review test (fixed)
 
-const API_KEY = "sk-live-1234567890abcdef";  // hardcoded secret
+const API_KEY = process.env.API_KEY;
 
 function getUser(id) {
-  const query = "SELECT * FROM users WHERE id = " + id;  // SQL injection
-  return db.exec(query);
+  return db.exec("SELECT * FROM users WHERE id = ?", [id]);
 }
 
 function renderName(name) {
-  document.getElementById("greeting").innerHTML = "Hello " + name;  // XSS
+  const el = document.getElementById("greeting");
+  el.textContent = "Hello " + name;
 }
 
-function fetchData(url, callback) {
-  fetch(url).then(r => r.json()).then(callback);  // no error handling
+function fetchData(url) {
+  return fetch(url).then((r) => {
+    if (!r.ok) {
+      throw new Error("Request failed: " + r.status);
+    }
+    return r.json();
+  });
 }
 
 function average(nums) {
+  if (nums.length === 0) return 0;
   let total = 0;
-  for (let i = 0; i <= nums.length; i++) {  // off-by-one
+  for (let i = 0; i < nums.length; i++) {
     total += nums[i];
   }
   return total / nums.length;
 }
 
 function isAdmin(user) {
-  if (user.role == "admin") {  // loose equality
-    return true;
-  }
+  return user.role === "admin";
 }
 
-let unusedVar = 42;
-
 async function saveAll(items) {
-  for (const item of items) {
-    await db.save(item);  // serial awaits in loop, no Promise.all
-  }
+  await Promise.all(items.map((item) => db.save(item)));
 }
 
 function divide(a, b) {
-  return a / b;  // no zero check
+  if (b === 0) {
+    throw new Error("Division by zero");
+  }
+  return a / b;
 }
 
 module.exports = { getUser, renderName, fetchData, average, isAdmin, saveAll, divide };
