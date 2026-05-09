@@ -3,24 +3,15 @@ name: Claude Code Review
 on:
   pull_request:
     types: [opened, synchronize, ready_for_review, reopened]
-    # Optional: Only run on specific file changes
-    # paths:
-    #   - "src/**/*.ts"
-    #   - "src/**/*.tsx"
-    #   - "src/**/*.js"
-    #   - "src/**/*.jsx"
 
 jobs:
   claude-review:
-    # Optional: Filter by PR author
-    # if: |
-    #   github.event.pull_request.user.login == 'external-contributor' ||
-    #   github.event.pull_request.user.login == 'new-developer' ||
-    #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
+    # Skip on Claude-authored fix branches to prevent recursion.
+    if: ${{ !startsWith(github.event.pull_request.head.ref, 'claude/') }}
 
     runs-on: ubuntu-latest
     permissions:
-      contents: read
+      contents: write
       pull-requests: write
       issues: write
       id-token: write
@@ -29,7 +20,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.ref }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
 
       - name: Run Claude Code Review
         id: claude-review
@@ -39,46 +32,89 @@ jobs:
           prompt: |
             REPO: ${{ github.repository }}
             PR_NUMBER: ${{ github.event.pull_request.number }}
+            PR_HEAD_BRANCH: ${{ github.event.pull_request.head.ref }}
+            PR_HEAD_SHA: ${{ github.event.pull_request.head.sha }}
 
-            Review the changes in this pull request. Focus on bugs, security
-            (injection, XSS, secrets, auth), performance, error handling, and
-            code quality.
+            You are reviewing a pull request and (when applicable) producing a
+            follow-up "fix PR" with the corrections. Work in two phases.
 
-            Post your review as a SINGLE GitHub PR review with INLINE comments
-            anchored to specific file/line positions. Steps:
+            ## Phase 1 — Review
 
-            1. Get the PR head commit SHA:
-               gh pr view $PR_NUMBER --repo $REPO --json headRefOid -q .headRefOid
+            Post a SINGLE GitHub PR review with INLINE comments anchored to
+            specific file/line positions. Focus on bugs, security (injection,
+            XSS, secrets, auth), performance, error handling, and code quality.
 
-            2. Read the PR diff so you know which lines are addressable:
-               gh pr diff $PR_NUMBER --repo $REPO
+            Steps:
+
+            1. Read the PR diff so you know which lines are addressable:
+                 gh pr diff $PR_NUMBER --repo $REPO
                Each inline comment must reference a path + line that appears on
                the RIGHT side (added/modified) of the diff. Drop any finding
-               whose line isn't in the diff.
+               whose line is not in the diff.
 
-            3. Write the review payload to /tmp/review.json. Schema:
-               {
-                 "commit_id": "<HEAD_SHA>",
-                 "event": "REQUEST_CHANGES",   // or "COMMENT" or "APPROVE"
-                 "body": "<one-paragraph overall verdict>",
-                 "comments": [
-                   {"path": "buggy.js", "line": 3, "side": "RIGHT",
-                    "body": "Hardcoded secret committed to source..."},
-                   ...
-                 ]
-               }
-               Use APPROVE if the PR looks fine, REQUEST_CHANGES for serious
-               issues, otherwise COMMENT.
+            2. Write the review payload to /tmp/review.json. Schema:
+                 {
+                   "commit_id": "$PR_HEAD_SHA",
+                   "event": "REQUEST_CHANGES",   // or "COMMENT" or "APPROVE"
+                   "body": "<one-paragraph overall verdict>",
+                   "comments": [
+                     {"path": "<file>", "line": <n>, "side": "RIGHT",
+                      "body": "<finding>"}
+                   ]
+                 }
+               APPROVE if the PR looks fine, REQUEST_CHANGES for serious issues,
+               otherwise COMMENT.
 
-            4. Submit the review:
-               gh api -X POST \
-                 /repos/$REPO/pulls/$PR_NUMBER/reviews \
-                 --input /tmp/review.json
+            3. Submit:
+                 gh api -X POST /repos/$REPO/pulls/$PR_NUMBER/reviews \
+                   --input /tmp/review.json
 
-            Submit exactly one review. Do not also leave a top-level issue
-            comment.
+            ## Phase 2 — Fix PR (only if Phase 1 emitted REQUEST_CHANGES or
+            ##                   COMMENT with at least one fixable inline comment)
+
+            Skip Phase 2 entirely if the review was APPROVE, if there are no
+            fixable issues, or if a fix PR is already open for this PR (search
+            for it before creating one — see step 1).
+
+            1. Check for an existing open fix PR targeting this branch:
+                 gh pr list --repo $REPO --base $PR_HEAD_BRANCH \
+                   --state open --json number,title,headRefName
+               If one already exists with head ref starting with
+               "claude/fix-pr-$PR_NUMBER-", skip Phase 2.
+
+            2. Configure git identity and create a fix branch off the PR head:
+                 git config user.name "claude[bot]"
+                 git config user.email "41898282+claude[bot]@users.noreply.github.com"
+                 FIX_BRANCH="claude/fix-pr-$PR_NUMBER-$(date +%s)"
+                 git checkout -b "$FIX_BRANCH"
+
+            3. Apply fixes using the Edit/Write tools. Address only the issues
+               you flagged in Phase 1. Do NOT introduce unrelated refactors or
+               style changes.
+
+            4. Commit and push:
+                 git add -A
+                 git commit -m "Fix issues flagged in PR #$PR_NUMBER review"
+                 git push origin "$FIX_BRANCH"
+
+            5. Open a PR targeting the original PR's branch, listing the
+               specific fixes in the body:
+                 gh pr create --repo $REPO \
+                   --base "$PR_HEAD_BRANCH" \
+                   --head "$FIX_BRANCH" \
+                   --title "Fix issues flagged in PR #$PR_NUMBER" \
+                   --body "$(cat <<'BODY'
+            Automated fixes for issues flagged in the review of #$PR_NUMBER.
+
+            ## Fixes
+            - file:line — what changed and why
+            - file:line — what changed and why
+
+            Generated by the Claude Code Review workflow.
+            BODY
+            )"
+
+            Submit exactly one review and at most one fix PR per workflow run.
           claude_args: |
-            --max-turns 30
-            --allowedTools "Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh api:*),Bash(git diff:*),Bash(git log:*),Bash(cat:*),Read,Write,Grep,Glob"
-
-
+            --max-turns 60
+            --allowedTools "Bash(gh pr view:*),Bash(gh pr diff:*),Bash(gh pr list:*),Bash(gh pr create:*),Bash(gh api:*),Bash(git diff:*),Bash(git log:*),Bash(git checkout:*),Bash(git add:*),Bash(git commit:*),Bash(git push:*),Bash(git config:*),Bash(git status:*),Bash(date:*),Bash(cat:*),Read,Write,Edit,Grep,Glob"
