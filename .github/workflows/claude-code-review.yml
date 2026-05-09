@@ -40,18 +40,30 @@ jobs:
             REPO: ${{ github.repository }}
             PR NUMBER: ${{ github.event.pull_request.number }}
 
-            Review the changes in this pull request. Focus on:
-            - Bugs and correctness issues
-            - Security vulnerabilities (injection, XSS, secrets, auth)
-            - Performance problems
-            - Error handling gaps
-            - Code quality and maintainability
+            Review the changes in this pull request. Focus on bugs, security
+            issues (injection, XSS, secrets, auth), performance, error handling,
+            and code quality.
 
-            Post ONE pull request comment summarizing your findings. Use markdown
-            with a short overall verdict followed by a bulleted list of specific
-            issues. For each issue, include the file path and line number. If the
-            PR looks fine, say so explicitly.
+            When you are done analyzing, post your review as a single PR comment
+            using the gh CLI. Use a heredoc so newlines and markdown render
+            correctly:
+
+              gh pr comment ${{ github.event.pull_request.number }} \
+                --repo ${{ github.repository }} \
+                --body "$(cat <<'MSG'
+              ## Claude review
+
+              <your overall verdict>
+
+              - file:line — issue description
+              - file:line — issue description
+              MSG
+              )"
+
+            If the PR looks fine, post a comment that says so. Always post
+            exactly one comment.
           claude_args: |
-            --max-turns 15
+            --max-turns 25
+            --allowedTools "Bash(gh pr comment:*),Bash(gh pr view:*),Bash(gh pr diff:*),Bash(git diff:*),Bash(git log:*),Read,Grep,Glob"
 
 
