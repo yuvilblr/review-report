@@ -36,10 +36,22 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          plugin_marketplaces: 'https://github.com/anthropics/claude-code.git'
-          plugins: 'code-review@claude-code-plugins'
-          prompt: '/code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }}'
-          # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
-          # or https://code.claude.com/docs/en/cli-reference for available options
+          prompt: |
+            REPO: ${{ github.repository }}
+            PR NUMBER: ${{ github.event.pull_request.number }}
+
+            Review the changes in this pull request. Focus on:
+            - Bugs and correctness issues
+            - Security vulnerabilities (injection, XSS, secrets, auth)
+            - Performance problems
+            - Error handling gaps
+            - Code quality and maintainability
+
+            Post ONE pull request comment summarizing your findings. Use markdown
+            with a short overall verdict followed by a bulleted list of specific
+            issues. For each issue, include the file path and line number. If the
+            PR looks fine, say so explicitly.
+          claude_args: |
+            --max-turns 15
 
 
