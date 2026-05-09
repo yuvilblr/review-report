@@ -1,6 +1,6 @@
 // Intentional bugs for Claude review test (fixed)
 
-const API_KEY = process.env.API_KEY;
+const db = require("./db");
 
 function getUser(id) {
   return db.exec("SELECT * FROM users WHERE id = ?", [id]);
@@ -8,6 +8,7 @@ function getUser(id) {
 
 function renderName(name) {
   const el = document.getElementById("greeting");
+  if (!el) return;
   el.textContent = "Hello " + name;
 }
 
@@ -30,7 +31,7 @@ function average(nums) {
 }
 
 function isAdmin(user) {
-  return user.role === "admin";
+  return Boolean(user) && user.role === "admin";
 }
 
 async function saveAll(items) {
