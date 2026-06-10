@@ -53,7 +53,9 @@ jobs:
             --service rqillp-lp \
             --env rqillp-lp-preprod-eu \
             --output error-dashboard.html \
-            --teams-card teams-card.json
+            --teams-card teams-card.json \
+            --rum-app-id 3d458308-e843-489f-be05-7a1a38523e5a \
+            --rum-env preprod-eulaerdallearning
           code=$?
           set -e
           if [ "$code" -eq 0 ]; then
