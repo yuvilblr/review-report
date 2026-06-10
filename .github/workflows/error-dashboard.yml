@@ -52,7 +52,8 @@ jobs:
             --window 1d \
             --service rqillp-lp \
             --env rqillp-lp-preprod-eu \
-            --output error-dashboard.html
+            --output error-dashboard.html \
+            --teams-card teams-card.json
           code=$?
           set -e
           if [ "$code" -eq 0 ]; then
@@ -84,3 +85,24 @@ jobs:
             git commit -m "chore: daily error dashboard ($(date -u +%Y-%m-%d))"
             git push
           fi
+
+      - name: Notify Teams
+        if: success()
+        env:
+          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+        run: |
+          # Skip cleanly if the secret isn't configured yet, so the run still passes.
+          if [ -z "$TEAMS_WEBHOOK_URL" ]; then
+            echo "TEAMS_WEBHOOK_URL secret not set; skipping Teams notification."
+            exit 0
+          fi
+          # No card file means no events this run (generator exit 3) — nothing to announce.
+          if [ ! -f teams-card.json ]; then
+            echo "No teams-card.json produced (e.g. no events); skipping Teams notification."
+            exit 0
+          fi
+          echo "Posting summary card to Teams..."
+          curl -sS -X POST "$TEAMS_WEBHOOK_URL" \
+            -H 'Content-Type: application/json' \
+            -w '\nHTTP %{http_code}\n' \
+            --data @teams-card.json
