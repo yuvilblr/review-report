@@ -660,7 +660,106 @@ def render_slow_apis_table(slow_apis):
     </script>'''
 
 
-def render_html(matched, unmatched, slow_apis, meta):
+# ----------------------------------------------------------------------------
+# RUM (frontend) errors
+# ----------------------------------------------------------------------------
+
+def fetch_rum_errors(site, api_key, app_key, app_id, rum_env, from_, to_, max_pages=20):
+    """Fetch RUM error events for an application (+ optional env), paginated."""
+    query = f'@application.id:{app_id} @type:error'
+    if rum_env:
+        query += f' env:{rum_env}'
+    all_events, cursor = [], None
+    for _ in range(max_pages):
+        page = {'limit': 1000}
+        if cursor:
+            page['cursor'] = cursor
+        payload = {'filter': {'query': query, 'from': from_, 'to': to_},
+                   'page': page, 'sort': '-timestamp'}
+        d = dd_post(site, '/api/v2/rum/events/search', payload, api_key, app_key)
+        if not d:
+            break
+        events = d.get('data', [])
+        all_events.extend(events)
+        cursor = d.get('meta', {}).get('page', {}).get('after')
+        if not cursor or len(events) < 1000:
+            break
+    return all_events
+
+
+def _norm_rum_msg(msg):
+    """Collapse a RUM error message to a stable single-line key for grouping."""
+    if not msg:
+        return '(no message)'
+    line = re.sub(r'\s+', ' ', msg.strip().splitlines()[0])
+    return line[:160] or '(no message)'
+
+
+def aggregate_rum(events):
+    """Group RUM error events by normalized message; also break down by source/page."""
+    groups, by_source, views = {}, Counter(), Counter()
+    for e in events:
+        a = e.get('attributes', {})
+        nested = a.get('attributes', {}) or {}
+        err = nested.get('error', {}) if isinstance(nested.get('error'), dict) else {}
+        view = nested.get('view', {}) if isinstance(nested.get('view'), dict) else {}
+        msg = err.get('message') or ''
+        source = err.get('source') or 'unknown'
+        url = view.get('url') or ''
+        key = _norm_rum_msg(msg)
+        g = groups.setdefault(key, {'message': key, 'source': source, 'count': 0, 'urls': Counter()})
+        g['count'] += 1
+        if url:
+            g['urls'][url] += 1
+            views[url] += 1
+        by_source[source] += 1
+    rows = sorted(groups.values(), key=lambda x: -x['count'])
+    return {'total': len(events), 'distinct': len(groups),
+            'by_source': dict(by_source), 'top_views': views.most_common(10), 'messages': rows}
+
+
+def render_rum_section(rum, meta):
+    """Render the Frontend (RUM) tab body."""
+    if not rum or not rum.get('total'):
+        return ('<section class="category-section"><p style="color:#64748b;font-style:italic;">'
+                'No RUM frontend errors found in this window.</p></section>')
+    console_n = rum['by_source'].get('console', 0)
+    source_chips = ''.join(
+        f'<span class="pod-chip">{esc(s)}<span class="pod-count">{n:,}</span></span>'
+        for s, n in sorted(rum['by_source'].items(), key=lambda x: -x[1])
+    )
+    rows = ''
+    for m in rum['messages'][:40]:
+        top_url = m['urls'].most_common(1)[0][0] if m['urls'] else ''
+        url_cell = (f'<a href="{esc(top_url)}" target="_blank">{esc(top_url[:70])}</a>'
+                    if top_url else '<span style="color:#94a3b8;">—</span>')
+        rows += (f'<tr><td><code>{esc(m["message"][:130])}</code></td>'
+                 f'<td>{esc(m["source"])}</td>'
+                 f'<td class="num">{m["count"]:,}</td>'
+                 f'<td>{url_cell}</td></tr>')
+    return f'''
+    <div class="stats-grid">
+        <div class="stat-card high"><div class="stat-value">{rum["total"]:,}</div><div class="stat-label">Frontend errors</div></div>
+        <div class="stat-card"><div class="stat-value">{rum["distinct"]:,}</div><div class="stat-label">Distinct messages</div></div>
+        <div class="stat-card"><div class="stat-value">{console_n:,}</div><div class="stat-label">Console-source</div></div>
+        <div class="stat-card"><div class="stat-value">{len(rum["top_views"])}</div><div class="stat-label">Pages with errors (top)</div></div>
+    </div>
+    <div class="sev-summary">
+        <h3>Error sources</h3>
+        <div class="pods-row">{source_chips}</div>
+    </div>
+    <section class="slow-apis-section">
+        <h2 class="section-title">🌐 Top frontend errors <span class="section-stats">RUM · {esc(meta.get("rum_env", ""))} · grouped by message</span></h2>
+        <div class="table-wrap">
+            <table class="slow-table">
+                <thead><tr><th>Error message</th><th>Source</th><th class="num">Count</th><th>Sample page</th></tr></thead>
+                <tbody>{rows}</tbody>
+            </table>
+        </div>
+    </section>'''
+
+
+def render_html(matched, unmatched, slow_apis, meta, rum_html=''):
     total_events = sum(m['count'] for m in matched) + len(unmatched)
     high = sum(m['count'] for m in matched if m['rule']['severity'] == 'high')
     med = sum(m['count'] for m in matched if m['rule']['severity'] == 'medium')
@@ -768,6 +867,25 @@ def render_html(matched, unmatched, slow_apis, meta):
         </a>''')
 
     pattern_count = sum(len(v) for v in by_cat.values())
+
+    # Tabbed UI only when a Frontend (RUM) pane is supplied; otherwise render flat.
+    if rum_html:
+        tab_bar = ('<div class="tabs">'
+                   '<button class="tab-btn active" data-tab="backend">🖥️ Backend · logs &amp; APM</button>'
+                   '<button class="tab-btn" data-tab="frontend">🌐 Frontend · RUM</button>'
+                   '</div>\n<div id="tab-backend" class="tab-pane active">')
+        frontend_pane = f'</div>\n<div id="tab-frontend" class="tab-pane">{rum_html}</div>'
+        tab_script = ("<script>\n"
+                      "document.querySelectorAll('.tab-btn').forEach(function(btn){\n"
+                      "  btn.addEventListener('click', function(){\n"
+                      "    document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});\n"
+                      "    document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});\n"
+                      "    btn.classList.add('active');\n"
+                      "    document.getElementById('tab-'+btn.getAttribute('data-tab')).classList.add('active');\n"
+                      "  });\n"
+                      "});\n</script>")
+    else:
+        tab_bar = frontend_pane = tab_script = ''
 
     html_doc = f'''<!DOCTYPE html>
 <html lang="en">
@@ -884,6 +1002,12 @@ footer code {{ background: rgba(255,255,255,0.1); padding: 1px 6px; border-radiu
 .span-row code {{ background: #f1f5f9; padding: 2px 6px; border-radius: 3px; font-size: 12px; font-family: "SF Mono", Monaco, Consolas, monospace; }}
 .trace-link {{ color: #0284c7; text-decoration: none; font-size: 13px; font-weight: 600; }}
 .trace-link:hover {{ text-decoration: underline; }}
+.tabs {{ display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; }}
+.tab-btn {{ background: none; border: none; padding: 12px 20px; font-size: 15px; font-weight: 600; color: #64748b; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; }}
+.tab-btn:hover {{ color: #1e293b; }}
+.tab-btn.active {{ color: #1e3a8a; border-bottom-color: #1e3a8a; }}
+.tab-pane {{ display: none; }}
+.tab-pane.active {{ display: block; }}
 @media (max-width: 768px) {{ .stats-grid {{ grid-template-columns: repeat(2, 1fr); }} .toc-links {{ grid-template-columns: 1fr; }} .header-grid {{ grid-template-columns: 1fr; }} }}
 </style></head>
 <body>
@@ -903,6 +1027,7 @@ footer code {{ background: rgba(255,255,255,0.1); padding: 1px 6px; border-radiu
 <div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">{esc(meta["generated_at"])}</strong></div>
 </div>
 </header>
+{tab_bar}
 <div class="stats-grid">
 <div class="stat-card"><div class="stat-value">{total_events:,}</div><div class="stat-label">Total events</div></div>
 <div class="stat-card"><div class="stat-value">{pattern_count}</div><div class="stat-label">Distinct patterns</div></div>
@@ -924,12 +1049,14 @@ footer code {{ background: rgba(255,255,255,0.1); padding: 1px 6px; border-radiu
 <div class="toc-links">{"".join(toc_links)}</div>
 </div>
 {"".join(sections_html)}
+{frontend_pane}
 <footer>
 <p>Generated from Datadog Logs API for <code>service:{esc(meta["service"])} env:{esc(meta["env"])}</code> over the last {esc(meta["window"])}.</p>
 <p style="margin-top:8px;">{total_events:,} events across {pattern_count} patterns • {pod_count} pods affected</p>
 <p style="margin-top:8px;font-size:11px;">Re-generate: <code>/error-dashboard</code> in Claude Code</p>
 </footer>
 </div>
+{tab_script}
 </body></html>'''
     return html_doc
 
@@ -1008,6 +1135,8 @@ def main():
     p.add_argument('--output', default='/workspace/lp-ui/docs/error-dashboard.html', help='Output HTML path')
     p.add_argument('--teams-card', default=None, help='If set, write a Microsoft Teams Adaptive Card (message JSON) summarizing severity + top high-severity patterns to this path')
     p.add_argument('--dashboard-url', default='https://yuvilblr.github.io/review-report/error-dashboard.html', help='URL the Teams card "Open dashboard" button links to')
+    p.add_argument('--rum-app-id', default=None, help='RUM application.id; if set, adds a Frontend (RUM) tab analyzing frontend/console errors')
+    p.add_argument('--rum-env', default='preprod-eulaerdallearning', help='RUM env tag used to filter frontend errors')
     args = p.parse_args()
 
     api_key = os.environ.get('DD_API_KEY')
@@ -1061,15 +1190,25 @@ def main():
             print(f"    [{count:4}x]  {pat}", file=sys.stderr)
         print("  → Add these to CATALOG in generate-dashboard.py to get RCAs.", file=sys.stderr)
 
+    # 4. RUM frontend errors (optional — only when --rum-app-id is provided)
+    rum_html = ''
+    if args.rum_app_id:
+        print(f"Fetching RUM errors: app={args.rum_app_id} env={args.rum_env} ...", file=sys.stderr)
+        rum_events = fetch_rum_errors(args.site, api_key, app_key, args.rum_app_id, args.rum_env, from_, to_)
+        print(f"  RUM error events: {len(rum_events)}", file=sys.stderr)
+        rum = aggregate_rum(rum_events)
+        rum_html = render_rum_section(rum, {'rum_env': args.rum_env})
+
     # Render
     meta = {
         'service': args.service,
         'env': args.env,
         'window': args.window,
         'site': args.site,
+        'rum_env': args.rum_env if args.rum_app_id else '',
         'generated_at': datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC'),
     }
-    html_doc = render_html(matched, unmatched, slow_apis, meta)
+    html_doc = render_html(matched, unmatched, slow_apis, meta, rum_html=rum_html)
 
     out_dir = os.path.dirname(args.output)
     if out_dir:
