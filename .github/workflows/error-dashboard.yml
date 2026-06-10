@@ -54,20 +54,27 @@ jobs:
             --env rqillp-lp-preprod-eu \
             --output error-dashboard.html
           code=$?
+          set -e
           if [ "$code" -eq 0 ]; then
             echo "Dashboard generated successfully."
-          elif [ "$code" -eq 1 ]; then
-            # Script exits 1 when there were zero events in the window.
+          elif [ "$code" -eq 3 ]; then
+            # Exit 3 = zero events in the window: a genuine, non-error skip.
             echo "::warning::No events found in the last day; nothing new to publish."
-            exit 0
+          elif [ "$code" -eq 2 ]; then
+            echo "::error::DD_API_KEY / DD_APP_KEY missing or invalid (exit 2). Check the repository secrets."
+            exit 2
           else
-            # Exit 2 = missing/invalid DD_API_KEY / DD_APP_KEY; anything else = real failure.
-            echo "::error::Dashboard generation failed (exit $code). Check the DD_API_KEY / DD_APP_KEY repository secrets."
+            # Exit 1 (uncaught exception) or any other non-zero = real failure. Do NOT mask it.
+            echo "::error::Dashboard generation failed (exit $code) — see the Python traceback above."
             exit "$code"
           fi
 
       - name: Commit & push if the dashboard changed
         run: |
+          if [ ! -f error-dashboard.html ]; then
+            echo "No dashboard file was produced (e.g. no events); nothing to commit."
+            exit 0
+          fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add error-dashboard.html
