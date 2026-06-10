@@ -938,6 +938,67 @@ footer code {{ background: rgba(255,255,255,0.1); padding: 1px 6px; border-radiu
 # MAIN
 # ----------------------------------------------------------------------------
 
+def build_teams_card(matched, slow_apis, meta, total, dashboard_url):
+    """Build a Microsoft Teams Adaptive Card (message envelope) summarizing
+    severity counts and the top high-severity patterns ('what needs attention').
+    `matched` is already sorted by event count descending."""
+    def sev_total(s):
+        return sum(m['count'] for m in matched if m['rule']['severity'] == s)
+    high, med, low = sev_total('high'), sev_total('medium'), sev_total('low')
+    high_patterns = [m for m in matched if m['rule']['severity'] == 'high'][:5]
+
+    alert = high > 0
+    body = [
+        {'type': 'TextBlock',
+         'text': ('🚨 ' if alert else '📊 ') + f"Error Dashboard — {meta['service']}",
+         'weight': 'Bolder', 'size': 'Medium', 'wrap': True},
+        {'type': 'TextBlock',
+         'text': f"{meta['env']} · last {meta['window']} · {meta['generated_at']}",
+         'isSubtle': True, 'spacing': 'None', 'wrap': True},
+        {'type': 'FactSet', 'facts': [
+            {'title': 'Total events', 'value': f"{total:,}"},
+            {'title': '🔴 High', 'value': f"{high:,}"},
+            {'title': '🟠 Medium', 'value': f"{med:,}"},
+            {'title': '🟢 Low', 'value': f"{low:,}"},
+            {'title': 'Patterns', 'value': str(len(matched))},
+            {'title': 'Slow APIs (>1s)', 'value': str(len(slow_apis))},
+        ]},
+    ]
+
+    if high_patterns:
+        items = '\n'.join(
+            f"- **{m['rule']['title']}** ({m['count']:,}) · {m['rule']['category']}"
+            for m in high_patterns
+        )
+        body.append({
+            'type': 'Container', 'style': 'attention', 'bleed': True, 'spacing': 'Medium',
+            'items': [
+                {'type': 'TextBlock', 'text': '⚠️ Needs attention', 'weight': 'Bolder',
+                 'color': 'Attention', 'wrap': True},
+                {'type': 'TextBlock', 'text': items, 'wrap': True},
+            ],
+        })
+    else:
+        body.append({'type': 'TextBlock', 'text': '✅ No high-severity patterns in this window.',
+                     'color': 'Good', 'spacing': 'Medium', 'wrap': True})
+
+    return {
+        'type': 'message',
+        'attachments': [{
+            'contentType': 'application/vnd.microsoft.card.adaptive',
+            'content': {
+                'type': 'AdaptiveCard',
+                '$schema': 'http://adaptivecards.io/schemas/adaptive-card.json',
+                'version': '1.4',
+                'body': body,
+                'actions': [
+                    {'type': 'Action.OpenUrl', 'title': 'Open dashboard', 'url': dashboard_url},
+                ],
+            },
+        }],
+    }
+
+
 def main():
     p = argparse.ArgumentParser(description="Generate Datadog error dashboard")
     p.add_argument('--window', default='2d', help='Time window (Datadog syntax: 1h/4h/1d/2d/7d)')
@@ -945,6 +1006,8 @@ def main():
     p.add_argument('--env', default='rqillp-lp-preprod-eu', help='Environment tag')
     p.add_argument('--site', default='datadoghq.com', help='Datadog site (e.g. datadoghq.com or datadoghq.eu)')
     p.add_argument('--output', default='/workspace/lp-ui/docs/error-dashboard.html', help='Output HTML path')
+    p.add_argument('--teams-card', default=None, help='If set, write a Microsoft Teams Adaptive Card (message JSON) summarizing severity + top high-severity patterns to this path')
+    p.add_argument('--dashboard-url', default='https://yuvilblr.github.io/review-report/error-dashboard.html', help='URL the Teams card "Open dashboard" button links to')
     args = p.parse_args()
 
     api_key = os.environ.get('DD_API_KEY')
@@ -979,7 +1042,7 @@ def main():
 
     if not all_events:
         print("\nNo events found in window. Dashboard not generated.", file=sys.stderr)
-        sys.exit(1)
+        sys.exit(3)  # distinct from 1 (uncaught crash) and 2 (missing credentials)
 
     # 3. APM spans for slow-API table
     spans = fetch_http_spans(args.site, api_key, app_key, args.service, args.env, from_, to_)
@@ -1008,7 +1071,9 @@ def main():
     }
     html_doc = render_html(matched, unmatched, slow_apis, meta)
 
-    os.makedirs(os.path.dirname(args.output), exist_ok=True)
+    out_dir = os.path.dirname(args.output)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
     with open(args.output, 'w') as f:
         f.write(html_doc)
 
@@ -1017,6 +1082,16 @@ def main():
     print(f"  Total events: {total:,}")
     print(f"  Matched patterns: {len(matched)}")
     print(f"  Unmatched patterns: {len(set(u['msg'][:120] for u in unmatched))}")
+
+    # Optional: emit a Microsoft Teams Adaptive Card summarizing what needs attention.
+    if args.teams_card:
+        card = build_teams_card(matched, slow_apis, meta, total, args.dashboard_url)
+        card_dir = os.path.dirname(args.teams_card)
+        if card_dir:
+            os.makedirs(card_dir, exist_ok=True)
+        with open(args.teams_card, 'w') as f:
+            json.dump(card, f)
+        print(f"  Teams card written: {args.teams_card}")
 
 
 if __name__ == '__main__':
