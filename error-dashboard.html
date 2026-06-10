@@ -113,6 +113,12 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 .span-row code { background: #f1f5f9; padding: 2px 6px; border-radius: 3px; font-size: 12px; font-family: "SF Mono", Monaco, Consolas, monospace; }
 .trace-link { color: #0284c7; text-decoration: none; font-size: 13px; font-weight: 600; }
 .trace-link:hover { text-decoration: underline; }
+.tabs { display: flex; gap: 4px; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; }
+.tab-btn { background: none; border: none; padding: 12px 20px; font-size: 15px; font-weight: 600; color: #64748b; cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -2px; }
+.tab-btn:hover { color: #1e293b; }
+.tab-btn.active { color: #1e3a8a; border-bottom-color: #1e3a8a; }
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
 @media (max-width: 768px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .toc-links { grid-template-columns: 1fr; } .header-grid { grid-template-columns: 1fr; } }
 </style></head>
 <body>
@@ -129,9 +135,11 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 <div><span class="label">Datadog Site</span><span class="value">datadoghq.com</span></div>
 </div>
 </div>
-<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-06-10 17:34:17 UTC</strong></div>
+<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-06-10 17:38:40 UTC</strong></div>
 </div>
 </header>
+<div class="tabs"><button class="tab-btn active" data-tab="backend">🖥️ Backend · logs &amp; APM</button><button class="tab-btn" data-tab="frontend">🌐 Frontend · RUM</button></div>
+<div id="tab-backend" class="tab-pane active">
 <div class="stats-grid">
 <div class="stat-card"><div class="stat-value">542</div><div class="stat-label">Total events</div></div>
 <div class="stat-card"><div class="stat-value">6</div><div class="stat-label">Distinct patterns</div></div>
@@ -496,10 +504,22 @@ Once defined the SDK stops emitting this warning.</pre></div>
                 </div>
             </div></div>
         </section>
+</div>
+<div id="tab-frontend" class="tab-pane"><section class="category-section"><p style="color:#64748b;font-style:italic;">No RUM frontend errors found in this window.</p></section></div>
 <footer>
 <p>Generated from Datadog Logs API for <code>service:rqillp-lp env:rqillp-lp-preprod-eu</code> over the last 1d.</p>
 <p style="margin-top:8px;">542 events across 6 patterns • 9 pods affected</p>
 <p style="margin-top:8px;font-size:11px;">Re-generate: <code>/error-dashboard</code> in Claude Code</p>
 </footer>
 </div>
+<script>
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+    document.querySelectorAll('.tab-pane').forEach(function(p){p.classList.remove('active');});
+    btn.classList.add('active');
+    document.getElementById('tab-'+btn.getAttribute('data-tab')).classList.add('active');
+  });
+});
+</script>
 </body></html>
