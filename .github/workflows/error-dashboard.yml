@@ -1,0 +1,79 @@
+name: Daily Datadog Error Dashboard
+
+# Runs every morning, regenerates the self-contained error dashboard from
+# Datadog for the last 1 day, and commits it to the repo root so the existing
+# root-served GitHub Pages site picks it up automatically.
+#
+# Published URL: https://yuvilblr.github.io/review-report/error-dashboard.html
+#
+# REQUIRED SETUP (one time):
+#   1. Repo Settings -> Secrets and variables -> Actions -> New repository secret:
+#        DD_API_KEY  = <your Datadog API key>
+#        DD_APP_KEY  = <your Datadog Application key>  (ideally a read-only scoped key)
+#   2. Repo Settings -> Pages -> Source: "Deploy from a branch", Branch: main, Folder: / (root)
+#
+# You can also trigger it by hand from the Actions tab (workflow_dispatch).
+
+on:
+  schedule:
+    # 02:30 UTC == 08:00 Asia/Kolkata (IST, UTC+5:30)
+    # NOTE: GitHub cron can be delayed by several minutes under load.
+    - cron: '30 2 * * *'
+  workflow_dispatch: {}
+
+# Allow the job to commit the regenerated HTML back to the repo.
+permissions:
+  contents: write
+
+# Never run two dashboard builds at once.
+concurrency:
+  group: error-dashboard
+  cancel-in-progress: false
+
+jobs:
+  build-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generate dashboard (last 1 day)
+        env:
+          DD_API_KEY: ${{ secrets.DD_API_KEY }}
+          DD_APP_KEY: ${{ secrets.DD_APP_KEY }}
+        run: |
+          set +e
+          python3 .claude/skills/error-dashboard/generate-dashboard.py \
+            --window 1d \
+            --service rqillp-lp \
+            --env rqillp-lp-preprod-eu \
+            --output error-dashboard.html
+          code=$?
+          if [ "$code" -eq 0 ]; then
+            echo "Dashboard generated successfully."
+          elif [ "$code" -eq 1 ]; then
+            # Script exits 1 when there were zero events in the window.
+            echo "::warning::No events found in the last day; nothing new to publish."
+            exit 0
+          else
+            # Exit 2 = missing/invalid DD_API_KEY / DD_APP_KEY; anything else = real failure.
+            echo "::error::Dashboard generation failed (exit $code). Check the DD_API_KEY / DD_APP_KEY repository secrets."
+            exit "$code"
+          fi
+
+      - name: Commit & push if the dashboard changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add error-dashboard.html
+          if git diff --cached --quiet; then
+            echo "No changes in error-dashboard.html; skipping commit."
+          else
+            git commit -m "chore: daily error dashboard ($(date -u +%Y-%m-%d))"
+            git push
+          fi
