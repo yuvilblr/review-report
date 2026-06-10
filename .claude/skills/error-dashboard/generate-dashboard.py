@@ -979,7 +979,7 @@ def main():
 
     if not all_events:
         print("\nNo events found in window. Dashboard not generated.", file=sys.stderr)
-        sys.exit(1)
+        sys.exit(3)  # distinct from 1 (uncaught crash) and 2 (missing credentials)
 
     # 3. APM spans for slow-API table
     spans = fetch_http_spans(args.site, api_key, app_key, args.service, args.env, from_, to_)
@@ -1008,7 +1008,9 @@ def main():
     }
     html_doc = render_html(matched, unmatched, slow_apis, meta)
 
-    os.makedirs(os.path.dirname(args.output), exist_ok=True)
+    out_dir = os.path.dirname(args.output)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
     with open(args.output, 'w') as f:
         f.write(html_doc)
 
