@@ -1053,7 +1053,6 @@ footer code {{ background: rgba(255,255,255,0.1); padding: 1px 6px; border-radiu
 <footer>
 <p>Generated from Datadog Logs API for <code>service:{esc(meta["service"])} env:{esc(meta["env"])}</code> over the last {esc(meta["window"])}.</p>
 <p style="margin-top:8px;">{total_events:,} events across {pattern_count} patterns • {pod_count} pods affected</p>
-<p style="margin-top:8px;font-size:11px;">Re-generate: <code>/error-dashboard</code> in Claude Code</p>
 </footer>
 </div>
 {tab_script}
