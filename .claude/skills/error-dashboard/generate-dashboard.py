@@ -512,7 +512,8 @@ def apply_catalog(classified):
     for u in unmatched:
         src = u.get('source', '')
         sev = 'high' if src in ('nestjs_error', 'ld_error') else 'medium'
-        uncat.setdefault((u['msg'][:120], sev), []).append(u)
+        norm = re.sub(r'\s+', ' ', (u.get('msg') or '').strip())[:120] or '(no message)'
+        uncat.setdefault((norm, sev), []).append(u)
     for (msg_key, sev), evs in uncat.items():
         timestamps = [e['ts'] for e in evs if e.get('ts')]
         pods = Counter(e['pod'] for e in evs if e.get('pod'))
