@@ -504,6 +504,38 @@ def apply_catalog(classified):
             'contexts': dict(contexts),
             'sample_msg': events[0]['msg'][:200] if events else '',
         })
+    # Fold UNCATALOGUED events into matched so every error is surfaced even without a
+    # catalog entry: error-stream events default to HIGH (red), warn-stream to MEDIUM.
+    # The catalog only refines this (e.g. downgrading known-benign errors). `unmatched`
+    # is still returned for the "add these to the catalog" hint in main().
+    uncat = {}
+    for u in unmatched:
+        src = u.get('source', '')
+        sev = 'high' if src in ('nestjs_error', 'ld_error') else 'medium'
+        uncat.setdefault((u['msg'][:120], sev), []).append(u)
+    for (msg_key, sev), evs in uncat.items():
+        timestamps = [e['ts'] for e in evs if e.get('ts')]
+        pods = Counter(e['pod'] for e in evs if e.get('pod'))
+        level = 'error-level' if sev == 'high' else 'warning-level'
+        matched.append({
+            'rule': {
+                'category': 'Other / Uncategorized',
+                'severity': sev,
+                'title': msg_key[:80] or '(no message)',
+                'rca': f'Not yet in the RCA catalog — surfaced automatically because it is an {level} '
+                       'log. Add a CATALOG entry to classify and explain it.',
+                'impact': 'Unknown — investigate.',
+                'fix': 'Add this pattern to CATALOG in generate-dashboard.py.',
+                'match': {'type': 'contains', 'value': msg_key},
+            },
+            'count': len(evs),
+            'first_seen': min(timestamps) if timestamps else '',
+            'last_seen': max(timestamps) if timestamps else '',
+            'pods': dict(pods),
+            'contexts': {},
+            'sample_msg': msg_key,
+        })
+
     matched.sort(key=lambda x: -x['count'])
     return matched, unmatched
 
@@ -760,7 +792,7 @@ def render_rum_section(rum, meta):
 
 
 def render_html(matched, unmatched, slow_apis, meta, rum_html=''):
-    total_events = sum(m['count'] for m in matched) + len(unmatched)
+    total_events = sum(m['count'] for m in matched)  # matched already includes uncatalogued events
     high = sum(m['count'] for m in matched if m['rule']['severity'] == 'high')
     med = sum(m['count'] for m in matched if m['rule']['severity'] == 'medium')
     low = sum(m['count'] for m in matched if m['rule']['severity'] == 'low')
@@ -769,30 +801,11 @@ def render_html(matched, unmatched, slow_apis, meta, rum_html=''):
         unique_pods.update(p for p in m.get('pods', {}).keys() if p and p != 'unknown')
     pod_count = len(unique_pods)
 
-    # Group matched by category
+    # Group matched by category. `matched` already includes uncatalogued events (folded in
+    # by apply_catalog with auto-severity: errors→high, warns→medium), so no separate handling.
     by_cat = defaultdict(list)
     for m in matched:
         by_cat[m['rule']['category']].append(m)
-    # If there are unmatched, add them as "Other"
-    if unmatched:
-        unmatched_patterns = Counter(u['msg'][:120] for u in unmatched)
-        for pat, count in unmatched_patterns.most_common():
-            by_cat['Other / Uncategorized'].append({
-                'rule': {
-                    'title': f"(unknown) {pat[:60]}",
-                    'severity': 'medium',
-                    'category': 'Other / Uncategorized',
-                    'rca': 'Not yet in the RCA catalog. Add an entry to CATALOG in generate-dashboard.py.',
-                    'impact': 'Unknown — investigate.',
-                    'fix': 'Add this pattern to the catalog.',
-                    'match': {'type': 'contains', 'value': pat},
-                },
-                'count': count,
-                'first_seen': '',
-                'last_seen': '',
-                'pods': {},
-                'sample_msg': pat,
-            })
 
     # Ordered categories
     cat_order = list(CATEGORY_EMOJI.keys())
@@ -1215,7 +1228,7 @@ def main():
     with open(args.output, 'w') as f:
         f.write(html_doc)
 
-    total = sum(m['count'] for m in matched) + len(unmatched)
+    total = sum(m['count'] for m in matched)  # matched now includes uncatalogued events
     print(f"\n✓ Dashboard written: {args.output}")
     print(f"  Total events: {total:,}")
     print(f"  Matched patterns: {len(matched)}")
