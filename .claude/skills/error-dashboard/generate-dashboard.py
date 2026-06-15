@@ -246,6 +246,72 @@ CATALOG = [
         'impact': "User can't download certificate. May be confused if they think they've completed everything.",
         'fix': "Disable claim button on UI until curriculum.allCompleted=true is server-confirmed. Improve error message to specify whether it's curriculum or attemptId mismatch.",
     },
+
+    # --- Database / Access ---
+    {
+        'match': {'type': 'contains', 'value': 'User was denied access on the database'},
+        'category': 'Database / Access',
+        'severity': 'high',
+        'title': 'Prisma: database access denied (eu_preprod_lp)',
+        'sources': ['nestjs_error', 'nestjs_warn'],
+        'rca': "Prisma queries (e.g. lp_user_licenses.findFirst, lp_apps.findUnique) are failing with 'User was denied access on the database eu_preprod_lp'. This is an AUTHORIZATION failure at the database layer, not a network outage — the role the app connects as has lost access to eu_preprod_lp. Likely causes: a revoked or changed GRANT, rotated/expired DB credentials that no longer match, a role/privilege change, or the user being dropped or renamed. This is almost certainly the root cause of the concurrent 'DB health check failed' and 'Service Unavailable Exception' errors in the same window.",
+        'impact': "Every request that touches the database (license lookups, app lookups, core flows) fails. The service returns 503 and the DB health check flips unhealthy. User-facing: logins, license access, and registration fail while access is denied.",
+        'fix': "1. Check the DB role the app uses against eu_preprod_lp — confirm GRANT/privileges were not revoked or changed\n2. Verify the DB credentials in the app secret match the current database password (an un-propagated rotation looks exactly like this)\n3. Confirm the role still exists and has CONNECT plus the needed SELECT/INSERT privileges on the schema\n4. Review recent DB migrations, infra, or credential-rotation changes around the first-seen time\n5. Health check and 503s clear automatically once access is restored",
+    },
+    {
+        'match': {'type': 'contains', 'value': 'DB health check failed'},
+        'category': 'Database / Access',
+        'severity': 'high',
+        'title': 'DB health check failed',
+        'sources': ['nestjs_error', 'nestjs_warn'],
+        'rca': "The application database health probe is failing. It clusters with the Prisma 'access denied on eu_preprod_lp' errors and 'Service Unavailable Exception' — the probe runs a query the database is rejecting, most likely because the app role lost access (see 'Prisma: database access denied'). A network/DB-down cause is possible, but the access-denied Prisma errors point to permissions/credentials.",
+        'impact': "While failing, the service reports unhealthy and returns 503s; orchestration may restart pods or pull the instance out of rotation.",
+        'fix': "Resolve the database access-denied root cause (see 'Prisma: database access denied'); the probe recovers once the app can query eu_preprod_lp. Log the underlying DB error inside the health check so the cause is visible without cross-referencing Prisma logs.",
+    },
+    {
+        'match': {'type': 'contains', 'value': 'Service Unavailable Exception'},
+        'category': 'Database / Access',
+        'severity': 'high',
+        'title': 'Service Unavailable Exception (503)',
+        'sources': ['nestjs_error', 'nestjs_warn'],
+        'rca': "The app is returning Service Unavailable (503). Timestamps cluster with 'DB health check failed' and the Prisma 'access denied on eu_preprod_lp' errors — the 503 is the user-facing symptom of the database being unreachable or denied. When the DB health check is down, DB-dependent requests short-circuit to 503.",
+        'impact': "Users get 503 errors on database-backed endpoints during the window — a direct, user-facing outage for affected flows.",
+        'fix': "Fix the underlying database access-denied issue (see 'Prisma: database access denied'). The 503 is a symptom, not the cause.",
+    },
+
+    # --- Application ---
+    {
+        'match': {'type': 'contains', 'value': "Content-Type doesn't match Reply body"},
+        'category': 'Application',
+        'severity': 'medium',
+        'title': 'Content-Type does not match Reply body',
+        'sources': ['nestjs_error', 'nestjs_warn'],
+        'rca': "Fastify/NestJS is warning that a response Content-Type header does not match the serialized body — typically a handler returning a non-JSON body (string, stream, or error page) on a route declared as JSON without a custom ExceptionFilter. Often a downstream effect of an error path (e.g. a 503 or HTML error body) being returned through a JSON route.",
+        'impact': "The response may be mis-serialized or rejected by clients expecting JSON. Frequently coincident with the DB/503 errors above — error responses leaving via the JSON path.",
+        'fix': "1. Add a custom ExceptionFilter for non-JSON responses, or ensure error handlers always return JSON\n2. If these spike alongside the DB 503s, they clear when the database issue is fixed.",
+    },
+
+    # --- Authentication (additional) ---
+    {
+        'match': {'type': 'contains', 'value': 'missing required scope'},
+        'category': 'Authentication',
+        'severity': 'medium',
+        'title': 'Missing required OAuth scope',
+        'sources': ['nestjs_error', 'nestjs_warn'],
+        'rca': "A request or app/integration token lacks a required OAuth scope (e.g. read:licenses). Either a client app was provisioned without the scope, or a token was issued before the scope existed. An authorization-configuration gap, not a server fault.",
+        'impact': "The calling app/integration is denied the scoped operation (e.g. reading licenses). Affects only that client until its scopes are corrected.",
+        'fix': "1. Identify the client from the request and grant the missing scope in its OAuth client config\n2. Re-issue tokens after updating scopes\n3. If unexpected, verify the client should have that scope at all.",
+    },
+    {
+        'match': {'type': 'contains', 'value': 'Refresh token reuse detected'},
+        'category': 'Authentication',
+        'severity': 'medium',
+        'title': 'Refresh token reuse detected',
+        'sources': ['nestjs_error', 'nestjs_warn'],
+        'rca': "A refresh token was presented more than once. Refresh-token rotation treats reuse as possible theft/replay and terminates the session (defense in depth). Usually benign — a client retrying with a stale token, a race between concurrent refreshes, or an app holding an old token after rotation — but a sustained spike can indicate token theft.",
+        'impact': "The affected session is terminated and the user must log in again. Expected security behavior; only a concern if the rate is anomalously high.",
+        'fix': "1. Usually no action — replay protection working as designed\n2. If frequent for legitimate users, check the client for concurrent/duplicate refresh calls or for not persisting the rotated refresh token\n3. If spiking, investigate possible token theft.",
+    },
 ]
 
 
@@ -555,6 +621,8 @@ CATEGORY_EMOJI = {
     'External Service / Org Data': '🏢',
     'External Service / RQI': '🔗',
     'Business Logic': '⚙️',
+    'Database / Access': '🗄️',
+    'Application': '🧩',
     'Other / Uncategorized': '❓',
 }
 

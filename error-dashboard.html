@@ -135,15 +135,15 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 <div><span class="label">Datadog Site</span><span class="value">datadoghq.com</span></div>
 </div>
 </div>
-<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-06-15 13:00:54 UTC</strong></div>
+<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-06-15 13:29:51 UTC</strong></div>
 </div>
 </header>
 <div class="tabs"><button class="tab-btn active" data-tab="backend">🖥️ Backend · logs &amp; APM</button><button class="tab-btn" data-tab="frontend">🌐 Frontend · RUM</button></div>
 <div id="tab-backend" class="tab-pane active">
 <div class="stats-grid">
 <div class="stat-card"><div class="stat-value">355</div><div class="stat-label">Total events</div></div>
-<div class="stat-card"><div class="stat-value">11</div><div class="stat-label">Distinct patterns</div></div>
-<div class="stat-card high"><div class="stat-value">4</div><div class="stat-label">High severity patterns</div></div>
+<div class="stat-card"><div class="stat-value">10</div><div class="stat-label">Distinct patterns</div></div>
+<div class="stat-card high"><div class="stat-value">3</div><div class="stat-label">High severity patterns</div></div>
 <div class="stat-card"><div class="stat-value">5</div><div class="stat-label">Pods affected</div></div>
 </div>
 <div class="sev-summary">
@@ -182,7 +182,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
             <td class="num">285</td>
             <td class="num">2.49s</td>
             <td class="num">3.02s</td>
-            <td class="num cell-warn">3.35s</td>
+            <td class="num cell-warn">3.36s</td>
             <td class="num cell-warn">3.53s</td>
             <td class="num">7.43s</td>
         </tr>
@@ -285,7 +285,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
         <a href="#cat-Authentication" class="toc-link">
             <span class="toc-emoji">🔐</span>
             <span class="toc-name">Authentication</span>
-            <span class="toc-count">12</span>
+            <span class="toc-count">16</span>
             
         </a>
         <a href="#cat-Self-Registration" class="toc-link">
@@ -294,11 +294,17 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
             <span class="toc-count">11</span>
             
         </a>
-        <a href="#cat-Other---Uncategorized" class="toc-link">
-            <span class="toc-emoji">❓</span>
-            <span class="toc-name">Other / Uncategorized</span>
-            <span class="toc-count">49</span>
-            <span class="toc-high">4↑</span>
+        <a href="#cat-Database---Access" class="toc-link">
+            <span class="toc-emoji">🗄️</span>
+            <span class="toc-name">Database / Access</span>
+            <span class="toc-count">40</span>
+            <span class="toc-high">3↑</span>
+        </a>
+        <a href="#cat-Application" class="toc-link">
+            <span class="toc-emoji">🧩</span>
+            <span class="toc-name">Application</span>
+            <span class="toc-count">5</span>
+            
         </a></div>
 </div>
 
@@ -319,8 +325,8 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Disconnected from AWS - attempting reconnect 1/10 in 5000ms</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-06-14T13:06:48.046Z</code><span class="meta-label">Last:</span> <code>2026-06-15T12:58:50.154Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-bcc7f57cd-dmjxr<span class="pod-count">134</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-92f5d<span class="pod-count">116</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-hrddf<span class="pod-count">17</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-r8wxx<span class="pod-count">8</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-65lpg<span class="pod-count">8</span></span></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-06-14T13:37:09.127Z</code><span class="meta-label">Last:</span> <code>2026-06-15T13:29:09.320Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-bcc7f57cd-dmjxr<span class="pod-count">131</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-92f5d<span class="pod-count">113</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-hrddf<span class="pod-count">17</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-r8wxx<span class="pod-count">11</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-65lpg<span class="pod-count">11</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">AWS WebSocket client repeatedly disconnects and reconnects. Most disconnections recover on the first retry (5000ms backoff). High volume suggests this is constant background churn — likely server-side termination (AWS API Gateway WebSocket idle timeout, NAT gateway TCP idle timeout, or ALB connection settings) that the client recovers from.</div></div>
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">During each ~5s reconnect window, any push messages from AWS are missed. Sustained loss of real-time updates impacts users watching live course state.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Check AWS API Gateway WebSocket idle timeout (default 10 min), NAT gateway TCP idle timeout, ALB connection settings
@@ -334,7 +340,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
             <h2 class="category-title">
                 <span class="cat-emoji">🔐</span>
                 Authentication
-                <span class="cat-stats">2 patterns • 12 events</span>
+                <span class="cat-stats">4 patterns • 16 events</span>
             </h2>
             <div class="cards-grid">
             <div class="card sev-low">
@@ -370,6 +376,44 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Expected. User is prompted to re-login.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">No fix needed. Could downgrade these from warn to info to reduce noise.</pre></div>
                 </div>
+            </div>
+            <div class="card sev-medium">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <span class="sev-badge sev-medium">MEDIUM</span>
+                        <h3 class="card-title">Missing required OAuth scope</h3>
+                    </div>
+                    <div class="card-count">2</div>
+                </div>
+                <div class="card-body">
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">App is missing required scope read:licenses.*</code></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-06-15T11:06:16.044Z</code><span class="meta-label">Last:</span> <code>2026-06-15T11:53:27.652Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-bcc7f57cd-r8wxx<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-dmjxr<span class="pod-count">1</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">A request or app/integration token lacks a required OAuth scope (e.g. read:licenses). Either a client app was provisioned without the scope, or a token was issued before the scope existed. An authorization-configuration gap, not a server fault.</div></div>
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">The calling app/integration is denied the scoped operation (e.g. reading licenses). Affects only that client until its scopes are corrected.</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Identify the client from the request and grant the missing scope in its OAuth client config
+2. Re-issue tokens after updating scopes
+3. If unexpected, verify the client should have that scope at all.</pre></div>
+                </div>
+            </div>
+            <div class="card sev-medium">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <span class="sev-badge sev-medium">MEDIUM</span>
+                        <h3 class="card-title">Refresh token reuse detected</h3>
+                    </div>
+                    <div class="card-count">2</div>
+                </div>
+                <div class="card-body">
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Refresh token reuse detected. Session has been terminated. Please login again</code></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-06-15T11:08:02.616Z</code><span class="meta-label">Last:</span> <code>2026-06-15T11:09:41.673Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-bcc7f57cd-hrddf<span class="pod-count">2</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">A refresh token was presented more than once. Refresh-token rotation treats reuse as possible theft/replay and terminates the session (defense in depth). Usually benign — a client retrying with a stale token, a race between concurrent refreshes, or an app holding an old token after rotation — but a sustained spike can indicate token theft.</div></div>
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">The affected session is terminated and the user must log in again. Expected security behavior; only a concern if the rate is anomalously high.</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Usually no action — replay protection working as designed
+2. If frequent for legitimate users, check the client for concurrent/duplicate refresh calls or for not persisting the rotated refresh token
+3. If spiking, investigate possible token theft.</pre></div>
+                </div>
             </div></div>
         </section>
         <section class="category-section">
@@ -399,28 +443,11 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
         </section>
         <section class="category-section">
             <h2 class="category-title">
-                <span class="cat-emoji">❓</span>
-                Other / Uncategorized
-                <span class="cat-stats">7 patterns • 49 events</span>
+                <span class="cat-emoji">🗄️</span>
+                Database / Access
+                <span class="cat-stats">3 patterns • 40 events</span>
             </h2>
             <div class="cards-grid">
-            <div class="card sev-high">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-high">HIGH</span>
-                        <h3 class="card-title">Service Unavailable Exception</h3>
-                    </div>
-                    <div class="card-count">16</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Service Unavailable Exception</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-06-15T06:07:03.144Z</code><span class="meta-label">Last:</span> <code>2026-06-15T10:37:55.487Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-bcc7f57cd-dmjxr<span class="pod-count">10</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-hrddf<span class="pod-count">5</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-92f5d<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an error-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
             <div class="card sev-high">
                 <div class="card-header">
                     <div class="card-title-row">
@@ -433,33 +460,65 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">DB health check failed</code></div>
                     <div class="timestamps"><span class="meta-label">First:</span> <code>2026-06-15T06:07:03.143Z</code><span class="meta-label">Last:</span> <code>2026-06-15T10:37:55.487Z</code></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-bcc7f57cd-dmjxr<span class="pod-count">10</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-hrddf<span class="pod-count">5</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-92f5d<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an error-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">The application database health probe is failing. It clusters with the Prisma &#x27;access denied on eu_preprod_lp&#x27; errors and &#x27;Service Unavailable Exception&#x27; — the probe runs a query the database is rejecting, most likely because the app role lost access (see &#x27;Prisma: database access denied&#x27;). A network/DB-down cause is possible, but the access-denied Prisma errors point to permissions/credentials.</div></div>
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">While failing, the service reports unhealthy and returns 503s; orchestration may restart pods or pull the instance out of rotation.</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Resolve the database access-denied root cause (see &#x27;Prisma: database access denied&#x27;); the probe recovers once the app can query eu_preprod_lp. Log the underlying DB error inside the health check so the cause is visible without cross-referencing Prisma logs.</pre></div>
                 </div>
             </div>
             <div class="card sev-high">
                 <div class="card-header">
                     <div class="card-title-row">
                         <span class="sev-badge sev-high">HIGH</span>
-                        <h3 class="card-title">Invalid `prisma.lp_user_licenses.findFirst()` invocation: User was denied access</h3>
+                        <h3 class="card-title">Service Unavailable Exception (503)</h3>
                     </div>
-                    <div class="card-count">7</div>
+                    <div class="card-count">16</div>
                 </div>
                 <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Invalid `prisma.lp_user_licenses.findFirst()` invocation: User was denied access on the database `eu_preprod_lp`</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-06-15T05:51:29.141Z</code><span class="meta-label">Last:</span> <code>2026-06-15T08:37:17.726Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-bcc7f57cd-dmjxr<span class="pod-count">5</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-92f5d<span class="pod-count">2</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an error-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Service Unavailable Exception</code></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-06-15T06:07:03.144Z</code><span class="meta-label">Last:</span> <code>2026-06-15T10:37:55.487Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-bcc7f57cd-dmjxr<span class="pod-count">10</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-hrddf<span class="pod-count">5</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-92f5d<span class="pod-count">1</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">The app is returning Service Unavailable (503). Timestamps cluster with &#x27;DB health check failed&#x27; and the Prisma &#x27;access denied on eu_preprod_lp&#x27; errors — the 503 is the user-facing symptom of the database being unreachable or denied. When the DB health check is down, DB-dependent requests short-circuit to 503.</div></div>
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Users get 503 errors on database-backed endpoints during the window — a direct, user-facing outage for affected flows.</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Fix the underlying database access-denied issue (see &#x27;Prisma: database access denied&#x27;). The 503 is a symptom, not the cause.</pre></div>
                 </div>
             </div>
+            <div class="card sev-high">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <span class="sev-badge sev-high">HIGH</span>
+                        <h3 class="card-title">Prisma: database access denied (eu_preprod_lp)</h3>
+                    </div>
+                    <div class="card-count">8</div>
+                </div>
+                <div class="card-body">
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Invalid `prisma.lp_user_licenses.findFirst()` invocation:
+
+
+User was denied access on the database `eu_preprod_lp`</code></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-06-14T23:55:02.473Z</code><span class="meta-label">Last:</span> <code>2026-06-15T08:37:17.726Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-bcc7f57cd-dmjxr<span class="pod-count">5</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-92f5d<span class="pod-count">3</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Prisma queries (e.g. lp_user_licenses.findFirst, lp_apps.findUnique) are failing with &#x27;User was denied access on the database eu_preprod_lp&#x27;. This is an AUTHORIZATION failure at the database layer, not a network outage — the role the app connects as has lost access to eu_preprod_lp. Likely causes: a revoked or changed GRANT, rotated/expired DB credentials that no longer match, a role/privilege change, or the user being dropped or renamed. This is almost certainly the root cause of the concurrent &#x27;DB health check failed&#x27; and &#x27;Service Unavailable Exception&#x27; errors in the same window.</div></div>
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Every request that touches the database (license lookups, app lookups, core flows) fails. The service returns 503 and the DB health check flips unhealthy. User-facing: logins, license access, and registration fail while access is denied.</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Check the DB role the app uses against eu_preprod_lp — confirm GRANT/privileges were not revoked or changed
+2. Verify the DB credentials in the app secret match the current database password (an un-propagated rotation looks exactly like this)
+3. Confirm the role still exists and has CONNECT plus the needed SELECT/INSERT privileges on the schema
+4. Review recent DB migrations, infra, or credential-rotation changes around the first-seen time
+5. Health check and 503s clear automatically once access is restored</pre></div>
+                </div>
+            </div></div>
+        </section>
+        <section class="category-section">
+            <h2 class="category-title">
+                <span class="cat-emoji">🧩</span>
+                Application
+                <span class="cat-stats">1 pattern • 5 events</span>
+            </h2>
+            <div class="cards-grid">
             <div class="card sev-medium">
                 <div class="card-header">
                     <div class="card-title-row">
                         <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">Content-Type doesn&#x27;t match Reply body, you might need a custom ExceptionFilter f</h3>
+                        <h3 class="card-title">Content-Type does not match Reply body</h3>
                     </div>
                     <div class="card-count">5</div>
                 </div>
@@ -467,60 +526,10 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Content-Type doesn&#x27;t match Reply body, you might need a custom ExceptionFilter for non-JSON responses</code></div>
                     <div class="timestamps"><span class="meta-label">First:</span> <code>2026-06-15T05:51:29.141Z</code><span class="meta-label">Last:</span> <code>2026-06-15T08:37:17.726Z</code></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-bcc7f57cd-dmjxr<span class="pod-count">3</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-92f5d<span class="pod-count">2</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an warning-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-medium">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">App is missing required scope read:licenses.*</h3>
-                    </div>
-                    <div class="card-count">2</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">App is missing required scope read:licenses.*</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-06-15T11:06:16.044Z</code><span class="meta-label">Last:</span> <code>2026-06-15T11:53:27.652Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-bcc7f57cd-r8wxx<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-bcc7f57cd-dmjxr<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an warning-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-medium">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">Refresh token reuse detected. Session has been terminated. Please login again</h3>
-                    </div>
-                    <div class="card-count">2</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Refresh token reuse detected. Session has been terminated. Please login again</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-06-15T11:08:02.616Z</code><span class="meta-label">Last:</span> <code>2026-06-15T11:09:41.673Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-bcc7f57cd-hrddf<span class="pod-count">2</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an warning-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-high">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-high">HIGH</span>
-                        <h3 class="card-title">Invalid `prisma.lp_apps.findUnique()` invocation: User was denied access on the </h3>
-                    </div>
-                    <div class="card-count">1</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Invalid `prisma.lp_apps.findUnique()` invocation: User was denied access on the database `eu_preprod_lp`</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-06-14T23:55:02.473Z</code><span class="meta-label">Last:</span> <code>2026-06-14T23:55:02.473Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-bcc7f57cd-92f5d<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an error-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Fastify/NestJS is warning that a response Content-Type header does not match the serialized body — typically a handler returning a non-JSON body (string, stream, or error page) on a route declared as JSON without a custom ExceptionFilter. Often a downstream effect of an error path (e.g. a 503 or HTML error body) being returned through a JSON route.</div></div>
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">The response may be mis-serialized or rejected by clients expecting JSON. Frequently coincident with the DB/503 errors above — error responses leaving via the JSON path.</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Add a custom ExceptionFilter for non-JSON responses, or ensure error handlers always return JSON
+2. If these spike alongside the DB 503s, they clear when the database issue is fixed.</pre></div>
                 </div>
             </div></div>
         </section>
@@ -547,7 +556,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
     </section></div>
 <footer>
 <p>Generated from Datadog Logs API for <code>service:rqillp-lp env:rqillp-lp-preprod-eu</code> over the last 1d.</p>
-<p style="margin-top:8px;">355 events across 11 patterns • 5 pods affected</p>
+<p style="margin-top:8px;">355 events across 10 patterns • 5 pods affected</p>
 </footer>
 </div>
 <script>
