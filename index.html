@@ -266,18 +266,18 @@
       </div>
 
       <div class="project-stats">
-        <div class="stat red"><div class="num">6</div><div class="lbl">Must</div></div>
+        <div class="stat red"><div class="num">5</div><div class="lbl">Must</div></div>
         <div class="stat amber"><div class="num">16</div><div class="lbl">Should</div></div>
-        <div class="stat green"><div class="num">13</div><div class="lbl">Nice</div></div>
-        <div class="stat blue"><div class="num">10</div><div class="lbl">Tests</div></div>
+        <div class="stat green"><div class="num">12</div><div class="lbl">Nice</div></div>
+        <div class="stat blue"><div class="num">11</div><div class="lbl">Tests</div></div>
       </div>
 
       <div class="verdict">
-        <strong>Needs changes.</strong> Hardcoded fallback JWT secret, singleton-logger context bug, one-time-token replay &amp; duplicate-license races, a missing-<code>await</code> cache race, an unguarded version cast, and missing LIS idempotency.
+        <strong>Needs changes.</strong> Hardcoded fallback JWT secret, non-idempotent LIS callback re-issuing eCards, a Redis client never closed on shutdown, a missing-<code>await</code> cache race, one-time-token replay race, and a CORS allowlist hardcoded empty.
       </div>
 
       <div class="footer-row">
-        <span>Branch <span class="branch">LP-399-recurrence-implementation</span></span>
+        <span>Branch <span class="branch">release/0.1.0</span></span>
         <span class="arrow">&rarr;</span>
       </div>
     </a>

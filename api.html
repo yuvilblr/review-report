@@ -220,11 +220,11 @@
     </div>
     <div class="meta-item">
       <span class="label">Branch</span>
-      <span class="value">LP-399-recurrence-implementation</span>
+      <span class="value">release/0.1.0</span>
     </div>
     <div class="meta-item">
       <span class="label">Date</span>
-      <span class="value">18 June 2026</span>
+      <span class="value">28 June 2026</span>
     </div>
     <div class="meta-item">
       <span class="label">Scope</span>
@@ -236,7 +236,7 @@
 <!-- Summary cards -->
 <div class="summary">
   <div class="card red">
-    <div class="num">6</div>
+    <div class="num">5</div>
     <div class="lbl">Must Fix</div>
   </div>
   <div class="card amber">
@@ -244,11 +244,11 @@
     <div class="lbl">Should Fix</div>
   </div>
   <div class="card green">
-    <div class="num">13</div>
+    <div class="num">12</div>
     <div class="lbl">Nice to Have</div>
   </div>
   <div class="card blue">
-    <div class="num">10</div>
+    <div class="num">11</div>
     <div class="lbl">Test Gaps</div>
   </div>
 </div>
@@ -256,7 +256,7 @@
 <div class="verdict">
   <div class="verdict-inner">
     <span class="icon">&#9888;</span>
-    <span class="text"><strong>Verdict: Needs changes before merge.</strong> The codebase is well-structured and broadly well-tested, but several blocking issues remain: a hardcoded fallback JWT signing secret, a shared-singleton logger that misattributes every log line, two check-then-act races (one-time launch-token replay and duplicate license creation), a missing-await that races cache invalidation, an unguarded version cast that can crash a launch, and a completion callback with no idempotency that re-issues eCards. The recurrence feature this branch is named for is currently shipped as dead code behind <code>const false</code> flags.</span>
+    <span class="text"><strong>Verdict: Needs changes before release.</strong> The codebase is well-structured and broadly well-tested, but several blocking issues remain: a hardcoded fallback JWT signing secret, a non-idempotent LIS completion callback that re-issues eCards, a Redis client never closed on shutdown, a missing-<code>await</code> that races cache invalidation, a one-time launch-token replay race, and a CORS allowlist hardcoded empty so cross-origin cookie-auth silently fails.</span>
   </div>
 </div>
 
@@ -267,7 +267,7 @@
   <div class="section-header">
     <span class="dot red-dot"></span>
     <h2>Must Fix</h2>
-    <span class="count count-red">6 issues</span>
+    <span class="count count-red">5 issues</span>
   </div>
   <div class="table-wrap">
     <table>
@@ -283,68 +283,57 @@
       <tbody>
         <tr>
           <td><span class="sev-badge red">Critical</span></td>
-          <td class="module">logger</td>
-          <td class="location"><code>logger.service.ts:83,89-91</code></td>
+          <td class="module">license / LIS</td>
+          <td class="location"><code>lis-completion.service.ts:233-253</code><br><code>license.controller.ts:78</code></td>
           <td class="desc">
-            <code>AppLogger</code> is a <code>@Global()</code> default-scoped <strong>singleton</strong> with a mutable <code>private context</code> field. ~25 services call <code>this.logger.setContext(X.name)</code> in their constructors against the <em>same</em> instance, so whichever provider is constructed last wins and <code>formatLog</code> stamps every subsequent log line with that context. Result: log lines are attributed to the wrong module, plus a shared-state write race.
+            The LIS completion endpoint is <strong>not idempotent</strong>, contradicting its own contract. The controller docstring promises an "Already Processed" response when already complete, but <code>processLisCompletion</code> performs no completion-state check — every <code>completion</code>/<code>course</code> callback re-fires the WebSocket notification and re-invokes <code>processCertificateClaim</code> &rarr; <code>msService.createCertificate</code>. Content Service legitimately retries callbacks, so duplicate eCards/certificates result.
           </td>
           <td class="fix">
-            Stop storing context on the shared instance. Either mark <code>AppLogger</code> as <code>Scope.TRANSIENT</code> so each consumer gets its own instance, or use Pino child loggers (<code>logger.child({ context })</code>) and require callers to pass <code>context</code> per call.
+            Gate <code>triggerPostCompletionActions</code> behind a persisted completion flag (status/timestamp, or dedupe on <code>attemptId</code>) and return "Already Processed" on repeats.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge red">Critical</span></td>
+          <td class="module">cache</td>
+          <td class="location"><code>cache.module.ts:13-25</code></td>
+          <td class="desc">
+            The <code>VALKEY_CLIENT</code> ioredis provider is a raw factory with no <code>onModuleDestroy</code>/<code>quit()</code>. <code>main.ts</code> calls <code>enableShutdownHooks()</code>, but nothing closes the Redis connection — the socket and its <code>keepAlive</code> timer are orphaned on every restart/redeploy.
+          </td>
+          <td class="fix">
+            Wrap the client in a provider implementing <code>onModuleDestroy</code> that <code>await client.quit()</code>.
           </td>
         </tr>
         <tr>
           <td><span class="sev-badge red">Critical</span></td>
           <td class="module">rqillp-service</td>
-          <td class="location"><code>rqillp.service.ts:451-461</code></td>
+          <td class="location"><code>rqillp.service.ts:448-458</code></td>
           <td class="desc">
-            <code>updateUserCustomProfile</code> does not <code>await</code> the <code>rqiRequest</code> PATCH, and fires the two <code>cacheService.delete(...)</code> calls without awaiting them. A concurrent <code>getUserById</code> can repopulate the cache with stale data after the delete, and the returned promise resolves before the PATCH completes. It also only busts two hard-coded keys while <code>getUserById</code> caches under <code>rqillp:user:${userId}${:filter}</code> for arbitrary filters, leaving other variants stale.
+            <code>updateUserCustomProfile</code> doesn't <code>await</code> the PATCH before invalidating the cache, and the two <code>cacheService.delete(...)</code> calls are floating (un-awaited). The deletes race the write — a concurrent <code>getUserById</code> can re-cache stale data after the delete but before the PATCH commits — and only two hardcoded keys are busted (other filter variants stay stale).
           </td>
           <td class="fix">
-            <code>await</code> the request, then <code>await</code> the deletes sequenced after a successful PATCH. Invalidate by key pattern (e.g. <code>SCAN rqillp:user:${userId}*</code>) or normalize to a single cache key.
+            <code>await</code> the request, then <code>await</code> the deletes; invalidate by key pattern (<code>SCAN rqillp:user:${userId}*</code>) or normalize to one key.
           </td>
         </tr>
         <tr>
           <td><span class="sev-badge red">Critical</span></td>
-          <td class="module">dispatch</td>
-          <td class="location"><code>dispatch.service.ts:601-637</code></td>
+          <td class="module">config / CORS</td>
+          <td class="location"><code>config/app.config.ts:8</code></td>
           <td class="desc">
-            <code>version: courseVersion as string</code> where <code>courseVersion</code> is <code>undefined</code> whenever the course has no manifest. The Prisma <code>version</code> column is a required <code>String</code> with no default, so the <code>create</code> path attempts to persist <code>undefined</code> and throws a Prisma validation error that surfaces as an unhandled 500 mid-launch. The <code>as string</code> cast merely hides the type hole.
+            <code>corsOrigins</code> is hardcoded to <code>[]</code> and never reads <code>process.env.CORS_ORIGINS</code> (which is documented in <code>.env.example</code>). So <code>main.ts</code> always evaluates the allowlist to <code>false</code> and every non-<code>/dispatch/</code> cross-origin request is blocked regardless of deployment config — any cookie-auth browser client on a different origin silently fails CORS.
           </td>
           <td class="fix">
-            Handle a missing manifest version explicitly — fail fast with a clear error or default to a sentinel/empty string — rather than casting <code>undefined</code> to <code>string</code>.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge red">Critical</span></td>
-          <td class="module">license / LIS</td>
-          <td class="location"><code>lis-completion.service.ts:233-253</code></td>
-          <td class="desc">
-            <code>processLisCompletion</code> never reads the license completion status. The route and service docstrings claim idempotency ("Already Processed" when already complete), but every duplicate <code>completion</code>/<code>course</code> callback re-runs <code>triggerPostCompletionActions</code> &rarr; <code>processCertificateClaim</code> &rarr; <code>msService.createCertificate</code>. Duplicate Content-Service callbacks therefore re-issue eCards.
-          </td>
-          <td class="fix">
-            Check the license status (or an already-completed marker) before claiming, mark it completed in the DB, and return "Already Processed" on repeats. If idempotency is delegated to MS, remove the false claim and document it.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge red">Critical</span></td>
-          <td class="module">repositories</td>
-          <td class="location"><code>user-license.repository.ts:88-108</code></td>
-          <td class="desc">
-            <code>getOrCreateUserLicense</code> is a check-then-create over a <strong>non-unique</strong> index (<code>@@index([user_id, org_id, course_id])</code>). Two concurrent <code>POST /dispatch/auth</code> calls for the same user/course both miss the <code>findFirst</code> and both <code>create</code>, producing duplicate activated licenses. This is the primary licensing path for launch and self-register, and callers do not tolerate duplicates.
-          </td>
-          <td class="fix">
-            Add a unique constraint on the active tuple and use <code>upsert</code>/catch P2002, or wrap select+insert in a transaction with appropriate isolation.
+            Parse the env var: <code>(process.env.CORS_ORIGINS ?? '').split(',').map(s =&gt; s.trim()).filter(Boolean)</code>.
           </td>
         </tr>
         <tr>
           <td><span class="sev-badge red">Critical</span></td>
           <td class="module">auth</td>
-          <td class="location"><code>auth.service.ts:504-510</code></td>
+          <td class="location"><code>token.service.ts:531-553</code></td>
           <td class="desc">
-            In <code>exchangeExternalServiceToken</code>, <code>userToken</code> can be <code>undefined</code> (<code>getTokens</code> types it optional and <code>getOrCreateUserToken</code> may return empty), yet it is non-null-asserted (<code>userToken!</code>) and returned. The client receives <code>accessToken: undefined</code> in a successful 200 response instead of a surfaced failure.
+            <code>verifyLaunchToken</code> enforces single-use with a check-then-act race: it calls <code>cacheService.exists()</code> then later <code>cacheService.set()</code>. Two concurrent requests with the same launch/proxy token both pass the <code>exists</code> check before either writes the marker, so a one-time token (which mints a full access+refresh session) can be redeemed more than once.
           </td>
           <td class="fix">
-            Guard before constructing the response: <code>if (!userToken) throw new ServiceUnavailableException(...)</code>.
+            Use an atomic set-if-not-exists (<code>SET key val NX EX ttl</code>) and treat a falsy result as "already used"; add a <code>setNx</code> primitive to <code>CacheService</code>.
           </td>
         </tr>
       </tbody>
@@ -376,109 +365,109 @@
           <td class="module">auth</td>
           <td class="location"><code>jwt.strategy.ts:19</code></td>
           <td class="desc">
-            <code>secretOrKey: configService.get&lt;string&gt;('auth.jwt.secret') ?? 'your-secret-key'</code>. If the secret env var is ever unset/empty, the strategy silently validates tokens against a public, well-known fallback key, allowing forged JWTs. <code>token.service.ts</code> already throws on a missing secret, so this fallback is both insecure and inconsistent.
+            <code>secretOrKey: configService.get&lt;string&gt;('auth.jwt.secret') ?? 'your-secret-key'</code>. If <code>JWT_SECRET</code> is unset, the strategy validates tokens against a publicly-known key, allowing forged tokens — a fail-open posture (<code>auth.config.ts</code> leaves the secret undefined when the env is missing).
           </td>
           <td class="fix">
-            Remove the <code>?? 'your-secret-key'</code> fallback and fail fast (throw at startup) when the secret is absent. Never provide a default signing/verification key.
+            Remove the fallback and fail fast at boot if <code>auth.jwt.secret</code> is absent.
           </td>
         </tr>
         <tr>
           <td><span class="sev-badge red">Security</span></td>
-          <td class="module">main</td>
+          <td class="module">bootstrap</td>
           <td class="location"><code>main.ts:27</code></td>
           <td class="desc">
-            <code>expressApp.set('trust proxy', true)</code> blanket-trusts every upstream hop, making <code>req.ip</code> / <code>X-Forwarded-For</code> fully spoofable. This undermines the per-IP <code>ThrottlerGuard</code> on public auth endpoints and poisons any IP-based logic (e.g. the maintenance VPN allowlist).
+            <code>expressApp.set('trust proxy', true)</code> trusts the entire <code>X-Forwarded-For</code> chain, making <code>req.ip</code> spoofable. This feeds the <code>ThrottlerGuard</code> and the maintenance VPN/IP allowlist — a client can forge their source IP to bypass per-IP rate limiting (and potentially the VPN gate).
           </td>
           <td class="fix">
-            Set <code>trust proxy</code> to the specific number of known proxy hops or a CIDR allowlist of the load balancer / ingress — never blanket <code>true</code>.
+            Set a bounded value — a trusted proxy CIDR list or hop count matching the real ingress topology.
           </td>
         </tr>
         <tr>
           <td><span class="sev-badge red">Security</span></td>
-          <td class="module">main</td>
+          <td class="module">bootstrap</td>
           <td class="location"><code>main.ts</code> (whole file)</td>
           <td class="desc">
-            No Helmet / security headers anywhere; <code>helmet</code> is not even a dependency. The app sends no <code>X-Content-Type-Options</code>, <code>Strict-Transport-Security</code>, <code>X-Frame-Options</code>, etc.
+            No Helmet / security-response-headers middleware anywhere (<code>helmet</code> isn't a dependency). Responses ship without <code>X-Content-Type-Options</code>, <code>X-Frame-Options</code>/CSP, <code>Referrer-Policy</code>, HSTS, etc.
           </td>
           <td class="fix">
-            Add <code>helmet</code> and <code>app.use(helmet(...))</code> early in <code>bootstrap()</code>, tuned for the LTI iframe-launch flows that need framing.
+            Add <code>helmet()</code> in <code>bootstrap()</code>, tuned for the LTI iframe flows.
           </td>
         </tr>
         <tr>
           <td><span class="sev-badge red">Security</span></td>
-          <td class="module">auth</td>
-          <td class="location"><code>token.service.ts:534-551</code></td>
+          <td class="module">config / throttle</td>
+          <td class="location"><code>config/throttle.config.ts:4</code></td>
           <td class="desc">
-            <code>verifyLaunchToken</code> single-use enforcement is a check-then-act race: <code>exists()</code> then <code>set()</code> are not atomic. Two concurrent requests with the same launch/proxy one-time token both pass the <code>exists</code> check before either writes the "used" marker, so an OTT can be redeemed more than once.
+            <code>enabled: process.env.THROTTLE_ENABLED === 'true'</code> defaults to <code>false</code> when unset, and <code>.env.example</code> ships <code>THROTTLE_ENABLED=false</code>. The <code>configService.get('throttle.enabled', true)</code> default is dead (the key always exists). Net: rate limiting is OFF unless explicitly enabled in every deployed env — a fail-open default for a security control.
           </td>
           <td class="fix">
-            Use an atomic set-if-not-exists (<code>SET key val NX EX ttl</code>) and treat a falsy result as "already used"; add that primitive to <code>CacheService</code>.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge red">Security</span></td>
-          <td class="module">curriculum</td>
-          <td class="location"><code>curriculum.service.ts:259-261</code></td>
-          <td class="desc">
-            <code>computeRetakeEligibility()</code> is a stub that unconditionally returns <code>true</code> and is exposed as <code>retakeEligible</code> in the live course list. Combined with <code>createRetakeLicense</code> (which only checks that any non-deleted license exists, not actual completion/eligibility), any learner with a license can mint unlimited retake licenses.
-          </td>
-          <td class="fix">
-            Implement the documented real check (product <code>course_retake</code>/<code>retake_duration</code> vs completion timestamp) before shipping, or gate the retake endpoint behind a feature flag; ensure <code>createRetakeLicense</code> enforces real eligibility.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge red">Security</span></td>
-          <td class="module">auth</td>
-          <td class="location"><code>auth.service.ts:137-138,256-316</code></td>
-          <td class="desc">
-            The proxy-token path mints a full user session from <code>userId</code>/<code>organizationId</code>/<code>courseId</code>/<code>licenseId</code> taken straight from the proxy JWT, with no DB validation that the license still exists, belongs to that user/org, or is active. A proxy token issued before a license was revoked/expired still yields a live session.
-          </td>
-          <td class="fix">
-            Validate the license is active and that <code>userId</code>/org match the license at exchange time, or keep proxy-token TTL extremely short and document the trade-off explicitly.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge red">Security</span></td>
-          <td class="module">auth</td>
-          <td class="location"><code>token.service.ts:637-700</code></td>
-          <td class="desc">
-            Refresh-token rotation stores only the latest <code>jti</code> keyed by <code>refresh:{userId}</code> (single slot), so concurrent sessions on multiple devices clobber each other and a legitimate retry trips the "reuse detected" force-logout. Cache failures are also swallowed silently, degrading reuse detection to "no protection" when Valkey is unavailable.
-          </td>
-          <td class="fix">
-            Key the jti store per-session (include a device/session id), and decide explicitly whether cache unavailability should fail open or closed for refresh.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge red">Security</span></td>
-          <td class="module">database</td>
-          <td class="location"><code>prisma.service.ts:38-40</code></td>
-          <td class="desc">
-            TLS is configured with <code>rejectUnauthorized: true</code> but <code>checkServerIdentity: () =&gt; undefined</code>, which disables hostname verification. This is only safe with a pinned CA, yet <code>tlsCaFile</code> is optional — with SSL on and no CA file you get the system CA bundle with hostname checks off, enabling MITM.
-          </td>
-          <td class="fix">
-            Only override <code>checkServerIdentity</code> when a private CA file is actually loaded; otherwise keep default hostname verification.
+            Default to enabled (<code>!== 'false'</code>) and set <code>THROTTLE_ENABLED=true</code> in deployed configs.
           </td>
         </tr>
         <tr>
           <td><span class="sev-badge red">Security</span></td>
           <td class="module">dispatch</td>
-          <td class="location"><code>dispatch.service.ts:232</code></td>
+          <td class="location"><code>dispatch.service.ts:215</code></td>
           <td class="desc">
-            <code>validateVendor</code> builds the cache key as <code>vendor:${vendorId}:${vendorKey}</code>, embedding the vendor secret key in a Valkey key. Cache keys are commonly visible via <code>KEYS</code>/<code>SCAN</code>/monitoring output, leaking the credential.
+            The Valkey cache key embeds the raw vendor secret: <code>vendor:${vendorId}:${vendorKey}</code>. Secrets in cache keys leak into <code>KEYS</code>/<code>SCAN</code> output, the Redis slow-log, and key-dump tooling.
           </td>
           <td class="fix">
-            Hash the <code>vendorKey</code> (e.g. SHA-256) into the key, or key only on <code>vendorId</code> with the key checked separately.
+            Hash the key (<code>vendor:${vendorId}:${sha256(vendorKey)}</code>) or key only on <code>vendorId</code> and compare the key in the payload.
           </td>
         </tr>
         <tr>
           <td><span class="sev-badge red">Security</span></td>
-          <td class="module">throttler / config</td>
-          <td class="location"><code>throttle.config.ts:4</code></td>
+          <td class="module">auth</td>
+          <td class="location"><code>token.service.ts</code> + <code>auth.module.ts:27-31</code></td>
           <td class="desc">
-            <code>enabled: process.env.THROTTLE_ENABLED === 'true'</code> means anything other than the literal <code>'true'</code> (including unset) disables rate limiting entirely via <code>skipIf</code>. Combined with the spoofable trust-proxy setting, deployed envs may run with no working rate limit on bcrypt-bound auth endpoints.
+            JWTs are signed/verified with no <code>issuer</code>/<code>audience</code> binding (<code>verify</code> uses default options). All token classes (launch, registration, dispatch, proxy, access, refresh, app) share one secret, distinguished only by a <code>type</code> claim — cross-context replay is prevented solely by per-method string checks.
           </td>
           <td class="fix">
-            Default to enabled (<code>!== 'false'</code>), ensure deployed configs set <code>THROTTLE_ENABLED=true</code>, and add a tighter named throttler for auth routes.
+            Add <code>verifyOptions: { issuer }</code> (and per-type audience) so tokens are cryptographically bound, not just string-claim-checked.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge red">Security</span></td>
+          <td class="module">auth</td>
+          <td class="location"><code>auth.controller.ts:330-337</code></td>
+          <td class="desc">
+            <code>POST /auth/tokens/exchange</code> is reachable by <code>app</code>-role tokens (neither <code>@AppOnly()</code> nor user-restricted). For an app principal <code>user.userId</code> is <code>undefined</code>, so the service calls the external API with <code>/users/undefined/tokens</code>. This is a user-only token-exchange endpoint.
+          </td>
+          <td class="fix">
+            Restrict to user principals (reject <code>role==='app'</code> / validate <code>isUserAuthTokenPayload</code>) and reject when <code>userId</code> is missing.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge red">Security</span></td>
+          <td class="module">curriculum</td>
+          <td class="location"><code>dto/course-launch-request.dto.ts:12-15</code></td>
+          <td class="desc">
+            <code>licenseId</code> is validated only with <code>@IsString()</code>, while <code>CourseListRequestDto</code> uses <code>@IsUUID('4')</code>. The value reaches <code>findOne({ id })</code> against a UUID PK unfiltered. The ownership check still prevents IDOR, so this is defense-in-depth.
+          </td>
+          <td class="fix">
+            Use <code>@IsUUID('4')</code> for consistency and edge rejection.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge red">Security</span></td>
+          <td class="module">config / auth</td>
+          <td class="location"><code>config/auth.config.ts:36-39</code></td>
+          <td class="desc">
+            Refresh-token cookie <code>sameSite</code> defaults to <code>'none'</code> when <code>COOKIE_SAME_SITE</code> is unset, and <code>secure</code> is forced only when <code>NODE_ENV==='production'</code>. A non-prod deployment could emit a <code>SameSite=None</code> cookie without <code>Secure</code> (invalid / dropped, or broadly cross-site exposed).
+          </td>
+          <td class="fix">
+            Default <code>sameSite</code> to <code>'lax'</code> and/or force <code>secure: true</code> outside local dev.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge red">Security</span></td>
+          <td class="module">websocket / content</td>
+          <td class="location"><code>aws-websocket-client.ts:78,136</code><br><code>content.service.ts:256</code></td>
+          <td class="desc">
+            Full outbound WebSocket payloads and the connection URL (incl. <code>userId</code>) are logged at info level, and the full CS API completion response body is logged on every call. These carry user/license identifiers and aren't covered by the request-logging redaction.
+          </td>
+          <td class="fix">
+            Drop payloads/bodies from info logs (or log non-PII metadata at debug); strip the query string from the URL log.
           </td>
         </tr>
       </tbody>
@@ -506,102 +495,91 @@
       </thead>
       <tbody>
         <tr>
-          <td><span class="sev-badge amber">Maintainability</span></td>
-          <td class="module">dispatch</td>
-          <td class="location"><code>dispatch.service.ts:578-638</code></td>
+          <td><span class="sev-badge amber">Lifecycle</span></td>
+          <td class="module">logger</td>
+          <td class="location"><code>logger.service.ts:89-91</code></td>
           <td class="desc">
-            Large dead branch: <code>createNewLicense</code> and <code>usePreviousLicense</code> are hardcoded <code>const false</code>, so the recurrence blocks are unreachable. <code>findSecondLatestActivatedLicense</code>, <code>validateRecurrence</code>, <code>fetchAndValidateCourseStatusForRecurrence</code>, and <code>toSystemDateString</code> have no production callers, and their tests are <code>describe.skip</code>. This is the feature this branch is named for.
+            <code>AppLogger</code> is a shared singleton, but several services call <code>setContext(...)</code> in their constructors. Since it's one instance, the last service to initialize wins, and any <code>log()</code> without an explicit context is mislabeled.
           </td>
           <td class="fix">
-            Either wire the recurrence path back in (with the skipped tests re-enabled) or remove the ~250 lines of unreachable code before merge.
+            Make the logger transient-scoped, or drop <code>setContext</code> and always pass <code>context</code> per call.
           </td>
         </tr>
         <tr>
           <td><span class="sev-badge amber">Performance</span></td>
           <td class="module">axios</td>
-          <td class="location"><code>axios.service.ts:9-11</code></td>
+          <td class="location"><code>axios.service.ts:9-42</code></td>
           <td class="desc">
-            No HTTP/HTTPS keep-alive agent on the shared axios instance. The entire integration layer (rqillp, MS gateway, content service, token endpoints) routes through this instance, so every outbound call pays a fresh TCP + TLS handshake and sockets churn in <code>TIME_WAIT</code>.
+            The shared axios instance has no <code>httpAgent</code>/<code>httpsAgent</code> with <code>keepAlive</code>, so every outbound call to rqillp/MS/content opens a fresh TCP+TLS connection. The request/response interceptors are also pure no-ops (dead commented auth code).
           </td>
           <td class="fix">
-            Configure <code>httpAgent</code>/<code>httpsAgent</code> with <code>new Agent({ keepAlive: true, maxSockets })</code>.
+            Configure <code>keepAlive: true</code> agents; remove or implement the interceptors.
           </td>
         </tr>
         <tr>
           <td><span class="sev-badge amber">Performance</span></td>
           <td class="module">auth / integrations</td>
-          <td class="location"><code>external-auth.service.ts:53-141</code></td>
+          <td class="location"><code>external-auth.service.ts:57-290</code></td>
           <td class="desc">
-            No cache-stampede / single-flight protection on token fetches. On a cold cache or simultaneous expiry, N concurrent requests all miss and all hit the token endpoint at once (thundering herd against rqillp, MS, and content-service auth).
+            No request coalescing on any token-fetch path — on a cold cache, N concurrent requests each fire a real <code>/tokens</code> call (cache stampede), hammering the auth endpoint.
           </td>
           <td class="fix">
-            Coalesce in-flight token fetches via a per-key promise map (single-flight), or add a short lock with jitter.
+            Coalesce in-flight fetches via a per-key promise map cleared on settle.
           </td>
         </tr>
         <tr>
           <td><span class="sev-badge amber">Correctness</span></td>
-          <td class="module">auth / integrations</td>
-          <td class="location"><code>external-auth.service.ts:164-220</code></td>
+          <td class="module">common / http</td>
+          <td class="location"><code>http-error.handler.ts:20-29</code></td>
           <td class="desc">
-            <code>getOrCreateGatewayAuthToken</code> caches for <code>ONE_DAY - 300s</code> regardless of the gateway token's actual lifetime (the response token is never introspected for expiry). If the gateway issues shorter-lived tokens, this caches stale/expired tokens for up to a day.
+            Upstream <code>403</code> is mapped to <code>UnauthorizedException</code> (401) and <code>500</code> to <code>ServiceUnavailableException</code> (503), silently rewriting upstream status and losing the authz-vs-authn distinction.
           </td>
           <td class="fix">
-            Derive TTL from the token's real expiry (decode JWT <code>exp</code> or use a returned expiry field), as <code>computeCacheTtl</code> already does for the other tokens.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge amber">Lifecycle</span></td>
-          <td class="module">websocket</td>
-          <td class="location"><code>aws-websocket-client.ts:105-108</code></td>
-          <td class="desc">
-            <code>sendToAWS</code> calls <code>connectToAWS()</code> directly when the socket is <code>CLOSED</code>, with no check for an in-flight <code>reconnectTimer</code>. A pending backoff reconnect plus a <code>sendToAWS</code>-triggered reconnect can spawn two concurrent connections; the orphaned socket keeps its old listeners.
-          </td>
-          <td class="fix">
-            Clear any existing <code>reconnectTimer</code> and <code>removeAllListeners()</code> + close the previous socket before reconnecting; guard concurrent connects with an <code>isConnecting</code> flag.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge amber">Security</span></td>
-          <td class="module">websocket</td>
-          <td class="location"><code>aws-websocket-client.ts:49,100</code></td>
-          <td class="desc">
-            Full WebSocket URL (including the <code>userId</code> query param) is logged at <code>info</code>, and every outbound payload is logged in full. If payloads carry PII or the URL embeds a signed token, this leaks to logs.
-          </td>
-          <td class="fix">
-            Log host/path only, redact the query string, and avoid logging full payloads at <code>info</code>.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge amber">Correctness</span></td>
-          <td class="module">curriculum</td>
-          <td class="location"><code>curriculum.service.ts:618-619</code></td>
-          <td class="desc">
-            <code>addMonths(validFrom, courseData.course_validity)</code> assumes <code>course_validity</code> is a valid number. If upstream omits/nulls it, <code>addMonths(date, undefined)</code> yields an <code>Invalid Date</code> that gets persisted as <code>valid_to</code>.
-          </td>
-          <td class="fix">
-            Validate <code>course_validity</code> is a finite positive number before calling <code>addMonths</code>; throw a clear error otherwise.
+            Map 403 &rarr; <code>ForbiddenException</code>, 500 &rarr; <code>InternalServerErrorException</code>/<code>BadGatewayException</code>.
           </td>
         </tr>
         <tr>
           <td><span class="sev-badge amber">Correctness</span></td>
           <td class="module">dispatch</td>
-          <td class="location"><code>dispatch.service.ts:154-171</code></td>
+          <td class="location"><code>dispatch.service.ts:566-589</code></td>
           <td class="desc">
-            <code>validateProduct</code> dereferences <code>product.course.id</code>/<code>.status</code> without guarding <code>product.course</code>. It is typed non-null but comes from an external API; if omitted, this throws a <code>TypeError</code> caught by a bare rethrow and surfaces as a 500 rather than a clean validation failure.
+            Check-then-act race in <code>getOrCreateUserLicense</code>: two concurrent calls for the same <code>(user_id, org_id, course_id)</code> both miss the <code>findFirst</code> and both <code>create</code>; the partial unique index makes the second throw P2002, which is <strong>not caught</strong> and propagates as an unhandled 500.
           </td>
           <td class="fix">
-            Null-check <code>product.course</code> and return <code>vdr_not_sub</code>.
+            Catch P2002 in <code>getOrCreateUserLicense</code> and re-query/return the existing row.
           </td>
         </tr>
         <tr>
-          <td><span class="sev-badge amber">Code Quality</span></td>
+          <td><span class="sev-badge amber">Resilience</span></td>
           <td class="module">dispatch</td>
-          <td class="location"><code>dispatch.service.ts:195-197,292-294,450-452</code></td>
+          <td class="location"><code>dispatch.service.ts:719-736</code></td>
           <td class="desc">
-            Three <code>catch (error) { throw error; }</code> blocks add nothing — no logging, no normalization. Dead try/catch.
+            In the existing-user branch of <code>resolveLicenseAndUserId</code>, <code>findOne</code> is not wrapped in try/catch (unlike the self-reg branch). A transient DB error throws a 500 instead of degrading to <code>incomplete</code>, inconsistent with the documented graceful-degradation behavior.
           </td>
           <td class="fix">
-            Remove them, or add the intended logging/normalization.
+            Wrap the existing-user lookup in the same try/catch returning null values.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Quality</span></td>
+          <td class="module">dispatch</td>
+          <td class="location"><code>dispatch.service.ts:484-496</code></td>
+          <td class="desc">
+            <code>getOrgLanguage(dto.vendorId)</code> runs in <code>Promise.all</code> alongside <code>validateVendor</code> with the <em>unvalidated</em> vendorId, so it fires an external call and populates the org-language cache for arbitrary attacker-supplied org IDs even when the vendor is invalid.
+          </td>
+          <td class="fix">
+            Fetch language only after vendor validation succeeds.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Error Handling</span></td>
+          <td class="module">auth</td>
+          <td class="location"><code>auth.service.ts:498-519</code></td>
+          <td class="desc">
+            <code>exchangeExternalServiceToken</code> swallows the underlying error with a bare <code>catch {}</code> and always returns <code>ServiceUnavailableException</code> (even for 401/invalid-credential failures); <code>userToken!</code> is non-null asserted though typed optional.
+          </td>
+          <td class="fix">
+            Inspect the caught error and map auth failures to <code>UnauthorizedException</code>; guard against a missing <code>userToken</code>.
           </td>
         </tr>
         <tr>
@@ -609,76 +587,87 @@
           <td class="module">auth</td>
           <td class="location"><code>auth.service.ts:82-91</code></td>
           <td class="desc">
-            <code>validateUser</code> is a no-op that spreads the payload and stamps <code>role: 'user'</code>; the comment "check if user exists in database" is stale/misleading and nothing is validated. A revoked user with a still-valid access token stays authenticated.
+            <code>validateUser</code> is a no-op scaffold (spreads the payload, stamps <code>role:'user'</code>) with a stale "add your custom validation logic" comment; the <code>if (!user)</code> guard in the strategy can never be true.
           </td>
           <td class="fix">
-            Implement real validation (existence/active check, ideally cached) or remove the misleading comments and rename to reflect it is a pass-through enrichment.
+            Remove the dead branch/comment, or implement real validation.
           </td>
         </tr>
         <tr>
           <td><span class="sev-badge amber">Type Safety</span></td>
           <td class="module">auth</td>
-          <td class="location"><code>auth.service.ts:196,221,370,378</code></td>
+          <td class="location"><code>auth.service.ts:138,196,221,370,378</code></td>
           <td class="desc">
-            Heavy <code>any</code> usage in a security-critical module: <code>createUnregisteredUserResponse(vendorDetails: any)</code>, <code>meta: any</code>, and <code>prepareAuthResponse(result: any)</code> returning <code>responseBody: any</code>. Payload shape matters here.
+            Heavy <code>any</code> in a security-critical module (<code>prepareAuthResponse(result: any)</code>, <code>vendorDetails: any</code>, <code>meta: any</code>); casts at 138/151 bypass the structural type guards.
           </td>
           <td class="fix">
-            Type <code>vendorDetails</code> as the launch/registration token payload union and <code>result</code> as the authenticate return type.
+            Narrow with the existing type guards and replace <code>any</code> with concrete payload types.
           </td>
         </tr>
         <tr>
           <td><span class="sev-badge amber">Correctness</span></td>
-          <td class="module">common / http</td>
-          <td class="location"><code>http-error.handler.ts:21</code></td>
-          <td class="desc">
-            Upstream <code>403 Forbidden</code> is mapped to <code>UnauthorizedException</code> (401), losing the authorization-vs-authentication distinction and surfacing a misleading 401 to clients.
-          </td>
-          <td class="fix">
-            Map 403 to <code>ForbiddenException</code>.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge amber">Security</span></td>
           <td class="module">curriculum</td>
-          <td class="location"><code>course-launch-request.dto.ts:12-15</code></td>
+          <td class="location"><code>dto/course-launch-request.dto.ts:51-66</code></td>
           <td class="desc">
-            <code>licenseId</code> is validated only with <code>@IsString()</code>, whereas <code>CourseListRequestDto.licenseId</code> correctly uses <code>@IsUUID('4')</code>. The value is looked up as a license that feeds OAuth signing; a malformed id hits Prisma and may throw an unmapped error instead of a clean 400.
+            <code>customDueDate</code>, <code>customStartDate</code>, <code>customCourseName</code> are declared (the latter two <code>@IsNotEmpty()</code> required) but <code>launchCourse()</code> never reads them — clients are forced to send mandatory fields that are silently ignored.
           </td>
           <td class="fix">
-            Use <code>@IsUUID('4')</code> for consistency and early rejection.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge amber">Config</span></td>
-          <td class="module">config</td>
-          <td class="location"><code>app.config.ts:8</code></td>
-          <td class="desc">
-            <code>corsOrigins: []</code> is hardcoded to an empty array and never reads an env var, so the strict CORS allowlist branch in <code>main.ts</code> always resolves to <code>origin: false</code> — either dead config or cross-origin cookie-auth endpoints are entirely blocked.
-          </td>
-          <td class="fix">
-            Populate from <code>process.env.CORS_ORIGINS</code> (comma-split) or remove the unused allowlist branch.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge amber">Config</span></td>
-          <td class="module">config</td>
-          <td class="location"><code>app.config.ts:11</code></td>
-          <td class="desc">
-            <code>rqillpServiceUrl</code> defaults to a hardcoded dev URL. A missing env var silently routes core LMS traffic to a dev host in any environment.
-          </td>
-          <td class="fix">
-            Remove the default; fail fast if unset in non-local envs.
+            Consume them in the LTI payload, or remove them (at least make optional if kept for forward-compat).
           </td>
         </tr>
         <tr>
           <td><span class="sev-badge amber">Type Safety</span></td>
-          <td class="module">certificates</td>
-          <td class="location"><code>certificates.service.ts:273,286-288</code></td>
+          <td class="module">curriculum</td>
+          <td class="location"><code>curriculum.service.ts:223</code></td>
           <td class="desc">
-            <code>fetchPromises: Promise&lt;any&gt;[]</code> with positional indexing (<code>fetchResults[0]?.data</code>, <code>[1]</code>, <code>[2]</code>) is fragile: the eCard fetch is conditionally pushed, so indices depend on flag state.
+            The date-mutation loop casts each course to <code>any</code> and mutates <code>response.courses[category]</code> in place via untyped indexing, bypassing the <code>CourseListResponseDto</code> contract.
           </td>
           <td class="fix">
-            Build the promises with explicit named variables (await a typed tuple) instead of positional <code>any[]</code>.
+            Type the course category arrays on the response DTO and iterate typed objects.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Config</span></td>
+          <td class="module">config</td>
+          <td class="location"><code>config/app.config.ts:9-11</code></td>
+          <td class="desc">
+            <code>rqillpServiceUrl</code> falls back to a hardcoded dev URL when <code>RQILLP_SERVICE_BASEURL</code> is unset — a misconfigured prod deploy would silently point the core LMS integration at the dev host.
+          </td>
+          <td class="fix">
+            Require the env var (throw on missing) rather than defaulting to a dev host.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Security</span></td>
+          <td class="module">bootstrap</td>
+          <td class="location"><code>main.ts:39-46</code></td>
+          <td class="desc">
+            The global <code>text/plain</code> &rarr; urlencoded re-parse runs on every request whose content-type merely <code>includes('text/plain')</code>, with no body-size guard beyond Express defaults and a fragile leading-<code>&amp;</code> strip; <code>req.body</code> is reassigned mid-pipeline.
+          </td>
+          <td class="fix">
+            Scope this to the LTI/dispatch callback routes rather than applying globally, and add a size limit.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Config</span></td>
+          <td class="module">config / auth</td>
+          <td class="location"><code>config/auth.config.ts:8-12</code></td>
+          <td class="desc">
+            JWT lifetimes (<code>expiresIn</code>, <code>refreshExpiresIn</code>, launch/registration token TTLs) have no fallback and will be <code>undefined</code> if env vars are missing — behavior then depends on how the signing lib treats <code>undefined</code> (often "never expires").
+          </td>
+          <td class="fix">
+            Provide explicit safe defaults or validate presence at startup.
+          </td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Robustness</span></td>
+          <td class="module">certificates</td>
+          <td class="location"><code>certificates.service.ts:286-304</code></td>
+          <td class="desc">
+            <code>userDetails = fetchResults[0]?.data</code> is optional-chained, but <code>userDetails.full_name</code>/<code>first_name</code> (and <code>orgDetails</code>) are then accessed without a guard; an empty RQI <code>data</code> throws a raw <code>TypeError</code> instead of a meaningful exception.
+          </td>
+          <td class="fix">
+            Validate <code>userDetails</code>/<code>orgDetails</code> are present and throw a domain exception.
           </td>
         </tr>
       </tbody>
@@ -691,7 +680,7 @@
   <div class="section-header">
     <span class="dot green-dot"></span>
     <h2>Nice to Have</h2>
-    <span class="count count-green">13 items</span>
+    <span class="count count-green">12 items</span>
   </div>
   <div class="table-wrap">
     <table>
@@ -706,107 +695,75 @@
       <tbody>
         <tr>
           <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">auth</td>
-          <td class="location"><code>token.service.ts:561-600</code></td>
-          <td class="desc">
-            <code>verifyRefreshToken</code> and <code>verifyAccessToken</code> are dead code outside tests (refresh uses <code>verifyRefreshTokenWithRotation</code>, access goes through the passport strategy). They duplicate logic and risk drift.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">auth</td>
-          <td class="location"><code>token.service.ts:486-513</code></td>
-          <td class="desc">
-            <code>verifyDispatchToken</code> re-throws JWT errors as bare <code>Error</code> rather than typed Nest exceptions like every other verify method, so failures surface as 500 unless remapped.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">curriculum</td>
-          <td class="location"><code>course-list-response.dto.ts:74-90</code></td>
-          <td class="desc">
-            The <code>User</code>/<code>EmailPref</code> interfaces are declared but unreferenced — dead code left from a prior shape.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">curriculum</td>
-          <td class="location"><code>curriculum.service.ts:181-243</code></td>
-          <td class="desc">
-            Several <code>userLicense?.</code> ternaries are redundant — <code>userLicense</code> is already guaranteed non-null by an earlier <code>if (!userLicense) throw</code>.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">axios</td>
-          <td class="location"><code>axios.service.ts:16-42</code></td>
-          <td class="desc">
-            Both request and response interceptors are effectively no-ops (the request one only holds commented-out future auth code). Dead/placeholder code.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">i18n</td>
-          <td class="location"><code>i18n.service.ts:28-75</code></td>
-          <td class="desc">
-            A malformed/missing locale dir throws during instantiation and takes down app bootstrap. Consider tolerating a missing dir as a warning if i18n is non-critical.
-          </td>
+          <td class="module">dispatch</td>
+          <td class="location"><code>dispatch.service.ts:609-670</code></td>
+          <td class="desc">Multiple hardcoded placeholder response fields tagged <code>// enhance</code> (<code>courseRetake:'false'</code>, <code>suspendDataGenerated:null</code>, etc.); <code>reccurenceCycle</code> is also misspelled. Track or remove.</td>
         </tr>
         <tr>
           <td><span class="sev-badge green">Minor</span></td>
           <td class="module">dispatch</td>
-          <td class="location"><code>dispatch.service.ts:660-721</code></td>
-          <td class="desc">
-            Multiple response fields hardcoded with <code>// enhance</code> comments (<code>courseRetake: 'false'</code>, <code>suspendDataGenerated: null</code>, etc.). Stale placeholders shipped in a response DTO.
-          </td>
+          <td class="location"><code>dispatch.service.ts:178,275,433</code></td>
+          <td class="desc">Three <code>catch (error) { throw error; }</code> blocks are dead code that only force <code>any</code> typing. Remove the try/catch.</td>
         </tr>
         <tr>
           <td><span class="sev-badge green">Minor</span></td>
           <td class="module">dispatch</td>
-          <td class="location"><code>dispatch.controller.ts:64</code></td>
-          <td class="desc">
-            Docstring example shows <code>popCloseApiUrl: ".../course-completion-status"</code> but the code returns <code>dispatch/course-status</code>. Stale doc.
-          </td>
+          <td class="location"><code>dto/dispatch-course-status.dto.ts:6-12</code></td>
+          <td class="desc"><code>usrSubscriptionId</code>/<code>vdrSubscriptionId</code> typed <code>string</code> but decorated <code>@IsNumber()</code> with a parseInt transform; also appears unused by the live route. Confirm dead and remove.</td>
         </tr>
         <tr>
           <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">announcements</td>
-          <td class="location"><code>announcements.service.ts:131-243</code></td>
-          <td class="desc">
-            The cache key derives only from <code>status</code> + the date portion of <code>fromDate</code>; <code>toDate</code>/<code>pageSize</code>/<code>pageNumber</code> are destructured but never used — misleading dead vars.
-          </td>
+          <td class="module">audit-logs</td>
+          <td class="location"><code>dto/get-audit-logs.dto.ts:67-98</code></td>
+          <td class="desc"><code>AuditLogData</code> declares <code>action</code>/<code>oldValues</code>/<code>newValues</code> and maps them, but the service deliberately omits those columns from the Prisma <code>select</code> — so they're always <code>undefined</code>. Drop the dead fields or fetch them intentionally.</td>
         </tr>
         <tr>
           <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">cache</td>
-          <td class="location"><code>cache.service.ts:38</code></td>
-          <td class="desc">
-            <code>get&lt;T&gt;</code> decides JSON vs string by <code>startsWith('{'|'[')</code>. A cached primitive string starting with <code>{</code> would attempt <code>JSON.parse</code> and be treated as a miss on failure. Lossy but low-risk.
-          </td>
+          <td class="module">curriculum</td>
+          <td class="location"><code>curriculum.service.ts:179-241</code></td>
+          <td class="desc">Redundant <code>userLicense ? ... : ...</code> ternaries — <code>userLicense</code> is already proven non-null by an earlier <code>if (!userLicense) throw</code>.</td>
         </tr>
         <tr>
           <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">license</td>
-          <td class="location"><code>license.service.ts:518</code></td>
-          <td class="desc">
-            <code>refUserLicenseId: insertedLicense.ref_user_license_id!</code> non-null assertion is safe today but will silently break if the column ever becomes optional.
-          </td>
+          <td class="module">auth</td>
+          <td class="location"><code>token.service.ts:485-515</code></td>
+          <td class="desc"><code>verifyDispatchToken</code> throws raw <code>Error</code> for expired/invalid tokens, unlike every other verify method which uses <code>UnauthorizedException</code>. Inconsistent error surface.</td>
         </tr>
         <tr>
           <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">repositories</td>
-          <td class="location"><code>user-license.repository.ts:279-299</code></td>
-          <td class="desc">
-            <code>findSecondLatestActivatedLicense</code> is annotated <code>Promise&lt;lp_user_licenses&gt;</code> but can return <code>undefined</code> (<code>licenses[0]</code>). Type as <code>| undefined</code> if kept.
-          </td>
+          <td class="module">auth</td>
+          <td class="location"><code>dto/app-refresh-request.dto.ts</code></td>
+          <td class="desc"><code>AppRefreshRequestDto</code> appears unused on this branch (no app-refresh route). Dead code — remove if no app-refresh flow is planned.</td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">auth / integrations</td>
+          <td class="location"><code>external-auth.service.ts:70,118,196,257</code></td>
+          <td class="desc">Heavy <code>httpCall&lt;any&gt;</code>; the token response shapes (<code>access_token</code>, <code>expires_at</code>, <code>token</code>) are known and could be typed.</td>
         </tr>
         <tr>
           <td><span class="sev-badge green">Minor</span></td>
           <td class="module">config</td>
-          <td class="location"><code>dd-trace.config.ts:6</code></td>
-          <td class="desc">
-            <code>env</code> defaults to <code>'dev-rqi1stop'</code>; a missing <code>DD_ENV</code> mislabels prod traces as dev.
-          </td>
+          <td class="location"><code>config/*.config.ts</code></td>
+          <td class="desc">The <code>parseInt</code>-with-fallback helper is duplicated across database/valkey/throttle/launchdarkly/websocket/auth config files. Extract one shared <code>parseIntEnv</code> util.</td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">license</td>
+          <td class="location"><code>dto/update-license.dto.ts:46-47</code></td>
+          <td class="desc">A private throwaway <code>_atLeastOne</code> property hosts the <code>@Validate(AtLeastOne)</code> decorator — works but a class-level decorator would read better.</td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">bootstrap</td>
+          <td class="location"><code>main.ts:98-102</code></td>
+          <td class="desc">Top-level <code>bootstrap().catch</code> reads <code>error.stack</code> without guarding that <code>error</code> is an <code>Error</code>; a non-Error rejection would throw inside the handler.</td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge green">Minor</span></td>
+          <td class="module">dispatch</td>
+          <td class="location"><code>dispatch.service.ts</code> JSDoc</td>
+          <td class="desc">Many JSDoc blocks reference an <code>authToken</code> parameter that no longer exists (tokens are fetched inside <code>rqillpService</code> now). Stale docs.</td>
         </tr>
       </tbody>
     </table>
@@ -818,35 +775,36 @@
   <div class="section-header">
     <span class="dot blue-dot"></span>
     <h2>Test Coverage</h2>
-    <span class="count count-blue">10 gaps</span>
+    <span class="count count-blue">11 gaps</span>
   </div>
   <div class="coverage-grid">
     <div class="coverage-box good">
       <h3>Well Covered</h3>
       <ul>
-        <li><code>token.service.ts</code> &mdash; 91 cases: expiry parsing, all token types, error mapping, single-use rejection, role rejection</li>
-        <li><code>auth.service.ts</code> / <code>auth.controller.ts</code> &mdash; bearer extraction, registered/unregistered/proxy flows, refresh rotation, cookie handling</li>
-        <li><code>curriculum.service.ts</code> &mdash; retake happy path, Forbidden/NotFound paths, getCourseList</li>
-        <li><code>certificates</code> (37), <code>announcements</code> (66 incl. retry/backoff/shutdown)</li>
-        <li><code>external-auth.service.ts</code> (40) &mdash; cache hit/miss, skip-cache, error normalization</li>
-        <li><code>cache.service.ts</code> (27), <code>launchdarkly</code> (37), <code>content.service.ts</code> (22)</li>
-        <li><code>app.repository.ts</code>, exception filter, trace interceptor, language-validation pipe</li>
-        <li><code>license-expiration.job.ts</code> &mdash; happy path (where-clause, batch termination, <code>app.close()</code>)</li>
+        <li><code>auth.controller.spec.ts</code> &mdash; tokens (registered/unregistered/error), refresh + rotation + missing/expired/invalid cases, app/tokens (Basic + body), exchange success/error</li>
+        <li><code>dispatch.service.spec.ts</code> &mdash; validateProduct (active/limit/mismatch/discontinued), validateVendor, getCourseStatus (existing + self-reg, CS 500 vs non-500, caching)</li>
+        <li><code>license.service.spec.ts</code> &mdash; update/delete (CS 404/4xx/5xx, audit-log tolerance), createLicense Prisma mapping, proxy ownership</li>
+        <li><code>lis-completion.service.spec.ts</code> &mdash; payload validation (sourcedId vs id/ref_user_license_id), non-completion skips, WS-failure tolerance</li>
+        <li><code>curriculum.service.spec.ts</code> &mdash; IDOR/authorization paths (ForbiddenException, no-license, cross-org launch)</li>
+        <li><code>audit-log.service.spec.ts</code> &mdash; filter composition, pagination, dropped-columns assertion; maintenance <code>isOnVpn</code>; announcements (51 cases)</li>
+        <li><code>external-auth.service.spec.ts</code> &mdash; TTL/buffer, skip-cache, 401 clear, hit/miss; cache, prisma, websocket, launchdarkly specs</li>
+        <li>filters, pipes, validators, <code>app.config</code>/<code>database.config</code> specs all present</li>
       </ul>
     </div>
     <div class="coverage-box weak">
       <h3>Missing / Thin</h3>
       <ul>
-        <li><code>app-auth.service.ts</code> &mdash; only 3 tests; no inactive-app, null <code>getValidatedApp</code>, or empty-scope coverage (security-critical)</li>
-        <li>Concurrency &mdash; no tests for the <code>verifyLaunchToken</code> single-use race, multi-device refresh-jti clobber, or <code>getOrCreateUserLicense</code> duplicate-create race</li>
-        <li><code>lis-completion.service.ts</code> &mdash; no test for a second completion callback on an already-completed license (the eCard double-issue path)</li>
-        <li>Recurrence date math &mdash; all <code>validateRecurrence</code>/second-latest-license/ecard-expiry tests are <code>describe.skip</code></li>
-        <li><code>jwt.strategy.ts</code> &mdash; no test asserting behavior when the secret is missing (would catch the hardcoded fallback)</li>
-        <li><code>aws-websocket-client.ts</code> &mdash; no test for the <code>sendToAWS</code> reconnect path, concurrent reconnect, or listener cleanup</li>
-        <li><code>axios.service.ts</code> (4 cases) &mdash; no error-propagation or keep-alive/agent assertions</li>
-        <li><code>prisma.service.ts</code> (7 cases) &mdash; TLS/CA config branch and <code>checkServerIdentity</code> override untested</li>
-        <li><code>license-expiration.job.ts</code> &mdash; error path (<code>updateMany</code> throwing) and multi-batch iteration untested</li>
-        <li><code>main.ts</code> bootstrap &mdash; trust-proxy, the <code>/dispatch/</code> CORS substring branch, and the throttler enable flag are unverified</li>
+        <li><strong>LIS idempotency</strong> &mdash; no test that a repeat completion callback skips the WS notification + certificate re-claim (the must-fix gap)</li>
+        <li><code>verifyLaunchToken</code> single-use <strong>race</strong> &mdash; only the sequential already-used case is tested; the concurrency gap is invisible</li>
+        <li><code>getOrCreateUserLicense</code> P2002 concurrent-create race untested</li>
+        <li>Existing-user DB-error degradation in <code>resolveLicenseAndUserId</code> untested</li>
+        <li><code>updateUserCustomProfile</code> await-ordering / floating-delete race untested</li>
+        <li>Token-fetch <strong>stampede/coalescing</strong> untested (no coalescing exists)</li>
+        <li>No test that boot fails when <code>JWT_SECRET</code> is unset, nor that issuer/audience is verified</li>
+        <li>No test that an <code>app</code>-role token is rejected at <code>/auth/tokens/exchange</code></li>
+        <li>Throttle <code>enabled</code> default and CORS <code>corsOrigins</code> wiring untested &mdash; a config spec would have caught both mis-defaults</li>
+        <li><code>license-expiration.job.spec.ts</code> shallow &mdash; error branch (<code>process.exit(1)</code>), multi-batch loop, and empty-result break untested</li>
+        <li>Certificates partial-failure path and absent <code>userDetails</code>/<code>orgDetails</code> untested; <code>main.ts</code> bootstrap (trust-proxy, CORS, text/plain reparse) has no e2e assertions</li>
       </ul>
     </div>
   </div>
@@ -854,7 +812,7 @@
 
 </main>
 
-<footer>rqillp-lp &middot; 18 June 2026</footer>
+<footer>rqillp-lp &middot; 28 June 2026</footer>
 
 </body>
 </html>
