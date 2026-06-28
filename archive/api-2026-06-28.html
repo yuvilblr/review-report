@@ -864,6 +864,7 @@
     var div=document.createElement('div'); div.className='cmt';
     div.innerHTML='<span class="cmt-author">'+esc(c.author||'Anonymous')+'</span><span class="cmt-when">'+esc(when)+'</span><div class="cmt-body">'+esc(c.body)+'</div>';
     cell.thread.appendChild(div); cell.empty.style.display='none';
+    if (cell.form) cell.form.style.display='none';
     cell.thread.scrollTop=cell.thread.scrollHeight;
   }
   function ready(fn){ if(document.readyState!=='loading') fn(); else document.addEventListener('DOMContentLoaded',fn); }
@@ -884,7 +885,7 @@
         var form=document.createElement('div'); form.className='cmt-form';
         form.innerHTML='<input class="cmt-name" placeholder="name (optional)" maxlength="60" /><textarea class="cmt-input" rows="2" placeholder="Add a comment…" maxlength="4000"></textarea><div class="cmt-actions"><button class="cmt-add" type="button">Comment</button><a class="cmt-gh" target="_blank" rel="noopener noreferrer">↗ issue</a></div><div class="cmt-status"></div>';
         cell.appendChild(thread); cell.appendChild(form); tr.appendChild(cell);
-        cells[fid]={thread:thread, empty:empty};
+        cells[fid]={thread:thread, empty:empty, form:form};
         form.querySelector('.cmt-gh').href=ghUrl('['+type+'] '+sectionTitle+': '+module+' — '+location, '**Finding:** '+issue+'\n\n**Location:** `'+location+'`\n');
         var btn=form.querySelector('.cmt-add'), ip=form.querySelector('.cmt-input'), nm=form.querySelector('.cmt-name'), st=form.querySelector('.cmt-status');
         btn.addEventListener('click', function () {
