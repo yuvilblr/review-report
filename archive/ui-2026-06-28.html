@@ -736,8 +736,13 @@
 <footer>lp-ui &middot; 28 June 2026</footer>
 
 <style>
+  /* widen the page so the extra Comments column fits, and let flex children shrink */
+  .summary,.verdict,main,.cmt-note{max-width:1480px}
+  main .section,.section,.table-wrap{min-width:0}
   .table-wrap{overflow-x:auto}
-  td.cmt-cell{min-width:240px;max-width:300px;vertical-align:top}
+  td.desc{max-width:340px}
+  td.fix{max-width:230px}
+  td.cmt-cell{min-width:230px;max-width:280px;vertical-align:top}
   thead th.cmt-col{min-width:240px}
   .cmt-thread{display:flex;flex-direction:column;gap:6px;margin-bottom:8px;max-height:200px;overflow:auto}
   .cmt{background:#f8fafc;border:1px solid #eef2f7;border-radius:6px;padding:6px 8px;font-size:12px;line-height:1.45}
