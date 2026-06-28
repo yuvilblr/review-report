@@ -814,5 +814,41 @@
 
 <footer>rqillp-lp &middot; 28 June 2026</footer>
 
+<style>
+  .discuss-link{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:11px;font-weight:600;color:#2563eb;text-decoration:none;border:1px solid #dbeafe;background:#eff6ff;padding:2px 8px;border-radius:6px;white-space:nowrap}
+  .discuss-link:hover{background:#dbeafe}
+  .discuss-note{max-width:1100px;margin:0 auto;padding:0 40px;font-size:12px;color:#64748b}
+  .discuss-note code{background:#eef2f7;padding:1px 5px;border-radius:4px}
+</style>
+<div class="discuss-note">&#128172; Click <strong>Discuss</strong> on any finding to open a pre-filled, shared GitHub issue (labelled <code>review:&lt;type&gt;</code>) — comments thread and persist in GitHub.</div>
+<script>
+(function () {
+  var REPO = 'yuvilblr/review-report';
+  var type = /lp-ui/i.test(document.title) ? 'ui' : 'api';
+  function txt(el){ return el ? el.innerText.trim().replace(/\s+/g,' ') : ''; }
+  var dateEl = document.querySelector('header .meta-item:nth-child(3) .value');
+  var branchEl = document.querySelector('header .meta-item:nth-child(2) .value');
+  var ctx = type.toUpperCase() + ' review' + (dateEl ? ' (' + txt(dateEl) : ' (') + (branchEl ? ', ' + txt(branchEl) : '') + ')';
+  document.querySelectorAll('main .section table tbody tr').forEach(function (tr) {
+    var td = tr.querySelectorAll('td');
+    if (td.length < 4) return;                       // findings rows only
+    var section = txt(tr.closest('.section').querySelector('h2'));
+    var module = txt(td[1]);
+    var location = txt(td[2]);
+    var issue = txt(td[3]);
+    if (!module || !location) return;
+    var title = '[' + type + '] ' + section + ': ' + module + ' — ' + location;
+    var body = '**Finding:** ' + issue + '\n\n**Location:** `' + location + '`\n\n_From the ' + ctx + '._\n\n---\n';
+    var url = 'https://github.com/' + REPO + '/issues/new?title=' + encodeURIComponent(title) +
+              '&body=' + encodeURIComponent(body) + '&labels=' + encodeURIComponent('review:' + type);
+    var a = document.createElement('a');
+    a.className = 'discuss-link';
+    a.href = url; a.target = '_blank'; a.rel = 'noopener noreferrer';
+    a.innerHTML = '&#128172; Discuss';
+    td[td.length - 1].appendChild(a);
+  });
+})();
+</script>
+
 </body>
 </html>
