@@ -251,7 +251,7 @@
   <div class="badge">Code Review</div>
   <h1>Review Reports</h1>
   <p>Latest code-review snapshots for the Learner Portal stack &mdash; click a card to open the full report.</p>
-  <div class="meta">Updated 8 May 2026</div>
+  <div class="meta">Updated 28 June 2026</div>
 </header>
 
 <main>
@@ -266,18 +266,18 @@
       </div>
 
       <div class="project-stats">
-        <div class="stat red"><div class="num">4</div><div class="lbl">Must</div></div>
-        <div class="stat amber"><div class="num">10</div><div class="lbl">Should</div></div>
-        <div class="stat green"><div class="num">8</div><div class="lbl">Nice</div></div>
-        <div class="stat blue"><div class="num">5</div><div class="lbl">Tests</div></div>
+        <div class="stat red"><div class="num">6</div><div class="lbl">Must</div></div>
+        <div class="stat amber"><div class="num">16</div><div class="lbl">Should</div></div>
+        <div class="stat green"><div class="num">13</div><div class="lbl">Nice</div></div>
+        <div class="stat blue"><div class="num">10</div><div class="lbl">Tests</div></div>
       </div>
 
       <div class="verdict">
-        <strong>Needs changes.</strong> WebSocket listener leak, singleton-logger context bug, dispatch <code>userId</code>/<code>uniqueId</code> conflation, and silent CS-error fail-soft are the standouts.
+        <strong>Needs changes.</strong> Hardcoded fallback JWT secret, singleton-logger context bug, one-time-token replay &amp; duplicate-license races, a missing-<code>await</code> cache race, an unguarded version cast, and missing LIS idempotency.
       </div>
 
       <div class="footer-row">
-        <span>Branch <span class="branch">feature/maintainance-mode</span></span>
+        <span>Branch <span class="branch">LP-399-recurrence-implementation</span></span>
         <span class="arrow">&rarr;</span>
       </div>
     </a>
@@ -292,18 +292,18 @@
       </div>
 
       <div class="project-stats">
-        <div class="stat red"><div class="num">3</div><div class="lbl">Must</div></div>
-        <div class="stat amber"><div class="num">9</div><div class="lbl">Should</div></div>
-        <div class="stat green"><div class="num">7</div><div class="lbl">Nice</div></div>
-        <div class="stat blue"><div class="num">3</div><div class="lbl">Tests</div></div>
+        <div class="stat red"><div class="num">4</div><div class="lbl">Must</div></div>
+        <div class="stat amber"><div class="num">14</div><div class="lbl">Should</div></div>
+        <div class="stat green"><div class="num">12</div><div class="lbl">Nice</div></div>
+        <div class="stat blue"><div class="num">9</div><div class="lbl">Tests</div></div>
       </div>
 
       <div class="verdict">
-        <strong>Needs changes.</strong> Home-grown HTML sanitizer (use DOMPurify), wildcard <code>postMessage</code> target origin, and a token-refresh race that lets requests use soon-to-expire tokens.
+        <strong>Needs changes.</strong> Hand-rolled HTML sanitizer (DOMPurify not installed), wildcard <code>postMessage('*')</code>, auth token left in the URL, external refresh tokens in JS memory, no Datadog URL scrubbing, and a shared WebSocket never cleaned up on unmount.
       </div>
 
       <div class="footer-row">
-        <span>Branch <span class="branch">feature/maintainance-mode</span></span>
+        <span>Branch <span class="branch">release/0.1.0</span></span>
         <span class="arrow">&rarr;</span>
       </div>
     </a>
@@ -311,6 +311,26 @@
 
   <div class="archive">
     <h2>Archive</h2>
+
+    <div class="month-group">
+      <div class="month-label">June 2026</div>
+      <ul>
+        <li>
+          <a href="archive/api-2026-06-28.html">
+            <span class="type-tag api">API</span>
+            <span class="date">2026-06-28</span>
+            <span class="arrow">&rarr;</span>
+          </a>
+        </li>
+        <li>
+          <a href="archive/ui-2026-06-28.html">
+            <span class="type-tag ui">UI</span>
+            <span class="date">2026-06-28</span>
+            <span class="arrow">&rarr;</span>
+          </a>
+        </li>
+      </ul>
+    </div>
 
     <div class="month-group">
       <div class="month-label">May 2026</div>
@@ -347,7 +367,7 @@
   </div>
 </main>
 
-<footer>Review Reports &middot; updated 8 May 2026</footer>
+<footer>Review Reports &middot; updated 28 June 2026</footer>
 
 </body>
 </html>
