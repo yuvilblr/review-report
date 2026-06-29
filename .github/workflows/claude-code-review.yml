@@ -95,3 +95,16 @@ jobs:
                Use `file:line` in backticks so GitHub links them. Only report issues you verified in the diff. Be concise and specific.
           claude_args: |
             --allowedTools "Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh api:*),Write,Read,Grep,Glob"
+
+      - name: Gate on review verdict
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          STATE=$(gh api "repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews" \
+            --jq '[.[] | select(.user.login=="claude[bot]")] | last | .state // "NONE"')
+          echo "Latest Claude review state: $STATE"
+          if [ "$STATE" = "CHANGES_REQUESTED" ]; then
+            echo "::error::Claude Code Review requested changes (Must Fix / High-severity findings present) — failing this check."
+            exit 1
+          fi
+          echo "No blocking findings (state: $STATE) — check passes."
