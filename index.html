@@ -266,14 +266,14 @@
       </div>
 
       <div class="project-stats">
-        <div class="stat red"><div class="num">5</div><div class="lbl">Must</div></div>
-        <div class="stat amber"><div class="num">16</div><div class="lbl">Should</div></div>
+        <div class="stat red"><div class="num">1</div><div class="lbl">Must</div></div>
+        <div class="stat amber"><div class="num">17</div><div class="lbl">Should</div></div>
         <div class="stat green"><div class="num">12</div><div class="lbl">Nice</div></div>
         <div class="stat blue"><div class="num">11</div><div class="lbl">Tests</div></div>
       </div>
 
       <div class="verdict">
-        <strong>Needs changes.</strong> Hardcoded fallback JWT secret, non-idempotent LIS callback re-issuing eCards, a Redis client never closed on shutdown, a missing-<code>await</code> cache race, one-time-token replay race, and a CORS allowlist hardcoded empty.
+        <strong>Needs changes (small high-severity set).</strong> Re-triaged to a strict bar: one conditional must-fix (LIS callback idempotency) plus a few real security items — fail-open JWT secret fallback (High), launch-token single-use race (Moderate), spoofable <code>trust proxy</code> (Moderate). Most prior "critical" items were config/hardening &rarr; Should Fix.
       </div>
 
       <div class="footer-row">
@@ -292,14 +292,14 @@
       </div>
 
       <div class="project-stats">
-        <div class="stat red"><div class="num">4</div><div class="lbl">Must</div></div>
-        <div class="stat amber"><div class="num">14</div><div class="lbl">Should</div></div>
+        <div class="stat red"><div class="num">0</div><div class="lbl">Must</div></div>
+        <div class="stat amber"><div class="num">16</div><div class="lbl">Should</div></div>
         <div class="stat green"><div class="num">12</div><div class="lbl">Nice</div></div>
         <div class="stat blue"><div class="num">9</div><div class="lbl">Tests</div></div>
       </div>
 
       <div class="verdict">
-        <strong>Needs changes.</strong> Hand-rolled HTML sanitizer (DOMPurify not installed), wildcard <code>postMessage('*')</code>, auth token left in the URL, external refresh tokens in JS memory, no Datadog URL scrubbing, and a shared WebSocket never cleaned up on unmount.
+        <strong>Needs changes — no release-blocking must-fix.</strong> At the strict bar, the real items are a few moderate security concerns (hand-rolled HTML sanitizer, refresh tokens in JS memory, unscrubbed Datadog URLs) plus lifecycle/UX should-fixes. Earlier "critical" lifecycle/routing items were bounded/conditional &rarr; Should Fix.
       </div>
 
       <div class="footer-row">
