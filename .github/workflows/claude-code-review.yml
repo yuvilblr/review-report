@@ -10,8 +10,8 @@ concurrency:
 
 jobs:
   lp-gate-keeper:
-    # Skip on Claude-authored branches to prevent recursion.
-    if: ${{ !startsWith(github.event.pull_request.head.ref, 'claude/') }}
+    # Run only on READY (non-draft) PRs; skip Claude-authored branches.
+    if: ${{ github.event.pull_request.draft == false && !startsWith(github.event.pull_request.head.ref, 'claude/') }}
 
     runs-on: ubuntu-latest
     permissions:
