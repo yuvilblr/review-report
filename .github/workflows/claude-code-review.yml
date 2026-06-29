@@ -52,7 +52,10 @@ jobs:
                - If the current code already fixes it, omit it.
                - If the author replied with a sound, specific justification that it is intentional or not applicable (e.g. "validated upstream", "internal-only endpoint"), accept it — do NOT raise it as Must Fix (note it as acknowledged at most).
                - Keep a finding as Must Fix ONLY when it is genuine, unaddressed harm and any justification is missing or unconvincing.
-               You adjudicate: never pass real harm just because the author says "not required", and never re-flag something already fixed or soundly justified. The author clears the gate by fixing the issue OR by justifying it well enough that you agree.
+               Comment authority — WHO said it matters (check each comment's author login):
+               - A comment or reply by the repository owner **yuvilblr** saying a finding can be skipped / is acceptable / will not be fixed is AUTHORITATIVE: drop that finding and let the build pass, even if you would otherwise rate it Must Fix. yuvilblr's decision is final.
+               - A justification from ANY OTHER author (peers) is advisory only: accept it solely when it is technically sound and specific. If it does not convince you, KEEP the finding as Must Fix and add the note "needs @yuvilblr's decision" — do NOT pass it on a peer's say-so.
+               You defer to yuvilblr's explicit skip; you adjudicate everyone else on merit. Never pass genuine harm because a peer said "not required", and never re-flag something already fixed, soundly justified, or waived by yuvilblr.
 
             2. Review for: correctness/logic bugs, unhandled edge cases (null/undefined/empty), race conditions, security (secrets, injection, XSS, auth/authz, IDOR, data exposure), performance, error handling, code quality, and missing tests.
 
