@@ -45,6 +45,15 @@ jobs:
                  gh pr view $PR_NUMBER --repo $REPO
                Read changed files for context as needed.
 
+            1a. Account for what the author has already addressed (this runs again on every push, so credit prior work):
+                 gh api repos/$REPO/pulls/$PR_NUMBER/comments    # your earlier inline comments + author replies
+                 gh api repos/$REPO/issues/$PR_NUMBER/comments   # PR conversation
+               For every issue you would raise:
+               - If the current code already fixes it, omit it.
+               - If the author replied with a sound, specific justification that it is intentional or not applicable (e.g. "validated upstream", "internal-only endpoint"), accept it — do NOT raise it as Must Fix (note it as acknowledged at most).
+               - Keep a finding as Must Fix ONLY when it is genuine, unaddressed harm and any justification is missing or unconvincing.
+               You adjudicate: never pass real harm just because the author says "not required", and never re-flag something already fixed or soundly justified. The author clears the gate by fixing the issue OR by justifying it well enough that you agree.
+
             2. Review for: correctness/logic bugs, unhandled edge cases (null/undefined/empty), race conditions, security (secrets, injection, XSS, auth/authz, IDOR, data exposure), performance, error handling, code quality, and missing tests.
 
             3. Assign severity with a STRICT bar — DO NOT inflate:
@@ -73,26 +82,26 @@ jobs:
                **Verdict:** <⚠️ Needs changes | ✅ Looks good | 🛑 Major rework> · **<n> Must Fix · <n> Security · <n> Should Fix · <n> Nice**
 
                ### 🔴 Must Fix
-               | Severity | File | Location | Issue | Suggested Fix |
-               |---|---|---|---|---|
+               | Location | Issue | Suggested Fix |
+               |---|---|---|
                (rows — or a single line: _None at the strict bar._)
 
                ### 🛡️ Security
-               | Severity | File | Location | Issue | Fix |
-               |---|---|---|---|---|
+               | Severity | Location | Issue | Fix |
+               |---|---|---|---|
                (use 🔴 High / 🟠 Moderate / 🟢 Low — NOT all red; or _None._)
 
                ### 🟡 Should Fix
-               | File | Location | Issue |
-               |---|---|---|
+               | Location | Issue |
+               |---|---|
                (if more than 8 rows, wrap the table in <details><summary>Show N</summary> … </details>; or _None._)
 
                ### 🟢 Nice to Have
-               | File | Location | Issue |
-               |---|---|---|
+               | Location | Issue |
+               |---|---|
                (or _None._)
 
-               Use `file:line` in backticks so GitHub links them. Only report issues you verified in the diff. Be concise and specific.
+               Keep tables to FEW columns so they render in the narrow PR pane. "Location" is ONE `path:line` cell in backticks (GitHub links it) — do NOT split file and line, and do NOT add a Severity column to Must Fix (the heading already says it). Only report issues you verified in the diff. Be concise and specific.
           claude_args: |
             --allowedTools "Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh api:*),Write,Read,Grep,Glob"
 
