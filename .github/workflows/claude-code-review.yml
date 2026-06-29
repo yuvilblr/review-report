@@ -1,15 +1,15 @@
-name: Claude Code Review
+name: LP Gate Keeper
 
 on:
   pull_request:
     types: [opened, synchronize, ready_for_review, reopened]
 
 concurrency:
-  group: claude-review-${{ github.event.pull_request.number }}
+  group: lp-gate-keeper-${{ github.event.pull_request.number }}
   cancel-in-progress: true
 
 jobs:
-  claude-review:
+  lp-gate-keeper:
     # Skip on Claude-authored branches to prevent recursion.
     if: ${{ !startsWith(github.event.pull_request.head.ref, 'claude/') }}
 
@@ -28,7 +28,7 @@ jobs:
           ref: ${{ github.event.pull_request.head.ref }}
           repository: ${{ github.event.pull_request.head.repo.full_name }}
 
-      - name: Run Claude Code Review
+      - name: Run LP Gate Keeper
         id: claude-review
         uses: anthropics/claude-code-action@v1
         with:
@@ -81,7 +81,7 @@ jobs:
 
             5. The "body" must be GitHub-flavored Markdown in EXACTLY this shape (tables render natively):
 
-               ## 🔍 Code Review
+               ## 🛡️ LP Gate Keeper
                **Verdict:** <⚠️ Needs changes | ✅ Looks good | 🛑 Major rework> · **<n> Must Fix · <n> Security · <n> Should Fix · <n> Nice**
 
                ### 🔴 Must Fix
@@ -104,7 +104,7 @@ jobs:
                |---|---|
                (or _None._)
 
-               Keep tables to FEW columns so they render in the narrow PR pane. "Location" is ONE `path:line` cell in backticks (GitHub links it) — do NOT split file and line, and do NOT add a Severity column to Must Fix (the heading already says it). Only report issues you verified in the diff. Be concise and specific.
+               Keep tables to FEW columns so they render in the narrow PR pane. "Location" is ONE `path:line` cell in backticks (GitHub links it) — do NOT split file and line, and do NOT add a Severity column to Must Fix (the heading already says it). Only report issues you verified in the diff. Be concise and specific. End the comment body with a final line: _— 🛡️ LP Gate Keeper · automated review_
           claude_args: |
             --allowedTools "Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh api:*),Write,Read,Grep,Glob"
 
@@ -116,7 +116,7 @@ jobs:
             --jq '[.[] | select(.user.login=="claude[bot]")] | last | .state // "NONE"')
           echo "Latest Claude review state: $STATE"
           if [ "$STATE" = "CHANGES_REQUESTED" ]; then
-            echo "::error::Claude Code Review requested changes (Must Fix / High-severity findings present) — failing this check."
+            echo "::error::LP Gate Keeper requested changes (Must Fix / High-severity findings present) — failing this check."
             exit 1
           fi
           echo "No blocking findings (state: $STATE) — check passes."
