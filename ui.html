@@ -172,6 +172,8 @@
       background: currentColor;
     }
 
+    .empty-note { padding: 18px 20px; font-size: 13px; color: #16a34a; }
+
     .coverage-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     @media (max-width: 640px) { .coverage-grid { grid-template-columns: 1fr; } }
     .coverage-box {
@@ -212,7 +214,7 @@
 <header>
   <div class="badge">Code Review</div>
   <h1>lp-ui &mdash; Full Codebase Review</h1>
-  <p>React 19 + TanStack Query v5 + Zustand v5 + React Router + Vite 7 + LaunchDarkly</p>
+  <p>React 19 + TanStack Query v5 + Zustand v5 + React Router + Vite 7 &middot; severity re-triaged to a strict bar</p>
   <div class="meta">
     <div class="meta-item">
       <span class="label">Project</span>
@@ -236,11 +238,11 @@
 <!-- Summary cards -->
 <div class="summary">
   <div class="card red">
-    <div class="num">4</div>
+    <div class="num">0</div>
     <div class="lbl">Must Fix</div>
   </div>
   <div class="card amber">
-    <div class="num">14</div>
+    <div class="num">16</div>
     <div class="lbl">Should Fix</div>
   </div>
   <div class="card green">
@@ -256,7 +258,7 @@
 <div class="verdict">
   <div class="verdict-inner">
     <span class="icon">&#9888;</span>
-    <span class="text"><strong>Verdict: Needs changes before release.</strong> The app is well-structured and unusually well-tested, but a cluster of security and lifecycle issues should be addressed first: a hand-rolled HTML sanitizer feeding <code>dangerouslySetInnerHTML</code> (DOMPurify isn't installed), wildcard <code>postMessage('*')</code> on course completion, an auth temp-token left in the URL, external refresh tokens held in JS memory, no Datadog URL scrubbing, plus a shared WebSocket that's never disconnected on unmount and silently sticks to a stale license on course switch.</span>
+    <span class="text"><strong>Verdict: Needs changes — no release-blocking must-fix.</strong> At the strict bar there are no unconditional must-fix issues. The real items are a few <em>moderate</em> security concerns — a hand-rolled HTML sanitizer feeding <code>dangerouslySetInnerHTML</code>, external refresh tokens held in JS memory, and unscrubbed token/userId in Datadog URLs — plus lifecycle and UX should-fixes. Earlier "critical" lifecycle/routing items were bounded or conditional and are now Should Fix.</span>
   </div>
 </div>
 
@@ -267,66 +269,10 @@
   <div class="section-header">
     <span class="dot red-dot"></span>
     <h2>Must Fix</h2>
-    <span class="count count-red">4 issues</span>
+    <span class="count count-red">0 issues</span>
   </div>
   <div class="table-wrap">
-    <table>
-      <thead>
-        <tr>
-          <th>Severity</th>
-          <th>Module</th>
-          <th>Location</th>
-          <th>Issue</th>
-          <th>Suggested Fix</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><span class="sev-badge red">Critical</span></td>
-          <td class="module">course-socket</td>
-          <td class="location"><code>course-socket.ts:27-35</code><br><code>courses-view.tsx:39</code><br><code>lti-launch-view.tsx:29</code></td>
-          <td class="desc">
-            <code>connect()</code> is called from <code>useEffect</code> with <strong>no cleanup</strong>, so the module-level WebSocket and its 30s keep-alive interval are never <code>disconnect()</code>-ed on unmount or route change. The connection outlives the component, and each reconnect's <code>onopen</code> registers a fresh <code>keepAliveTimer</code> — timers and sockets accumulate.
-          </td>
-          <td class="fix">
-            Return <code>() =&gt; disconnect()</code> from the effects. Because two components share the singleton, use ref-counting or a single owner so one unmounting view doesn't tear down the other's socket.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge red">Critical</span></td>
-          <td class="module">course-socket</td>
-          <td class="location"><code>course-socket.ts:27-32,79-82</code></td>
-          <td class="desc">
-            On <code>connect(newLicenseId)</code>, <code>currentLicenseId</code> is reassigned but <code>openSocket()</code> early-returns when a socket is already OPEN/CONNECTING. The live socket stays subscribed to the <em>old</em> <code>userId=&lt;oldLicenseId&gt;_0</code> while the app believes it's listening for the new license — completion notifications for the new course are silently missed.
-          </td>
-          <td class="fix">
-            If <code>licenseId !== currentLicenseId</code> and a socket exists, <code>disconnect()</code> before opening the new one.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge red">Critical</span></td>
-          <td class="module">routing / auth</td>
-          <td class="location"><code>routes/courses/index.tsx:16-29</code></td>
-          <td class="desc">
-            <code>CoursesRoute</code> reads session data from the in-memory Zustand store with no <code>RequireAuth</code> guard. On a hard refresh the store is empty, so a registered user is shown a 401 <code>ErrorFallback</code> instead of being routed back through <code>/auth</code>. The fallback is also <em>rendered</em> in the body (not thrown), so the route's <code>errorElement</code> is bypassed.
-          </td>
-          <td class="fix">
-            Add a shared auth guard that redirects to the auth/launch flow (or throws a <code>Response</code> so the <code>errorElement</code> handles it) instead of inline-rendering the fallback.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge red">Correctness</span></td>
-          <td class="module">routing</td>
-          <td class="location"><code>app/router.tsx:94-98</code></td>
-          <td class="desc">
-            The <code>router.subscribe</code> effect references <code>router</code> but has an empty dependency array. <code>router</code> is recreated by <code>useMemo</code> whenever <code>queryClient</code> changes, so a new router would never be re-subscribed — <code>showInitLoader</code> goes stale and the previous subscription leaks.
-          </td>
-          <td class="fix">
-            Add <code>router</code> to the dependency array: <code>useEffect(() =&gt; router.subscribe(...), [router])</code>.
-          </td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="empty-note">&#10003; None at the strict bar — no issue causes unconditional harm in normal operation. The closest candidates (stale WebSocket on in-session course switch) are conditional and listed under Should Fix; the security items are in the section below.</div>
   </div>
 </div>
 
@@ -335,85 +281,43 @@
   <div class="section-header">
     <span class="dot red-dot"></span>
     <h2>Security Findings</h2>
-    <span class="count count-red">6 issues</span>
+    <span class="count count-red">4 issues</span>
   </div>
   <div class="table-wrap">
     <table>
       <thead>
-        <tr>
-          <th>Severity</th>
-          <th>Module</th>
-          <th>Location</th>
-          <th>Issue</th>
-          <th>Suggested Fix</th>
-        </tr>
+        <tr><th>Severity</th><th>Module</th><th>Location</th><th>Issue</th><th>Suggested Fix</th></tr>
       </thead>
       <tbody>
         <tr>
-          <td><span class="sev-badge red">Security</span></td>
+          <td><span class="sev-badge amber">Moderate</span></td>
           <td class="module">courses</td>
           <td class="location"><code>course-info.tsx:35,98,105</code></td>
           <td class="desc">
-            <code>sanitizeHtml</code> is a hand-rolled DOM-stripping sanitizer (removes <code>script/iframe</code> + <code>on*</code> attrs) feeding two <code>dangerouslySetInnerHTML</code> sinks. It's bypassable: it doesn't strip <code>javascript:</code>/<code>data:</code> URLs in <code>href</code>/<code>src</code>, misses <code>&lt;svg&gt;</code>/<code>&lt;math&gt;</code> mXSS vectors, and <code>temp.innerHTML = html</code> can trigger side effects. The file's own comment says to use DOMPurify — which is <strong>not installed</strong>.
+            Hand-rolled <code>sanitizeHtml</code> feeds two <code>dangerouslySetInnerHTML</code> sinks (course <code>longDesc</code>/<code>launchDesc</code>); it's bypassable and DOMPurify isn't installed. <strong>&rarr; High if course content is authored by untrusted/external parties</strong>; Moderate if only trusted admins author it.
           </td>
-          <td class="fix">
-            Add DOMPurify and replace <code>sanitizeHtml</code> with <code>DOMPurify.sanitize(html)</code>.
-          </td>
+          <td class="fix">Add DOMPurify and replace <code>sanitizeHtml</code> with <code>DOMPurify.sanitize()</code>.</td>
         </tr>
         <tr>
-          <td><span class="sev-badge red">Security</span></td>
-          <td class="module">lti / socket</td>
-          <td class="location"><code>courses-view.tsx:46</code><br><code>course-socket.ts:56</code></td>
-          <td class="desc">
-            <code>window.opener?.postMessage('cdp_course_completed', '*')</code> posts to a wildcard target origin — any window that opened (or framed) this app receives the completion event.
-          </td>
-          <td class="fix">
-            Post to a specific configured parent origin (e.g. <code>config.PARENT_ORIGIN</code>), never <code>'*'</code>.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge red">Security</span></td>
-          <td class="module">auth</td>
-          <td class="location"><code>routes/auth/exchange-token.tsx:28-29</code></td>
-          <td class="desc">
-            The temporary auth token arrives in the URL query string (<code>/auth?token=...</code>). Tokens in URLs leak via browser history, <code>Referer</code> headers, and proxy/server logs. On the error path the token-bearing URL persists in history and is rendered by the error boundary.
-          </td>
-          <td class="fix">
-            Ensure post-exchange redirect uses <code>replace</code> semantics, redirect to a clean path on failure too, and confirm the token is short-TTL / single-use server-side.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge red">Security</span></td>
+          <td><span class="sev-badge amber">Moderate</span></td>
           <td class="module">external-api-client</td>
           <td class="location"><code>external-api-client.ts:18,29-39</code></td>
-          <td class="desc">
-            External-service <code>refreshToken</code>s are held in the in-memory Zustand store and POSTed directly from the browser to <code>refreshUrl</code>. A refresh token in JS memory is XSS-exfiltratable, and this violates the project convention (LP refresh token is HTTP-only cookie) for the external-service tier.
-          </td>
-          <td class="fix">
-            Keep external refresh tokens out of JS; refresh exclusively through the LP backend exchange (HTTP-only cookie) and drop the direct client-side refresh path.
-          </td>
+          <td class="desc">External-service refresh tokens are held in the in-memory store and POSTed from the browser — XSS-exfiltratable, and it violates the project's HTTP-only-cookie convention for the external tier.</td>
+          <td class="fix">Keep external refresh tokens out of JS; refresh via the LP backend exchange (HTTP-only cookie).</td>
         </tr>
         <tr>
-          <td><span class="sev-badge red">Security</span></td>
+          <td><span class="sev-badge amber">Moderate</span></td>
           <td class="module">datadog</td>
           <td class="location"><code>datadog/index.ts:17-29</code></td>
-          <td class="desc">
-            <code>datadogRum.init</code> has no <code>beforeSend</code> scrubbing, with <code>trackResources</code> + <code>trackUserInteractions</code> on. <code>defaultPrivacyLevel: 'mask-user-input'</code> masks DOM input but <em>not</em> URLs — so the auth <code>?token=</code> param and the socket <code>userId=&lt;licenseId&gt;</code> param are captured in RUM.
-          </td>
-          <td class="fix">
-            Add a <code>beforeSend</code> that strips <code>token</code>/<code>userId</code> query params from <code>event.resource.url</code> and <code>event.view.url</code>.
-          </td>
+          <td class="desc">No <code>beforeSend</code> scrubbing while tracking resources/views — the auth <code>?token=</code> param and the socket <code>userId</code> param are captured in RUM and sent to a third party (<code>mask-user-input</code> doesn't scrub URLs).</td>
+          <td class="fix">Add a <code>beforeSend</code> that strips <code>token</code>/<code>userId</code> from <code>resource.url</code> and <code>view.url</code>.</td>
         </tr>
         <tr>
-          <td><span class="sev-badge red">Security</span></td>
-          <td class="module">lti</td>
-          <td class="location"><code>lti-iframe.tsx:36</code></td>
-          <td class="desc">
-            The LTI iframe sets <code>allow="usb; serial; local-network-access; microphone *"</code> — granting powerful hardware features (<code>microphone *</code> = all origins) — and has no <code>sandbox</code> attribute. Combined with auto-POSTing OAuth-signed params to a server-supplied <code>lti_endpoint</code>, the embedded content is broadly trusted.
-          </td>
-          <td class="fix">
-            Scope <code>allow</code> to the specific content-service origin and only the features actually needed; validate <code>lti_endpoint</code> scheme/host against an allowlist before submit.
-          </td>
+          <td><span class="sev-badge green">Low</span></td>
+          <td class="module">auth</td>
+          <td class="location"><code>routes/auth/exchange-token.tsx:28-29</code></td>
+          <td class="desc">The temp auth token arrives as <code>?token=</code> and isn't stripped on the error path — leaks via history/referer. Short-lived/single-use token, so Low.</td>
+          <td class="fix">Redirect with <code>replace</code> on success and to a clean path on failure; keep the token short-TTL/single-use.</td>
         </tr>
       </tbody>
     </table>
@@ -425,173 +329,125 @@
   <div class="section-header">
     <span class="dot amber-dot"></span>
     <h2>Should Fix</h2>
-    <span class="count count-amber">14 issues</span>
+    <span class="count count-amber">16 issues</span>
   </div>
   <div class="table-wrap">
     <table>
       <thead>
-        <tr>
-          <th>Severity</th>
-          <th>Module</th>
-          <th>Location</th>
-          <th>Issue</th>
-          <th>Suggested Fix</th>
-        </tr>
+        <tr><th>Severity</th><th>Module</th><th>Location</th><th>Issue</th><th>Suggested Fix</th></tr>
       </thead>
       <tbody>
         <tr>
           <td><span class="sev-badge amber">Correctness</span></td>
+          <td class="module">course-socket</td>
+          <td class="location"><code>course-socket.ts:27-32,79-82</code></td>
+          <td class="desc">On <code>connect(newLicenseId)</code>, <code>openSocket()</code> early-returns if a socket is open, so the live socket stays on the old <code>userId</code> &mdash; completion events for the new course are missed. <strong>&rarr; Must Fix if users switch course/license in-session without a page reload.</strong></td>
+          <td class="fix">If <code>licenseId</code> changed and a socket exists, <code>disconnect()</code> before reopening.</td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Lifecycle</span></td>
+          <td class="module">course-socket</td>
+          <td class="location"><code>course-socket.ts:27-35</code></td>
+          <td class="desc"><code>connect()</code> is called from <code>useEffect</code> with no cleanup, so the singleton socket + keep-alive interval outlive the view. Bounded (one socket; timers can accumulate only across repeated reconnects), not unbounded growth.</td>
+          <td class="fix">Return <code>() =&gt; disconnect()</code> with ref-counting so co-owners don't tear down each other's socket.</td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">UX</span></td>
+          <td class="module">routing</td>
+          <td class="location"><code>routes/courses/index.tsx:16-29</code></td>
+          <td class="desc">No <code>RequireAuth</code> guard: on a hard refresh the in-memory store is empty, so a registered user sees a 401 fallback instead of being routed back through <code>/auth</code>. (Often acceptable if launch sessions aren't meant to survive refresh.)</td>
+          <td class="fix">Add an auth guard that redirects to the launch/auth flow instead of inline-rendering the fallback.</td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Security</span></td>
+          <td class="module">lti / socket</td>
+          <td class="location"><code>courses-view.tsx:46</code>, <code>course-socket.ts:56</code></td>
+          <td class="desc">Completion event uses <code>postMessage('cdp_course_completed', '*')</code> — wildcard target origin. Low impact (the payload is a fixed non-sensitive string), but it's a best-practice fix.</td>
+          <td class="fix">Post to a specific configured parent origin.</td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Security</span></td>
+          <td class="module">lti</td>
+          <td class="location"><code>lti-iframe.tsx:36</code></td>
+          <td class="desc">The LTI iframe grants <code>allow="usb; serial; local-network-access; microphone *"</code> and has no <code>sandbox</code>. Permission hardening.</td>
+          <td class="fix">Scope <code>allow</code> to the content-service origin and only required features.</td>
+        </tr>
+        <tr>
+          <td><span class="sev-badge amber">Correctness</span></td>
           <td class="module">api-client</td>
           <td class="location"><code>api-client.ts:49-53</code></td>
-          <td class="desc">
-            <code>getValidToken()</code> fires a fire-and-forget proactive refresh (<code>refreshAccessToken().catch(()=&gt;{})</code>) then returns the <em>stale</em> token anyway. A request made within the 60s buffer can go out with a token that expires mid-flight; the refresh only benefits the next request.
-          </td>
-          <td class="fix">
-            <code>await</code> the refresh when expiring-soon and return the new token (make <code>getValidToken</code> async), or rely solely on the reactive 401 retry.
-          </td>
+          <td class="desc">Proactive refresh is fire-and-forget and still returns the about-to-expire token, so a request in the buffer window can go out with a token that expires mid-flight (mitigated by the 401 retry).</td>
+          <td class="fix"><code>await</code> the refresh when expiring-soon and return the new token, or rely solely on the 401 retry.</td>
         </tr>
         <tr>
           <td><span class="sev-badge amber">Resilience</span></td>
           <td class="module">course-socket</td>
           <td class="location"><code>course-socket.ts:68</code></td>
-          <td class="desc">
-            Reconnect uses <code>setInterval(openSocket, RECONNECT_MS)</code> with no exponential backoff and no max-retry cap. If the server keeps closing the socket, this hammers reconnects on a fixed cadence.
-          </td>
-          <td class="fix">
-            Use a self-rescheduling <code>setTimeout</code> with exponential backoff and a retry ceiling.
-          </td>
+          <td class="desc"><code>setInterval(openSocket, RECONNECT_MS)</code> reconnect with no backoff and no retry cap.</td>
+          <td class="fix">Self-rescheduling <code>setTimeout</code> with exponential backoff + ceiling.</td>
         </tr>
         <tr>
           <td><span class="sev-badge amber">Correctness</span></td>
           <td class="module">auth-store</td>
           <td class="location"><code>use-auth-store.ts:87-97</code></td>
-          <td class="desc">
-            <code>getAccessToken()</code> is a getter with a side effect: it calls <code>set()</code> to clear state when the token is expired. Invoked during render (via <code>isAuthenticated()</code>) it can trigger a state mutation mid-render and extra re-renders.
-          </td>
-          <td class="fix">
-            Move expiry-clearing out of the read path (a separate <code>pruneExpired()</code> action), or compute expiry without mutating.
-          </td>
+          <td class="desc"><code>getAccessToken()</code> mutates state (<code>set()</code> to clear when expired) during a read — invoked in render it can trigger a mid-render update and extra re-renders.</td>
+          <td class="fix">Move expiry-clearing out of the read path.</td>
         </tr>
         <tr>
           <td><span class="sev-badge amber">Correctness</span></td>
           <td class="module">auth-store</td>
           <td class="location"><code>use-auth-store.ts:77-85</code></td>
-          <td class="desc">
-            <code>clearAuthData()</code> clears tokens/user/externalTokens but not <code>source</code>, so a stale proxy <code>source</code> lingers after logout.
-          </td>
-          <td class="fix">
-            Reset <code>source: null</code> in <code>clearAuthData()</code>.
-          </td>
+          <td class="desc"><code>clearAuthData()</code> doesn't reset <code>source</code>, leaving a stale proxy <code>source</code> after logout.</td>
+          <td class="fix">Reset <code>source: null</code>.</td>
         </tr>
         <tr>
           <td><span class="sev-badge amber">Correctness</span></td>
           <td class="module">api-client</td>
           <td class="location"><code>api-client.ts:32-37</code></td>
-          <td class="desc">
-            The <code>/auth/refresh</code> response is read as <code>data.accessToken</code>/<code>data.expiresIn</code> with no validation; a 200 with an unexpected body calls <code>setAccessToken(undefined, undefined)</code> and poisons the store.
-          </td>
-          <td class="fix">
-            Validate the refresh response shape before calling <code>setAccessToken</code>.
-          </td>
+          <td class="desc">Refresh response isn't validated; a 200 with an unexpected body calls <code>setAccessToken(undefined, undefined)</code> and poisons the store.</td>
+          <td class="fix">Validate the refresh response shape first.</td>
         </tr>
         <tr>
           <td><span class="sev-badge amber">Resilience</span></td>
           <td class="module">external-api-client</td>
           <td class="location"><code>external-api-client.ts:30-39</code></td>
-          <td class="desc">
-            The tier-2 refresh <code>fetch</code> has no try/catch around <code>res.json()</code> or the network call, so a thrown error escapes instead of falling through to the tier-3 backend exchange as the comment implies.
-          </td>
-          <td class="fix">
-            Wrap in try/catch so failures fall through to the LP backend exchange.
-          </td>
+          <td class="desc">Tier-2 refresh has no try/catch around the fetch/<code>res.json()</code>, so a network error escapes instead of falling through to the tier-3 backend exchange.</td>
+          <td class="fix">Wrap in try/catch so failures fall through.</td>
         </tr>
         <tr>
           <td><span class="sev-badge amber">Correctness</span></td>
           <td class="module">courses</td>
           <td class="location"><code>courses-view.tsx:44-62</code></td>
-          <td class="desc">
-            The all-completed effect reads <code>t</code>, <code>toast</code>, <code>toastStyle</code> but its dependency array is only <code>[...allCompleted]</code> — stale-closure risk; exhaustive-deps is silently violated.
-          </td>
-          <td class="fix">
-            Include the referenced values in the dependency array (or memoize them).
-          </td>
+          <td class="desc">The all-completed effect reads <code>t</code>/<code>toast</code>/<code>toastStyle</code> but its dep array is only <code>[...allCompleted]</code> — stale-closure risk.</td>
+          <td class="fix">Include the referenced values (or memoize).</td>
         </tr>
         <tr>
-          <td><span class="sev-badge amber">Type Safety</span></td>
-          <td class="module">courses</td>
-          <td class="location"><code>course-credential.tsx:40-42</code></td>
-          <td class="desc">
-            <code>certificateData</code>/<code>ecardData</code> are typed <code>any</code> despite existing <code>Certificate</code>/<code>CertificateData</code> types — TS strict violation.
-          </td>
-          <td class="fix">
-            Type these as <code>Certificate | undefined</code>.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge amber">Dead Code</span></td>
-          <td class="module">lti</td>
-          <td class="location"><code>queries/use-launch-params.ts:9-14</code></td>
-          <td class="desc">
-            Exported <code>launchParamsQueryOptions</code> builds <code>queryOptions</code> with <strong>no</strong> <code>queryFn</code> and is unused outside its own test — misleading/dead code that would throw if consumed.
-          </td>
-          <td class="fix">
-            Remove it, or give it the real <code>queryFn</code> so it matches <code>useLaunchParams</code>.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge amber">Security</span></td>
+          <td><span class="sev-badge amber">Privacy</span></td>
           <td class="module">error-fallback</td>
           <td class="location"><code>error-fallback.tsx:127</code></td>
-          <td class="desc">
-            <code>console.error('Error caught:', errorDetails)</code> logs the full error object (incl. <code>stack</code> and <code>data</code>) to the browser console on every fallback render, in production.
-          </td>
-          <td class="fix">
-            Gate the console output behind <code>isDevelopment</code> (as <code>provider.tsx</code> does).
-          </td>
+          <td class="desc"><code>console.error</code> logs the full error object (incl. stack/data) on every fallback render, in production.</td>
+          <td class="fix">Gate behind <code>isDevelopment</code>.</td>
         </tr>
         <tr>
           <td><span class="sev-badge amber">Quality</span></td>
           <td class="module">app shell</td>
           <td class="location"><code>main.tsx:14-16</code></td>
-          <td class="desc">
-            <code>&lt;StrictMode&gt;</code> is commented out, so React's double-invocation checks that surface effect-cleanup bugs are lost — directly relevant to the <code>router.subscribe</code> and socket-cleanup issues above.
-          </td>
-          <td class="fix">
-            Re-enable <code>&lt;StrictMode&gt;</code> and fix anything it surfaces.
-          </td>
+          <td class="desc"><code>&lt;StrictMode&gt;</code> is commented out, so effect-cleanup double-invocation checks are lost (relevant to the socket/subscribe issues).</td>
+          <td class="fix">Re-enable and fix anything it surfaces.</td>
         </tr>
         <tr>
           <td><span class="sev-badge amber">UX</span></td>
           <td class="module">layouts</td>
           <td class="location"><code>layout-wrapper.tsx:22-33</code></td>
-          <td class="desc">
-            Route-level <code>Suspense</code> and the <code>state === 'loading'</code> branch both render a full-page loader, with a nested <code>Suspense</code> on <code>Outlet</code> using the same fallback — every navigation replaces the whole content region (flash of empty content / layout jump).
-          </td>
-          <td class="fix">
-            Keep the prior <code>Outlet</code> mounted during <code>loading</code> transitions (overlay spinner) instead of unmounting it.
-          </td>
+          <td class="desc">Route <code>Suspense</code> and the <code>loading</code> branch both render a full-page loader (with a nested same-fallback <code>Suspense</code>), so every navigation flashes an empty page.</td>
+          <td class="fix">Keep the prior <code>Outlet</code> mounted during transitions (overlay spinner).</td>
         </tr>
         <tr>
           <td><span class="sev-badge amber">i18n</span></td>
           <td class="module">app / layouts</td>
-          <td class="location"><code>not-found.tsx:8-16</code><br><code>footers/footer.tsx:20-50</code></td>
-          <td class="desc">
-            Hard-coded English strings ("404 - Not Found", "Powered by:", "Terms of Service", etc.) with no i18n keys, plus three footer links pointing to <code>href="#"</code>. The <code>t('key') || 'English'</code> pattern in <code>landing.tsx</code>/<code>header.tsx</code> also rarely fires since i18next returns the key.
-          </td>
-          <td class="fix">
-            Use <code>useTranslation</code> keys with i18next <code>defaultValue</code>; give footer links real hrefs.
-          </td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge amber">Quality</span></td>
-          <td class="module">course-socket</td>
-          <td class="location"><code>course-socket.ts:38,51,65</code></td>
-          <td class="desc">
-            <code>console.log</code> statements left in production socket code, including logging message content at line 51.
-          </td>
-          <td class="fix">
-            Remove or gate behind <code>config.DEVELOPMENT</code>.
-          </td>
+          <td class="location"><code>not-found.tsx</code>, <code>footers/footer.tsx</code></td>
+          <td class="desc">Hard-coded English strings (404 page, footer links/labels) with no i18n keys; footer links point to <code>href="#"</code>.</td>
+          <td class="fix">Use <code>useTranslation</code> keys; give footer links real hrefs.</td>
         </tr>
       </tbody>
     </table>
@@ -608,86 +464,21 @@
   <div class="table-wrap">
     <table>
       <thead>
-        <tr>
-          <th>Severity</th>
-          <th>Module</th>
-          <th>Location</th>
-          <th>Issue</th>
-        </tr>
+        <tr><th>Severity</th><th>Module</th><th>Location</th><th>Issue</th></tr>
       </thead>
       <tbody>
-        <tr>
-          <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">api-client</td>
-          <td class="location"><code>api-client.ts:89</code></td>
-          <td class="desc"><code>apiClient&lt;T = any&gt;</code> defaults the generic to <code>any</code>, propagating <code>any</code> to callers that omit the type param. Default to <code>unknown</code>.</td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">courses</td>
-          <td class="location"><code>course-card.tsx:131</code></td>
-          <td class="desc"><code>${isLicenseExpired &amp;&amp; "...overlay"}</code> interpolates the boolean <code>false</code> into the className when not expired. Use a ternary returning <code>''</code>.</td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">courses</td>
-          <td class="location"><code>course-info.tsx:97,104</code></td>
-          <td class="desc"><code>aria-label="Detailed course information"</code> / <code>"Launch instructions"</code> are hard-coded English; use <code>t(...)</code> keys.</td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">auth-store</td>
-          <td class="location"><code>use-auth-store.ts:107-114</code></td>
-          <td class="desc">Convenience getters (<code>getUser</code> etc.) encourage <code>getState().getUser()</code> in components, bypassing selector subscriptions (no re-render on change). Prefer selector hooks.</td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">registration-store</td>
-          <td class="location"><code>use-registration-store.ts:45-62</code></td>
-          <td class="desc"><code>getRegistrationMetadata()</code> always returns a populated object with <code>''</code>/<code>0</code> defaults, so callers can't tell "no registration" from "empty" — contradicts its doc comment claiming it returns <code>null</code>.</td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">auth</td>
-          <td class="location"><code>exchange-token.tsx:94</code></td>
-          <td class="desc"><code>if (meta.licenseId &amp;&amp; meta.userId &amp;&amp; meta.courseId)</code> treats <code>userId === 0</code>/<code>courseId === 0</code> as falsy and misroutes. Use explicit <code>!= null</code> checks.</td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">integrations</td>
-          <td class="location"><code>lib/integrations/*.ts</code></td>
-          <td class="desc"><code>loadHeap</code>/<code>loadHotjar</code>/<code>loadOneTrust</code> append a <code>&lt;script&gt;</code> with no idempotency guard; a double <code>initIntegrations</code> injects scripts twice.</td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">app loaders</td>
-          <td class="location"><code>prefetch-startup-data.ts:9</code></td>
-          <td class="desc">Exported as <code>prefetchStatupData</code> (typo). Rename to <code>prefetchStartupData</code>.</td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge green">Perf</span></td>
-          <td class="module">layouts / courses</td>
-          <td class="location"><code>footer.tsx</code>, <code>course-card.tsx</code></td>
-          <td class="desc">Shared layout components (<code>Footer</code>, <code>MainLayout</code>) and list items (<code>CourseCard</code>/<code>CredentialCard</code>) aren't <code>React.memo</code>-wrapped, so they re-render on every navigation / parent state change. Low impact at current sizes.</td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">react-query</td>
-          <td class="location"><code>react-query.ts:11-20</code></td>
-          <td class="desc">Multiple <code>any</code> in the generic helper signatures; <code>unknown[]</code> for the arg tuples would be stricter (standard pattern, low priority).</td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge green">Minor</span></td>
-          <td class="module">router</td>
-          <td class="location"><code>app/router.tsx:18</code></td>
-          <td class="desc"><code>[key: string]: any</code> in <code>LazyModule</code> is the only <code>any</code> in the app shell and defeats <code>strict</code>. Type as <code>unknown</code> or enumerate expected route props.</td>
-        </tr>
-        <tr>
-          <td><span class="sev-badge green">A11y</span></td>
-          <td class="module">meta / app</td>
-          <td class="location"><code>page-meta.tsx:20-26</code></td>
-          <td class="desc">No route-change announcement / focus reset for screen readers on SPA navigation (app-wide). Consider a focus-management step on navigation.</td>
-        </tr>
+        <tr><td><span class="sev-badge green">Minor</span></td><td class="module">routing</td><td class="location"><code>app/router.tsx:94-98</code></td><td class="desc"><code>router.subscribe</code> effect has empty deps while <code>router</code> is recreated by <code>useMemo</code> — only matters if <code>queryClient</code> changes (effectively never). Add <code>router</code> to deps.</td></tr>
+        <tr><td><span class="sev-badge green">Type Safety</span></td><td class="module">courses</td><td class="location"><code>course-credential.tsx:40-42</code></td><td class="desc"><code>certificateData</code>/<code>ecardData</code> typed <code>any</code> despite existing <code>Certificate</code> types.</td></tr>
+        <tr><td><span class="sev-badge green">Dead Code</span></td><td class="module">lti</td><td class="location"><code>queries/use-launch-params.ts:9-14</code></td><td class="desc"><code>launchParamsQueryOptions</code> builds <code>queryOptions</code> with no <code>queryFn</code> and is unused — would throw if consumed.</td></tr>
+        <tr><td><span class="sev-badge green">Quality</span></td><td class="module">course-socket</td><td class="location"><code>course-socket.ts:38,51,65</code></td><td class="desc"><code>console.log</code> left in production socket code (logs message content).</td></tr>
+        <tr><td><span class="sev-badge green">Type Safety</span></td><td class="module">api-client</td><td class="location"><code>api-client.ts:89</code></td><td class="desc"><code>apiClient&lt;T = any&gt;</code> defaults the generic to <code>any</code> — prefer <code>unknown</code>.</td></tr>
+        <tr><td><span class="sev-badge green">Minor</span></td><td class="module">courses</td><td class="location"><code>course-card.tsx:131</code></td><td class="desc"><code>${isLicenseExpired &amp;&amp; "...overlay"}</code> interpolates <code>false</code> into the className when not expired.</td></tr>
+        <tr><td><span class="sev-badge green">i18n</span></td><td class="module">courses</td><td class="location"><code>course-info.tsx:97,104</code></td><td class="desc">Hard-coded English <code>aria-label</code>s; use <code>t(...)</code> keys.</td></tr>
+        <tr><td><span class="sev-badge green">Minor</span></td><td class="module">auth-store</td><td class="location"><code>use-auth-store.ts:107-114</code></td><td class="desc">Convenience getters encourage <code>getState().getUser()</code> in components, bypassing selector subscriptions.</td></tr>
+        <tr><td><span class="sev-badge green">Minor</span></td><td class="module">registration-store</td><td class="location"><code>use-registration-store.ts:45-62</code></td><td class="desc"><code>getRegistrationMetadata()</code> always returns a populated object with defaults — contradicts its doc claiming it returns <code>null</code>.</td></tr>
+        <tr><td><span class="sev-badge green">Minor</span></td><td class="module">auth</td><td class="location"><code>exchange-token.tsx:94</code></td><td class="desc"><code>if (meta.licenseId &amp;&amp; meta.userId &amp;&amp; meta.courseId)</code> treats id <code>0</code> as falsy and misroutes — use <code>!= null</code>.</td></tr>
+        <tr><td><span class="sev-badge green">Minor</span></td><td class="module">integrations</td><td class="location"><code>lib/integrations/*.ts</code></td><td class="desc"><code>loadHeap</code>/<code>loadHotjar</code>/<code>loadOneTrust</code> inject a <code>&lt;script&gt;</code> with no idempotency guard.</td></tr>
+        <tr><td><span class="sev-badge green">Minor</span></td><td class="module">app loaders</td><td class="location"><code>prefetch-startup-data.ts:9</code></td><td class="desc">Exported as <code>prefetchStatupData</code> (typo).</td></tr>
       </tbody>
     </table>
   </div>
@@ -704,28 +495,27 @@
     <div class="coverage-box good">
       <h3>Well Covered</h3>
       <ul>
-        <li><code>api-client.ts</code> &mdash; reactive 401 refresh, single-flight dedupe (concurrent + sequential races), proactive-refresh triggers, network/parse errors</li>
-        <li><code>external-api-client.ts</code> &mdash; all three token tiers, absolute-URL passthrough, 401 retry, 204, error paths</li>
-        <li><code>exchange-token.tsx</code> loader &mdash; missing-token redirect, registration vs registered branching, error bubbling</li>
-        <li>courses api + components + queries (cards, info, list, view, credential, certificates)</li>
-        <li>LTI: form, iframe, launch-view, launch params; <code>course-socket</code> connect/keep-alive/reconnect-on-close</li>
-        <li>self-registration hooks/api/queries/components; <code>combobox</code> (incl. aria fallbacks)</li>
+        <li><code>api-client.ts</code> &mdash; 401 refresh, single-flight dedupe, network/parse errors</li>
+        <li><code>external-api-client.ts</code> &mdash; all three token tiers, 401 retry, error paths</li>
+        <li><code>exchange-token.tsx</code> loader &mdash; redirect/branch/error paths</li>
+        <li>courses api + components + queries; LTI form/iframe/launch + <code>course-socket</code></li>
+        <li>self-registration hooks/api/queries/components; <code>combobox</code></li>
         <li>app shell: <code>provider</code>, <code>app/index</code>, <code>router</code>, <code>error-fallback</code>, <code>layout-wrapper</code></li>
-        <li>hooks: <code>use-maximize-window</code>, <code>use-feature-flags</code>, <code>use-translation</code>; <code>runtime-config</code>, <code>datadog</code> router selection</li>
+        <li>hooks; <code>runtime-config</code>, <code>datadog</code> router selection</li>
       </ul>
     </div>
     <div class="coverage-box weak">
       <h3>Missing / Thin</h3>
       <ul>
-        <li><strong>No tests for any Zustand store</strong> (auth/course/app/registration) — the <code>getAccessToken</code> expiry side effect, <code>isAuthenticated</code> logic, and <code>getRegistrationMetadata</code> defaulting are all untested</li>
-        <li><code>sanitizeHtml</code> has no XSS/bypass test — the security-critical function is effectively untested (migrate to DOMPurify, then test <code>javascript:</code> hrefs / nested SVG)</li>
-        <li><code>course-socket.test.ts</code> actually asserts <code>postMessage(..., '*')</code> — locking in the wildcard; update once origin is fixed</li>
-        <li><code>course-socket</code>: no test for license-change (stale-socket bug), unmount cleanup/<code>disconnect</code>, or reconnect backoff/cap</li>
-        <li><code>datadog</code>: no URL/token scrubbing test (because no <code>beforeSend</code> exists)</li>
-        <li><code>launch-darkly.ts</code>/provider: <code>getLDConfig</code> (null when no client id) and <code>buildContext</code> untested</li>
-        <li><code>router.tsx</code>: the <code>router.subscribe</code> re-subscription bug isn't covered (a new-queryClient test would catch it)</li>
-        <li><code>prefetch-startup-data</code> loader and <code>page-meta</code> instance switching (llp vs rqi) untested</li>
-        <li><code>credential-email-form.tsx</code>, <code>parse-optional-id.ts</code>, <code>utils/format.ts</code> have no dedicated tests</li>
+        <li><strong>No tests for any Zustand store</strong> (auth/course/app/registration) — logic-heavy getters</li>
+        <li><code>sanitizeHtml</code> has no XSS/bypass test (security-critical) — migrate to DOMPurify then test</li>
+        <li><code>course-socket</code>: license-change (stale socket), unmount cleanup, reconnect backoff untested</li>
+        <li>postMessage target origin test currently asserts <code>'*'</code> — update when fixed</li>
+        <li><code>datadog</code>: no URL/token scrubbing test (no <code>beforeSend</code> yet)</li>
+        <li><code>launch-darkly</code>: <code>getLDConfig</code>/<code>buildContext</code> untested</li>
+        <li><code>router.tsx</code> re-subscription behaviour untested</li>
+        <li><code>prefetch-startup-data</code> loader and <code>page-meta</code> instance switching untested</li>
+        <li><code>credential-email-form</code>, <code>parse-optional-id</code>, <code>format.ts</code> have no dedicated tests</li>
       </ul>
     </div>
   </div>
