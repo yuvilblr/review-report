@@ -33,6 +33,7 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt: |
             REPO: ${{ github.repository }}
             PR_NUMBER: ${{ github.event.pull_request.number }}
@@ -113,7 +114,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           STATE=$(gh api "repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }}/reviews" \
-            --jq '[.[] | select(.user.login=="claude[bot]")] | last | .state // "NONE"')
+            --jq '[.[] | select(.user.login=="github-actions[bot]")] | last | .state // "NONE"')
           echo "Latest Claude review state: $STATE"
           if [ "$STATE" = "CHANGES_REQUESTED" ]; then
             echo "::error::LP Gate Keeper requested changes (Must Fix / High-severity findings present) — failing this check."
