@@ -135,34 +135,34 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 <div><span class="label">Datadog Site</span><span class="value">datadoghq.com</span></div>
 </div>
 </div>
-<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-07-02 06:22:07 UTC</strong></div>
+<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-07-03 06:08:19 UTC</strong></div>
 </div>
 </header>
 <div class="tabs"><button class="tab-btn active" data-tab="backend">🖥️ Backend · logs &amp; APM</button><button class="tab-btn" data-tab="frontend">🌐 Frontend · RUM</button></div>
 <div id="tab-backend" class="tab-pane active">
 <div class="stats-grid">
-<div class="stat-card"><div class="stat-value">427</div><div class="stat-label">Total events</div></div>
-<div class="stat-card"><div class="stat-value">24</div><div class="stat-label">Distinct patterns</div></div>
-<div class="stat-card high"><div class="stat-value">8</div><div class="stat-label">High severity patterns</div></div>
-<div class="stat-card"><div class="stat-value">10</div><div class="stat-label">Pods affected</div></div>
+<div class="stat-card"><div class="stat-value">337</div><div class="stat-label">Total events</div></div>
+<div class="stat-card"><div class="stat-value">6</div><div class="stat-label">Distinct patterns</div></div>
+<div class="stat-card high"><div class="stat-value">0</div><div class="stat-label">High severity patterns</div></div>
+<div class="stat-card"><div class="stat-value">7</div><div class="stat-label">Pods affected</div></div>
 </div>
 <div class="sev-summary">
 <h3>Severity distribution (by event count)</h3>
 
         <div class="sev-bar">
-            <div class="sev-segment sev-high" style="flex:101" title="High: 101">101</div>
-            <div class="sev-segment sev-medium" style="flex:319" title="Medium: 319">319</div>
-            <div class="sev-segment sev-low" style="flex:7" title="Low: 7"></div>
+            <div class="sev-segment sev-high" style="flex:0" title="High: 0"></div>
+            <div class="sev-segment sev-medium" style="flex:305" title="Medium: 305">305</div>
+            <div class="sev-segment sev-low" style="flex:32" title="Low: 32"></div>
         </div>
 <div class="sev-legend">
-<span><span class="sev-dot sev-high"></span>High: 101</span>
-<span><span class="sev-dot sev-medium"></span>Medium: 319</span>
-<span><span class="sev-dot sev-low"></span>Low: 7</span>
+<span><span class="sev-dot sev-high"></span>High: 0</span>
+<span><span class="sev-dot sev-medium"></span>Medium: 305</span>
+<span><span class="sev-dot sev-low"></span>Low: 32</span>
 </div>
 </div>
 
     <section class="slow-apis-section">
-        <h2 class="section-title">🐌 Top 5 slow APIs <span class="section-stats">p95 or p99 &gt; 1s • click a row for span samples</span></h2>
+        <h2 class="section-title">🐌 Top 4 slow APIs <span class="section-stats">p95 or p99 &gt; 1s • click a row for span samples</span></h2>
         <div class="table-wrap">
             <table class="slow-table">
                 <thead>
@@ -177,50 +177,41 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                     </tr>
                 </thead>
                 <tbody>
-        <tr class="api-row" data-idx="0" data-resource="GET /all" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-01T13:51:38.795Z&quot;, &quot;duration_sec&quot;: 48648.279, &quot;trace_id&quot;: &quot;6a451b6a0000000030f2d246f8b4c06a&quot;, &quot;span_id&quot;: &quot;3527112660446658666&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-2-32.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://stream.launchdarkly.com/all&quot;}, {&quot;timestamp&quot;: &quot;2026-07-02T02:06:43.125Z&quot;, &quot;duration_sec&quot;: 5133.637, &quot;trace_id&quot;: &quot;6a45c7b300000000594c4dc7ad9f418a&quot;, &quot;span_id&quot;: &quot;6434603487612322186&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-5-49.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://stream.launchdarkly.com/all&quot;}]">
+        <tr class="api-row" data-idx="0" data-resource="GET /all" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-02T03:22:28.013Z&quot;, &quot;duration_sec&quot;: 28566.836, &quot;trace_id&quot;: &quot;6a451b6a0000000030f2d246f8b4c06a&quot;, &quot;span_id&quot;: &quot;2258548299622401288&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-2-32.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://stream.launchdarkly.com/all&quot;}, {&quot;timestamp&quot;: &quot;2026-07-02T07:04:57.518Z&quot;, &quot;duration_sec&quot;: 14306.113, &quot;trace_id&quot;: &quot;6a460d9900000000035587454e563a84&quot;, &quot;span_id&quot;: &quot;240246886870956676&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-252.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://stream.launchdarkly.com/all&quot;}]">
             <td class="api-name"><code>GET /all</code> <span class="drill-icon">⤴</span></td>
             <td class="num">2</td>
-            <td class="num">7h 28m</td>
-            <td class="num">13h 30m</td>
-            <td class="num cell-critical">13h 30m</td>
-            <td class="num cell-critical">13h 30m</td>
-            <td class="num">13h 30m</td>
+            <td class="num">5h 57m</td>
+            <td class="num">7h 56m</td>
+            <td class="num cell-critical">7h 56m</td>
+            <td class="num cell-critical">7h 56m</td>
+            <td class="num">7h 56m</td>
         </tr>
-        <tr class="api-row" data-idx="1" data-resource="POST /launch_lti" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-02T03:19:08.978Z&quot;, &quot;duration_sec&quot;: 3.779, &quot;trace_id&quot;: &quot;4120189846066447668&quot;, &quot;span_id&quot;: &quot;5274646008868654902&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-2-32.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-02T03:22:15.8Z&quot;, &quot;duration_sec&quot;: 3.183, &quot;trace_id&quot;: &quot;6294745204308248400&quot;, &quot;span_id&quot;: &quot;8778045731928410716&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-2-32.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-02T03:25:01.34Z&quot;, &quot;duration_sec&quot;: 3.163, &quot;trace_id&quot;: &quot;223903805825113451&quot;, &quot;span_id&quot;: &quot;706433393403589140&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-2-32.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-02T03:23:32.814Z&quot;, &quot;duration_sec&quot;: 3.133, &quot;trace_id&quot;: &quot;1091163882769326832&quot;, &quot;span_id&quot;: &quot;3922147099952460276&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-5-49.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-02T06:12:59.346Z&quot;, &quot;duration_sec&quot;: 3.131, &quot;trace_id&quot;: &quot;3489331088343580543&quot;, &quot;span_id&quot;: &quot;2872152465375930616&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-6-191.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}]">
-            <td class="api-name"><code>POST /launch_lti</code> <span class="drill-icon">⤴</span></td>
-            <td class="num">10</td>
-            <td class="num">3.05s</td>
-            <td class="num">3.13s</td>
-            <td class="num cell-warn">3.78s</td>
-            <td class="num cell-warn">3.78s</td>
-            <td class="num">3.78s</td>
-        </tr>
-        <tr class="api-row" data-idx="2" data-resource="GET /production" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-01T09:39:42.068Z&quot;, &quot;duration_sec&quot;: 3.764, &quot;trace_id&quot;: &quot;6a44bf270000000059c3d923cb987632&quot;, &quot;span_id&quot;: &quot;5808747620778490211&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-103.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}, {&quot;timestamp&quot;: &quot;2026-07-02T06:03:46.756Z&quot;, &quot;duration_sec&quot;: 3.664, &quot;trace_id&quot;: &quot;6a451b6a000000005b9673f63f014ad1&quot;, &quot;span_id&quot;: &quot;3688021638711634670&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-2-32.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}, {&quot;timestamp&quot;: &quot;2026-07-01T18:25:11.401Z&quot;, &quot;duration_sec&quot;: 3.557, &quot;trace_id&quot;: &quot;6a451b6a000000005b9673f63f014ad1&quot;, &quot;span_id&quot;: &quot;6432258041077298474&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-2-32.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}, {&quot;timestamp&quot;: &quot;2026-07-01T18:08:42.604Z&quot;, &quot;duration_sec&quot;: 3.514, &quot;trace_id&quot;: &quot;6a451ebe0000000013f128214375d841&quot;, &quot;span_id&quot;: &quot;9003310792535439615&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-5-202.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}, {&quot;timestamp&quot;: &quot;2026-07-01T17:24:22.899Z&quot;, &quot;duration_sec&quot;: 3.466, &quot;trace_id&quot;: &quot;6a451b6a000000005b9673f63f014ad1&quot;, &quot;span_id&quot;: &quot;6527172699084299515&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-2-32.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}]">
+        <tr class="api-row" data-idx="1" data-resource="GET /production" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-03T05:24:05.944Z&quot;, &quot;duration_sec&quot;: 3.6, &quot;trace_id&quot;: &quot;6a4717fa000000005a0aa55b4c986a46&quot;, &quot;span_id&quot;: &quot;393162765851055234&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-244.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}, {&quot;timestamp&quot;: &quot;2026-07-02T16:00:43.153Z&quot;, &quot;duration_sec&quot;: 3.573, &quot;trace_id&quot;: &quot;6a460d99000000003a68993e7ea98bc2&quot;, &quot;span_id&quot;: &quot;531982095117354465&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-252.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}, {&quot;timestamp&quot;: &quot;2026-07-02T16:13:13.037Z&quot;, &quot;duration_sec&quot;: 3.466, &quot;trace_id&quot;: &quot;6a468958000000005718cc74c47a923d&quot;, &quot;span_id&quot;: &quot;4600620533492146873&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-7-54.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}, {&quot;timestamp&quot;: &quot;2026-07-03T06:01:35.984Z&quot;, &quot;duration_sec&quot;: 3.452, &quot;trace_id&quot;: &quot;6a460d99000000003a68993e7ea98bc2&quot;, &quot;span_id&quot;: &quot;5978179898344673674&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-252.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}, {&quot;timestamp&quot;: &quot;2026-07-02T17:42:04.599Z&quot;, &quot;duration_sec&quot;: 3.44, &quot;trace_id&quot;: &quot;6a460d99000000003a68993e7ea98bc2&quot;, &quot;span_id&quot;: &quot;6527803487668501002&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-252.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}]">
             <td class="api-name"><code>GET /production</code> <span class="drill-icon">⤴</span></td>
             <td class="num">286</td>
-            <td class="num">2.35s</td>
-            <td class="num">2.98s</td>
-            <td class="num cell-warn">3.33s</td>
-            <td class="num cell-warn">3.56s</td>
-            <td class="num">3.76s</td>
+            <td class="num">2.30s</td>
+            <td class="num">2.95s</td>
+            <td class="num cell-warn">3.28s</td>
+            <td class="num cell-warn">3.47s</td>
+            <td class="num">3.60s</td>
         </tr>
-        <tr class="api-row" data-idx="3" data-resource="GET /certificate/v1/lmsUsers/:?/certificates" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-02T03:29:17.852Z&quot;, &quot;duration_sec&quot;: 2.969, &quot;trace_id&quot;: &quot;8345920697993615694&quot;, &quot;span_id&quot;: &quot;2069934573599394289&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-2-32.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://api-eupreprod-gateway.laerdalblr.in/certificate/v1/lmsUsers/617753/certificates&quot;}]">
-            <td class="api-name"><code>GET /certificate/v1/lmsUsers/:?/certificates</code> <span class="drill-icon">⤴</span></td>
-            <td class="num">1</td>
-            <td class="num">2.97s</td>
-            <td class="num">2.97s</td>
-            <td class="num cell-warn">2.97s</td>
-            <td class="num cell-warn">2.97s</td>
-            <td class="num">2.97s</td>
+        <tr class="api-row" data-idx="2" data-resource="POST /launch_lti" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-02T06:35:29.077Z&quot;, &quot;duration_sec&quot;: 3.446, &quot;trace_id&quot;: &quot;16710020864786858623&quot;, &quot;span_id&quot;: &quot;3832625611101216067&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-2-32.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-02T13:17:04.712Z&quot;, &quot;duration_sec&quot;: 3.292, &quot;trace_id&quot;: &quot;16092272108547553239&quot;, &quot;span_id&quot;: &quot;7904258619533949986&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-252.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-02T06:46:01.709Z&quot;, &quot;duration_sec&quot;: 3.261, &quot;trace_id&quot;: &quot;6037067898244181321&quot;, &quot;span_id&quot;: &quot;6363855001952818137&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-2-32.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-02T06:12:59.346Z&quot;, &quot;duration_sec&quot;: 3.131, &quot;trace_id&quot;: &quot;3489331088343580543&quot;, &quot;span_id&quot;: &quot;2872152465375930616&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-6-191.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-03T05:39:55.318Z&quot;, &quot;duration_sec&quot;: 3.097, &quot;trace_id&quot;: &quot;6a474b2a000000004524af985856e3ef&quot;, &quot;span_id&quot;: &quot;3044755988827948090&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-244.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}]">
+            <td class="api-name"><code>POST /launch_lti</code> <span class="drill-icon">⤴</span></td>
+            <td class="num">9</td>
+            <td class="num">3.06s</td>
+            <td class="num">3.10s</td>
+            <td class="num cell-warn">3.45s</td>
+            <td class="num cell-warn">3.45s</td>
+            <td class="num">3.45s</td>
         </tr>
-        <tr class="api-row" data-idx="4" data-resource="POST /certificate/v1/certificates" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-02T03:29:16.031Z&quot;, &quot;duration_sec&quot;: 1.606, &quot;trace_id&quot;: &quot;8195594961367228239&quot;, &quot;span_id&quot;: &quot;6190044089836461264&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-2-32.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://api-eupreprod-gateway.laerdalblr.in/certificate/v1/certificates&quot;}, {&quot;timestamp&quot;: &quot;2026-07-02T03:29:16.033Z&quot;, &quot;duration_sec&quot;: 0.532, &quot;trace_id&quot;: &quot;8195594961367228239&quot;, &quot;span_id&quot;: &quot;3094337446526476734&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-2-32.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://api-eupreprod-gateway.laerdalblr.in/certificate/v1/certificates&quot;}]">
-            <td class="api-name"><code>POST /certificate/v1/certificates</code> <span class="drill-icon">⤴</span></td>
-            <td class="num">2</td>
-            <td class="num">1.07s</td>
-            <td class="num">1.61s</td>
-            <td class="num cell-slow">1.61s</td>
-            <td class="num cell-slow">1.61s</td>
-            <td class="num">1.61s</td>
+        <tr class="api-row" data-idx="3" data-resource="POST /diagnostic" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-02T17:37:56.703Z&quot;, &quot;duration_sec&quot;: 2.259, &quot;trace_id&quot;: &quot;6a46a1f4000000004759e08b37beeec3&quot;, &quot;span_id&quot;: &quot;5141387338160467651&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-7-54.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;202&quot;, &quot;http_url&quot;: &quot;https://events.launchdarkly.com/diagnostic&quot;}, {&quot;timestamp&quot;: &quot;2026-07-02T08:34:57.516Z&quot;, &quot;duration_sec&quot;: 1.045, &quot;trace_id&quot;: &quot;6a4622b10000000002317b8f56ce4f9e&quot;, &quot;span_id&quot;: &quot;158043317501579166&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-252.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;202&quot;, &quot;http_url&quot;: &quot;https://events.launchdarkly.com/diagnostic&quot;}, {&quot;timestamp&quot;: &quot;2026-07-02T22:22:56.704Z&quot;, &quot;duration_sec&quot;: 0.397, &quot;trace_id&quot;: &quot;6a46e4c00000000006b89929e0d40645&quot;, &quot;span_id&quot;: &quot;484305365087028805&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-7-54.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;202&quot;, &quot;http_url&quot;: &quot;https://events.launchdarkly.com/diagnostic&quot;}, {&quot;timestamp&quot;: &quot;2026-07-03T05:01:30.435Z&quot;, &quot;duration_sec&quot;: 0.387, &quot;trace_id&quot;: &quot;6a47422a00000000050137f1b2e7cb95&quot;, &quot;span_id&quot;: &quot;360630956394531733&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-244.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;202&quot;, &quot;http_url&quot;: &quot;https://events.launchdarkly.com/diagnostic&quot;}, {&quot;timestamp&quot;: &quot;2026-07-02T14:04:57.523Z&quot;, &quot;duration_sec&quot;: 0.366, &quot;trace_id&quot;: &quot;6a467009000000002240ccd624b251e1&quot;, &quot;span_id&quot;: &quot;2468197815909765601&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-252.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;202&quot;, &quot;http_url&quot;: &quot;https://events.launchdarkly.com/diagnostic&quot;}]">
+            <td class="api-name"><code>POST /diagnostic</code> <span class="drill-icon">⤴</span></td>
+            <td class="num">174</td>
+            <td class="num">0.32s</td>
+            <td class="num">0.30s</td>
+            <td class="num cell-slow">0.35s</td>
+            <td class="num cell-slow">1.04s</td>
+            <td class="num">2.26s</td>
         </tr></tbody>
             </table>
         </div>
@@ -312,38 +303,20 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
         <a href="#cat-AWS-WebSocket" class="toc-link">
             <span class="toc-emoji">🔌</span>
             <span class="toc-name">AWS WebSocket</span>
-            <span class="toc-count">279</span>
+            <span class="toc-count">282</span>
             
         </a>
         <a href="#cat-Authentication" class="toc-link">
             <span class="toc-emoji">🔐</span>
             <span class="toc-name">Authentication</span>
-            <span class="toc-count">7</span>
-            
-        </a>
-        <a href="#cat-External-Service---Org-Data" class="toc-link">
-            <span class="toc-emoji">🏢</span>
-            <span class="toc-name">External Service / Org Data</span>
-            <span class="toc-count">5</span>
-            
-        </a>
-        <a href="#cat-External-Service---RQI" class="toc-link">
-            <span class="toc-emoji">🔗</span>
-            <span class="toc-name">External Service / RQI</span>
-            <span class="toc-count">42</span>
-            <span class="toc-high">1↑</span>
-        </a>
-        <a href="#cat-Application" class="toc-link">
-            <span class="toc-emoji">🧩</span>
-            <span class="toc-name">Application</span>
-            <span class="toc-count">4</span>
+            <span class="toc-count">32</span>
             
         </a>
         <a href="#cat-Other---Uncategorized" class="toc-link">
             <span class="toc-emoji">❓</span>
             <span class="toc-name">Other / Uncategorized</span>
-            <span class="toc-count">88</span>
-            <span class="toc-high">7↑</span>
+            <span class="toc-count">21</span>
+            
         </a></div>
 </div>
 
@@ -364,8 +337,8 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">warn: [LaunchDarkly] Received I/O error (the request completed unexpectedly) for streaming request - will retry</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T03:22:27.999Z</code><span class="meta-label">Last:</span> <code>2026-07-02T03:32:17.659Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-7hgx7<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">1</span></span></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T11:03:24.407Z</code><span class="meta-label">Last:</span> <code>2026-07-02T11:18:35.787Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-7d75567547-m7xd5<span class="pod-count">1</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">LaunchDarkly uses Server-Sent Events for real-time flag updates. The SDK is reporting that the long-lived stream connection drops periodically and reconnects. Likely cause: network proxy/NAT idle timeout terminating connections, firewall connection-timeout, or transient regional network glitches.</div></div>
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">During each disconnection window the pod won&#x27;t receive real-time flag updates. Once reconnected, it gets the latest state. Brief windows of slightly stale flag values.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Check NAT gateway TCP idle timeout (default 350s on AWS) — may need keepalive
@@ -379,7 +352,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
             <h2 class="category-title">
                 <span class="cat-emoji">🔌</span>
                 AWS WebSocket
-                <span class="cat-stats">1 pattern • 279 events</span>
+                <span class="cat-stats">1 pattern • 282 events</span>
             </h2>
             <div class="cards-grid">
             <div class="card sev-medium">
@@ -388,12 +361,12 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                         <span class="sev-badge sev-medium">MEDIUM</span>
                         <h3 class="card-title">AWS WebSocket disconnect → reconnect loop</h3>
                     </div>
-                    <div class="card-count">279</div>
+                    <div class="card-count">282</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Disconnected from AWS - attempting reconnect 1/10 in 5000ms</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-01T06:23:35.083Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:13:50.576Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">97</span></span><span class="pod-chip">rqillp-lp-7d75567547-gmgd4<span class="pod-count">71</span></span><span class="pod-chip">rqillp-lp-7d75567547-hnmdm<span class="pod-count">38</span></span><span class="pod-chip">rqillp-lp-7d75567547-g57dj<span class="pod-count">20</span></span><span class="pod-chip">rqillp-lp-7d75567547-pmnzf<span class="pod-count">13</span></span><span class="pod-chip">rqillp-lp-7d75567547-7hgx7<span class="pod-count">12</span></span></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T06:12:01.177Z</code><span class="meta-label">Last:</span> <code>2026-07-03T06:04:28.593Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-m7xd5<span class="pod-count">136</span></span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">53</span></span><span class="pod-chip">rqillp-lp-7d75567547-clrlm<span class="pod-count">50</span></span><span class="pod-chip">rqillp-lp-7d75567547-9chjr<span class="pod-count">24</span></span><span class="pod-chip">rqillp-lp-7d75567547-v46qx<span class="pod-count">9</span></span><span class="pod-chip">rqillp-lp-7d75567547-fq9kq<span class="pod-count">6</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">AWS WebSocket client repeatedly disconnects and reconnects. Most disconnections recover on the first retry (5000ms backoff). High volume suggests this is constant background churn — likely server-side termination (AWS API Gateway WebSocket idle timeout, NAT gateway TCP idle timeout, or ALB connection settings) that the client recovers from.</div></div>
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">During each ~5s reconnect window, any push messages from AWS are missed. Sustained loss of real-time updates impacts users watching live course state.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Check AWS API Gateway WebSocket idle timeout (default 10 min), NAT gateway TCP idle timeout, ALB connection settings
@@ -407,7 +380,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
             <h2 class="category-title">
                 <span class="cat-emoji">🔐</span>
                 Authentication
-                <span class="cat-stats">1 pattern • 7 events</span>
+                <span class="cat-stats">3 patterns • 32 events</span>
             </h2>
             <div class="cards-grid">
             <div class="card sev-low">
@@ -416,93 +389,49 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                         <span class="sev-badge sev-low">LOW</span>
                         <h3 class="card-title">Unauthorized</h3>
                     </div>
-                    <div class="card-count">7</div>
+                    <div class="card-count">21</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Unauthorized</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-01T08:40:43.853Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:05:31.948Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-pmnzf<span class="pod-count">3</span></span><span class="pod-chip">rqillp-lp-7d75567547-hnmdm<span class="pod-count">3</span></span><span class="pod-chip">rqillp-lp-7d75567547-fq9kq<span class="pod-count">1</span></span></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T06:34:02.942Z</code><span class="meta-label">Last:</span> <code>2026-07-03T06:02:34.527Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-m7xd5<span class="pod-count">10</span></span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">8</span></span><span class="pod-chip">rqillp-lp-7d75567547-fq9kq<span class="pod-count">2</span></span><span class="pod-chip">rqillp-lp-7d75567547-9chjr<span class="pod-count">1</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Generic &#x27;Unauthorized&#x27; responses returned to clients. Most are expected: expired tokens, missing auth headers, or invalid credentials hitting protected endpoints. Without correlated request paths, hard to tell if any subset is anomalous.</div></div>
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Expected. Users with expired sessions get prompted to re-login. No action needed unless rate spikes anomalously.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Not a bug. To improve observability: log the request URL alongside `Unauthorized` so you can distinguish normal expired-token cases from auth misconfiguration.</pre></div>
                 </div>
-            </div></div>
-        </section>
-        <section class="category-section">
-            <h2 class="category-title">
-                <span class="cat-emoji">🏢</span>
-                External Service / Org Data
-                <span class="cat-stats">1 pattern • 5 events</span>
-            </h2>
-            <div class="cards-grid">
-            <div class="card sev-medium">
+            </div>
+            <div class="card sev-low">
                 <div class="card-header">
                     <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">Failed to fetch languages — fallback used</h3>
+                        <span class="sev-badge sev-low">LOW</span>
+                        <h3 class="card-title">Refresh token required / expired</h3>
                     </div>
-                    <div class="card-count">5</div>
+                    <div class="card-count">10</div>
                 </div>
                 <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Failed to fetch languages for organization 109871, returning fallback</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T05:56:37.943Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:05:31.948Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">4</span></span><span class="pod-chip">rqillp-lp-7d75567547-fq9kq<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Same as Organization not found — controller-level log of the underlying 404. The app gracefully falls back to default languages.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Same as above.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Same as Organization not found.</pre></div>
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Refresh token is required</code></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T07:48:33.736Z</code><span class="meta-label">Last:</span> <code>2026-07-03T06:02:34.527Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-m7xd5<span class="pod-count">6</span></span><span class="pod-chip">rqillp-lp-7d75567547-9chjr<span class="pod-count">2</span></span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">2</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Normal session-lifecycle response — when an access token expires, the client should send a refresh token; if it doesn&#x27;t or the refresh token itself expired, the app responds with these warnings.</div></div>
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Expected. User is prompted to re-login.</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">No fix needed. Could downgrade these from warn to info to reduce noise.</pre></div>
                 </div>
-            </div></div>
-        </section>
-        <section class="category-section">
-            <h2 class="category-title">
-                <span class="cat-emoji">🔗</span>
-                External Service / RQI
-                <span class="cat-stats">1 pattern • 42 events</span>
-            </h2>
-            <div class="cards-grid">
-            <div class="card sev-high">
+            </div>
+            <div class="card sev-low">
                 <div class="card-header">
                     <div class="card-title-row">
-                        <span class="sev-badge sev-high">HIGH</span>
-                        <h3 class="card-title">RQI service call retry cycle exhausted</h3>
+                        <span class="sev-badge sev-low">LOW</span>
+                        <h3 class="card-title">Launch token already used</h3>
                     </div>
-                    <div class="card-count">42</div>
+                    <div class="card-count">1</div>
                 </div>
                 <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">RQI service call failed on cycle 9, attempt 3/3: RQILLP-service GET /announcements?status=active&amp;from_date=2026-07-02+00%3A00%3A00&amp;to_date=2026-07-02+23%3A59%3A59&amp;page=1&amp;per_page=100 returned status 5</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T05:51:39.749Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:08:07.356Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">27</span></span><span class="pod-chip">rqillp-lp-7d75567547-fq9kq<span class="pod-count">15</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">A scheduled/triggered RQI service call failed all 3 retries within a single cycle and is waiting before retrying. The underlying error reason is not logged in the warning body — would need to look at correlated logs/traces.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Background job didn&#x27;t complete in cycle 1. If cycle 2+ also fail, downstream data may be stale.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Log the specific error reason on each attempt failure — not just &#x27;RQI service call failed&#x27;
-2. Add metrics for `rqi_sync_retry_cycle` count
-3. Alert if more than N cycles required (sustained outage, not transient)</pre></div>
-                </div>
-            </div></div>
-        </section>
-        <section class="category-section">
-            <h2 class="category-title">
-                <span class="cat-emoji">🧩</span>
-                Application
-                <span class="cat-stats">1 pattern • 4 events</span>
-            </h2>
-            <div class="cards-grid">
-            <div class="card sev-medium">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">Content-Type does not match Reply body</h3>
-                    </div>
-                    <div class="card-count">4</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Content-Type doesn&#x27;t match Reply body, you might need a custom ExceptionFilter for non-JSON responses</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T05:56:37.943Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:01:51.132Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">4</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Fastify/NestJS is warning that a response Content-Type header does not match the serialized body — typically a handler returning a non-JSON body (string, stream, or error page) on a route declared as JSON without a custom ExceptionFilter. Often a downstream effect of an error path (e.g. a 503 or HTML error body) being returned through a JSON route.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">The response may be mis-serialized or rejected by clients expecting JSON. Frequently coincident with the DB/503 errors above — error responses leaving via the JSON path.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Add a custom ExceptionFilter for non-JSON responses, or ensure error handlers always return JSON
-2. If these spike alongside the DB 503s, they clear when the database issue is fixed.</pre></div>
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Launch token has already been used</code></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T13:12:11.219Z</code><span class="meta-label">Last:</span> <code>2026-07-02T13:12:11.219Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-m7xd5<span class="pod-count">1</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">LTI launch tokens are single-use by design (replay protection). Repeated attempts to reuse a token. Could be users clicking the launch link twice, browser back button, or replay of a captured URL.</div></div>
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">User cannot launch the course via the reused link. Working as designed.</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">No fix needed. If reuse rate spikes, investigate whether the launch UI is causing accidental double-clicks (button not disabled after click).</pre></div>
                 </div>
             </div></div>
         </section>
@@ -510,310 +439,21 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
             <h2 class="category-title">
                 <span class="cat-emoji">❓</span>
                 Other / Uncategorized
-                <span class="cat-stats">18 patterns • 88 events</span>
+                <span class="cat-stats">1 pattern • 21 events</span>
             </h2>
             <div class="cards-grid">
-            <div class="card sev-high">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-high">HIGH</span>
-                        <h3 class="card-title">RQILLP-service GET /announcements?status=active&amp;from_date=2026-07-02+00%3A00%3A0</h3>
-                    </div>
-                    <div class="card-count">42</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">RQILLP-service GET /announcements?status=active&amp;from_date=2026-07-02+00%3A00%3A00&amp;to_date=2026-07-02+23%3A59%3A59&amp;page=1</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T05:51:39.749Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:08:07.356Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">27</span></span><span class="pod-chip">rqillp-lp-7d75567547-fq9kq<span class="pod-count">15</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an error-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
             <div class="card sev-medium">
                 <div class="card-header">
                     <div class="card-title-row">
                         <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">Cannot OPTIONS /lp-api/api/v1/announcements</h3>
+                        <h3 class="card-title">Cannot POST /lp-api/api//v1/auth/app/tokens</h3>
                     </div>
-                    <div class="card-count">15</div>
+                    <div class="card-count">21</div>
                 </div>
                 <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot OPTIONS /lp-api/api/v1/announcements</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-01T14:52:45.923Z</code><span class="meta-label">Last:</span> <code>2026-07-01T15:53:05.538Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">9</span></span><span class="pod-chip">rqillp-lp-7d75567547-gmgd4<span class="pod-count">6</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an warning-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-high">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-high">HIGH</span>
-                        <h3 class="card-title">RQILLP-service GET /organizations?filter[vendor_key]=57e4f2d65e329d4513b6e85f4ee</h3>
-                    </div>
-                    <div class="card-count">8</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">RQILLP-service GET /organizations?filter[vendor_key]=57e4f2d65e329d4513b6e85f4eeb0345856476d388e6fac9373eac0a6b806e79181</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T05:56:37.943Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:01:51.132Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">8</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an error-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-high">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-high">HIGH</span>
-                        <h3 class="card-title">RQILLP-service GET /organizations/109871/languages returned status 502: &quot;&lt;html&gt;\</h3>
-                    </div>
-                    <div class="card-count">5</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">RQILLP-service GET /organizations/109871/languages returned status 502: &quot;&lt;html&gt;\r\n&lt;head&gt;&lt;title&gt;502 Bad Gateway&lt;/title&gt;&lt;</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T05:56:37.943Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:05:31.948Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">4</span></span><span class="pod-chip">rqillp-lp-7d75567547-fq9kq<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an error-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-medium">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">All 3 attempts failed in cycle 4. Waiting 120 seconds before next retry cycle...</h3>
-                    </div>
-                    <div class="card-count">2</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">All 3 attempts failed in cycle 4. Waiting 120 seconds before next retry cycle...</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T05:57:51.990Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:07:22.014Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-fq9kq<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an warning-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-medium">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">All 3 attempts failed in cycle 3. Waiting 120 seconds before next retry cycle...</h3>
-                    </div>
-                    <div class="card-count">2</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">All 3 attempts failed in cycle 3. Waiting 120 seconds before next retry cycle...</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T05:55:48.913Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:05:18.941Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-fq9kq<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an warning-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-medium">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">All 3 attempts failed in cycle 2. Waiting 120 seconds before next retry cycle...</h3>
-                    </div>
-                    <div class="card-count">2</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">All 3 attempts failed in cycle 2. Waiting 120 seconds before next retry cycle...</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T05:53:45.832Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:03:15.868Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-fq9kq<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an warning-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-medium">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">All 3 attempts failed in cycle 1. Waiting 120 seconds before next retry cycle...</h3>
-                    </div>
-                    <div class="card-count">2</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">All 3 attempts failed in cycle 1. Waiting 120 seconds before next retry cycle...</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T05:51:42.751Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:01:12.798Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-fq9kq<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an warning-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-high">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-high">HIGH</span>
-                        <h3 class="card-title">RQILLP Service - Get announcements is unreachable</h3>
-                    </div>
-                    <div class="card-count">1</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">RQILLP Service - Get announcements is unreachable</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T06:05:34.950Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:05:34.950Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-fq9kq<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an error-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-high">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-high">HIGH</span>
-                        <h3 class="card-title">Error in getAnnouncements: RQILLP Service - Get announcements is unreachable</h3>
-                    </div>
-                    <div class="card-count">1</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Error in getAnnouncements: RQILLP Service - Get announcements is unreachable</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T06:05:34.950Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:05:34.950Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-fq9kq<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an error-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-high">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-high">HIGH</span>
-                        <h3 class="card-title">All 3 attempts failed. RQILLP Service is unreachable.</h3>
-                    </div>
-                    <div class="card-count">1</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">All 3 attempts failed. RQILLP Service is unreachable.</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T06:05:34.950Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:05:34.950Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-fq9kq<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an error-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-high">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-high">HIGH</span>
-                        <h3 class="card-title">RQILLP-service GET /system/settings?filter[system_key]=DATE_FORMAT returned stat</h3>
-                    </div>
-                    <div class="card-count">1</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">RQILLP-service GET /system/settings?filter[system_key]=DATE_FORMAT returned status 502: &quot;&lt;html&gt;\r\n&lt;head&gt;&lt;title&gt;502 Bad </code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T06:05:31.948Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:05:31.948Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-fq9kq<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an error-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-medium">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">All 3 attempts failed in cycle 9. Waiting 120 seconds before next retry cycle...</h3>
-                    </div>
-                    <div class="card-count">1</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">All 3 attempts failed in cycle 9. Waiting 120 seconds before next retry cycle...</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T06:08:07.356Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:08:07.356Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an warning-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-medium">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">All 3 attempts failed in cycle 8. Waiting 120 seconds before next retry cycle...</h3>
-                    </div>
-                    <div class="card-count">1</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">All 3 attempts failed in cycle 8. Waiting 120 seconds before next retry cycle...</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T06:06:04.279Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:06:04.279Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an warning-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-medium">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">All 3 attempts failed in cycle 7. Waiting 120 seconds before next retry cycle...</h3>
-                    </div>
-                    <div class="card-count">1</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">All 3 attempts failed in cycle 7. Waiting 120 seconds before next retry cycle...</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T06:04:01.209Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:04:01.209Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an warning-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-medium">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">All 3 attempts failed in cycle 6. Waiting 120 seconds before next retry cycle...</h3>
-                    </div>
-                    <div class="card-count">1</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">All 3 attempts failed in cycle 6. Waiting 120 seconds before next retry cycle...</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T06:01:58.136Z</code><span class="meta-label">Last:</span> <code>2026-07-02T06:01:58.136Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an warning-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-medium">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">All 3 attempts failed in cycle 5. Waiting 120 seconds before next retry cycle...</h3>
-                    </div>
-                    <div class="card-count">1</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">All 3 attempts failed in cycle 5. Waiting 120 seconds before next retry cycle...</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T05:59:55.068Z</code><span class="meta-label">Last:</span> <code>2026-07-02T05:59:55.068Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an warning-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-medium">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">Cannot OPTIONS /lp-api/api/v1/auth/tokens</h3>
-                    </div>
-                    <div class="card-count">1</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot OPTIONS /lp-api/api/v1/auth/tokens</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-01T14:52:44.389Z</code><span class="meta-label">Last:</span> <code>2026-07-01T14:52:44.389Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-gmgd4<span class="pod-count">1</span></span></div>
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot POST /lp-api/api//v1/auth/app/tokens</code></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-02T11:42:23.901Z</code><span class="meta-label">Last:</span> <code>2026-07-02T14:09:45.342Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-g7zhl<span class="pod-count">14</span></span><span class="pod-chip">rqillp-lp-7d75567547-m7xd5<span class="pod-count">7</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an warning-level log. Add a CATALOG entry to classify and explain it.</div></div>
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
@@ -823,27 +463,27 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 </div>
 <div id="tab-frontend" class="tab-pane">
     <div class="stats-grid">
-        <div class="stat-card high"><div class="stat-value">7</div><div class="stat-label">Frontend errors</div></div>
+        <div class="stat-card high"><div class="stat-value">10</div><div class="stat-label">Frontend errors</div></div>
         <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">Distinct messages</div></div>
-        <div class="stat-card"><div class="stat-value">7</div><div class="stat-label">Console-source</div></div>
+        <div class="stat-card"><div class="stat-value">10</div><div class="stat-label">Console-source</div></div>
         <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">Pages with errors (top)</div></div>
     </div>
     <div class="sev-summary">
         <h3>Error sources</h3>
-        <div class="pods-row"><span class="pod-chip">console<span class="pod-count">7</span></span></div>
+        <div class="pods-row"><span class="pod-chip">console<span class="pod-count">10</span></span></div>
     </div>
     <section class="slow-apis-section">
         <h2 class="section-title">🌐 Top frontend errors <span class="section-stats">RUM · preprod-eulaerdallearning · grouped by message</span></h2>
         <div class="table-wrap">
             <table class="slow-table">
                 <thead><tr><th>Error message</th><th>Source</th><th class="num">Count</th><th>Sample page</th></tr></thead>
-                <tbody><tr><td><code>Failed to fetch announcements: {</code></td><td>console</td><td class="num">6</td><td><a href="https://eubugbasheupreprod.laerdalblr.in/lp/auth?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25JZCI6MTA1MTgyLCJjb3Vyc2VJZCI6Nzc3LCJ2ZHJTdWJzY3JpcHRpb25JZCI6MzIxNzMsImZpcnN0X25hbWUiOiJ0ZXN0IiwibGFzdF9uYW1lIjoidGVzdCIsImNvdXJzZV9uYW1lIjoiSGVhcnRDb2Rlwq4gMjAyNSBCTFMgQ29tcGxldGUgIiwiZW1haWxfcmVxdWlyZWQiOmZhbHNlLCJ1bmlxdWVJZCI6InRpcmFsaTc2OTdAanNuY29zLmNvbSIsIm9yZ19uYW1lIjoiQnVnIEJhc2ggOC4wLjMtTE1TLUVkaXQiLCJ2YWxpZF9mcm9tIjoiMjAyNi0wNy0wMVQxNDo1MjoyOS45NTZaIiwidmFsaWRfdG8iOiIyMDI4LTA3LTAxVDE0OjUyOjI5Ljk1NloiLCJ0eXBlIjoicmVnaXN0cmF0aW9uIiwib3R0Ijp0cnVlLCJpYXQiOjE3ODI5MTc1NDksImV4cCI6MTc4MjkxODE0OX0.xXqW8QOHLZXC41E2SihkdNRjcl_-m_UXYUaJdPji7BY&amp;dispatchVersion=9.0&amp;skipSelfRegistration=1" target="_blank">https://eubugbasheupreprod.laerdalblr.in/lp/auth?token=eyJhbGciOiJIUzI</a></td></tr><tr><td><code>Error caught: {</code></td><td>console</td><td class="num">1</td><td><a href="https://eubugbasheupreprod.laerdalblr.in/lp/auth?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25JZCI6MTA1MTgyLCJjb3Vyc2VJZCI6Nzc3LCJ2ZHJTdWJzY3JpcHRpb25JZCI6MzIxNzMsImZpcnN0X25hbWUiOiJ0ZXN0IiwibGFzdF9uYW1lIjoidGVzdCIsImNvdXJzZV9uYW1lIjoiSGVhcnRDb2Rlwq4gMjAyNSBCTFMgQ29tcGxldGUgIiwiZW1haWxfcmVxdWlyZWQiOmZhbHNlLCJ1bmlxdWVJZCI6InRpcmFsaTc2OTdAanNuY29zLmNvbSIsIm9yZ19uYW1lIjoiQnVnIEJhc2ggOC4wLjMtTE1TLUVkaXQiLCJ2YWxpZF9mcm9tIjoiMjAyNi0wNy0wMVQxNDo1MjoyOS45NTZaIiwidmFsaWRfdG8iOiIyMDI4LTA3LTAxVDE0OjUyOjI5Ljk1NloiLCJ0eXBlIjoicmVnaXN0cmF0aW9uIiwib3R0Ijp0cnVlLCJpYXQiOjE3ODI5MTc1NDksImV4cCI6MTc4MjkxODE0OX0.xXqW8QOHLZXC41E2SihkdNRjcl_-m_UXYUaJdPji7BY&amp;dispatchVersion=9.0&amp;skipSelfRegistration=1" target="_blank">https://eubugbasheupreprod.laerdalblr.in/lp/auth?token=eyJhbGciOiJIUzI</a></td></tr></tbody>
+                <tbody><tr><td><code>Failed to fetch announcements: {</code></td><td>console</td><td class="num">9</td><td><a href="https://preprod-eulaerdallearning.laerdalblr.in/lp/" target="_blank">https://preprod-eulaerdallearning.laerdalblr.in/lp/</a></td></tr><tr><td><code>Error caught: {</code></td><td>console</td><td class="num">1</td><td><a href="https://preprod-eulaerdallearning.laerdalblr.in/lp/auth?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25JZCI6MTAyODA2LCJjb3Vyc2VJZCI6MzgsInZkclN1YnNjcmlwdGlvbklkIjozMjE3NCwiZmlyc3RfbmFtZSI6ImxwNiBwcm9jZXNzNiIsImxhc3RfbmFtZSI6IiIsImNvdXJzZV9uYW1lIjoiQ1BSIFZvbHdhc3NlbmUg4oCTIENQUiBCYWJ5IDE1OjIgQ3VycmljdWx1bSIsImVtYWlsX3JlcXVpcmVkIjpmYWxzZSwidW5pcXVlSWQiOiJscHByb2Nlc3NjaGVjazZAcnFpbWFpbC5sYWVyZGFsYmxyLmluIiwib3JnX25hbWUiOiJUZXN0IERpc3BhdGNoIiwidmFsaWRfZnJvbSI6IjIwMjYtMDctMDJUMTM6MDg6MTAuMzMwWiIsInZhbGlkX3RvIjoiMjAyOC0wNy0wMlQxMzowODoxMC4zMzBaIiwidHlwZSI6InJlZ2lzdHJhdGlvbiIsIm90dCI6dHJ1ZSwiaWF0IjoxNzgyOTk3NjkwLCJleHAiOjE3ODI5OTgyOTB9.l0J87z3HvQ82m0OnedVuNjC9ZmbcY5twdmW-bCklz1E&amp;dispatchVersion=9.0&amp;skipSelfRegistration=1" target="_blank">https://preprod-eulaerdallearning.laerdalblr.in/lp/auth?token=eyJhbGci</a></td></tr></tbody>
             </table>
         </div>
     </section></div>
 <footer>
 <p>Generated from Datadog Logs API for <code>service:rqillp-lp env:rqillp-lp-preprod-eu</code> over the last 1d.</p>
-<p style="margin-top:8px;">427 events across 24 patterns • 10 pods affected</p>
+<p style="margin-top:8px;">337 events across 6 patterns • 7 pods affected</p>
 </footer>
 </div>
 <script>
