@@ -744,7 +744,7 @@ def render_slow_apis_table(slow_apis):
                                     <div class="span-row"><span class="span-label">Span ID:</span> <code>${{escapeHtml(s.span_id)}}</code></div>
                                     ${{s.http_url ? `<div class="span-row"><span class="span-label">URL:</span> <code>${{escapeHtml(s.http_url)}}</code></div>` : ''}}
                                     <div class="span-row">
-                                        <a class="trace-link" target="_blank" href="https://app.datadoghq.com/apm/trace/${{encodeURIComponent(s.trace_id)}}">
+                                        <a class="trace-link" target="_blank" href="https://app.datadoghq.com/apm/trace/${{encodeURIComponent(s.trace_id)}}${{s.span_id ? '?spanID=' + encodeURIComponent(s.span_id) : ''}}">
                                             🔗 Open trace in Datadog
                                         </a>
                                     </div>
@@ -917,7 +917,7 @@ def render_html(matched, unmatched, slow_apis, meta, rum_html=''):
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">{esc(r["rca"])}</div></div>
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">{esc(r["impact"])}</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">{esc(r["fix"])}</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="{esc(dd_logs_url(r["match"]["value"], meta))}">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="{esc(dd_logs_url(r["match"], meta))}">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>''')
         sections_html.append(f'''
@@ -1161,17 +1161,31 @@ def _window_to_seconds(window):
         return 86400
 
 
-def dd_apm_trace_url(trace_id, site):
-    """Deep-link to a single APM trace (empty string if no trace id)."""
-    return f"https://app.{site}/apm/trace/{trace_id}" if trace_id else ''
+def dd_apm_trace_url(trace_id, site, span_id=''):
+    """Deep-link to a single APM trace, focused on the given span (empty string if no trace id)."""
+    if not trace_id:
+        return ''
+    url = f"https://app.{site}/apm/trace/{trace_id}"
+    return url + f"?spanID={span_id}" if span_id else url
 
 
-def dd_logs_url(text, meta):
-    """Deep-link to the Logs Explorer, scoped to service + env + phrase, time-boxed to the window."""
+def _literal_from_match(match):
+    """Plain-text phrase to search logs for. A regex match value (e.g. '^Unauthorized$' or
+    '(A|B|C)') must NOT be quoted verbatim — extract the longest literal run instead."""
+    val = match.get('value', '') or ''
+    if match.get('type') != 'regex':
+        return val
+    val = re.sub(r'\\[a-zA-Z]', ' ', val)  # drop \d \w \s etc.
+    parts = [p.strip(' /') for p in re.split(r'[\\^$.*+?()\[\]{}|]+', val) if p.strip(' /')]
+    return max(parts, key=len) if parts else ''
+
+
+def dd_logs_url(match, meta):
+    """Deep-link to the Logs Explorer: service + env + a literal phrase (free-text on msg), time-boxed."""
     from urllib.parse import quote
     from datetime import datetime, timezone
-    phrase = (text or '').replace('"', ' ').strip()[:80]
-    q = f'service:{meta["service"]} env:{meta["env"]} "{phrase}"'
+    phrase = _literal_from_match(match).replace('"', ' ').strip()[:80]
+    q = f'service:{meta["service"]} env:{meta["env"]}' + (f' "{phrase}"' if phrase else '')
     to_ms = int(datetime.now(timezone.utc).timestamp() * 1000)
     from_ms = to_ms - _window_to_seconds(meta.get('window', '1d')) * 1000
     return f'https://app.{meta["site"]}/logs?query={quote(q)}&from_ts={from_ms}&to_ts={to_ms}'
@@ -1206,7 +1220,7 @@ def build_teams_card(matched, slow_apis, meta, total, dashboard_url):
 
     if high_patterns:
         items = '\n'.join(
-            f"- [**{m['rule']['title']}**]({dd_logs_url(m['rule']['match']['value'], meta)}) "
+            f"- [**{m['rule']['title']}**]({dd_logs_url(m['rule']['match'], meta)}) "
             f"({m['count']:,}) · {m['rule']['category']}"
             for m in high_patterns
         )
@@ -1224,9 +1238,11 @@ def build_teams_card(matched, slow_apis, meta, total, dashboard_url):
 
     # Slow APIs — list each endpoint (below the red block), linked to its slowest trace.
     if slow_apis:
+        def _slow_link(s):
+            smp = (s.get('samples') or [{}])[0]
+            return dd_apm_trace_url(smp.get('trace_id', ''), meta['site'], smp.get('span_id', ''))
         slow_items = '\n'.join(
-            f"- [**{s['resource']}**]"
-            f"({dd_apm_trace_url((s['samples'][0]['trace_id'] if s.get('samples') else ''), meta['site'])}) "
+            f"- [**{s['resource']}**]({_slow_link(s)}) "
             f"· p95 {s['p95']:.1f}s · p99 {s['p99']:.1f}s · {s['count']:,}×"
             for s in slow_apis
         )
