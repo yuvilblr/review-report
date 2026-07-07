@@ -917,6 +917,7 @@ def render_html(matched, unmatched, slow_apis, meta, rum_html=''):
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">{esc(r["rca"])}</div></div>
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">{esc(r["impact"])}</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">{esc(r["fix"])}</pre></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="{esc(dd_logs_url(r["match"]["value"], meta))}">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>''')
         sections_html.append(f'''
@@ -1149,6 +1150,33 @@ footer code {{ background: rgba(255,255,255,0.1); padding: 1px 6px; border-radiu
 # MAIN
 # ----------------------------------------------------------------------------
 
+# ---- Datadog per-issue deep-links ------------------------------------------
+_WINDOW_SECONDS = {'m': 60, 'h': 3600, 'd': 86400, 'w': 604800}
+
+
+def _window_to_seconds(window):
+    try:
+        return int(window[:-1]) * _WINDOW_SECONDS.get(window[-1], 3600)
+    except Exception:
+        return 86400
+
+
+def dd_apm_trace_url(trace_id, site):
+    """Deep-link to a single APM trace (empty string if no trace id)."""
+    return f"https://app.{site}/apm/trace/{trace_id}" if trace_id else ''
+
+
+def dd_logs_url(text, meta):
+    """Deep-link to the Logs Explorer, scoped to service + env + phrase, time-boxed to the window."""
+    from urllib.parse import quote
+    from datetime import datetime, timezone
+    phrase = (text or '').replace('"', ' ').strip()[:80]
+    q = f'service:{meta["service"]} env:{meta["env"]} "{phrase}"'
+    to_ms = int(datetime.now(timezone.utc).timestamp() * 1000)
+    from_ms = to_ms - _window_to_seconds(meta.get('window', '1d')) * 1000
+    return f'https://app.{meta["site"]}/logs?query={quote(q)}&from_ts={from_ms}&to_ts={to_ms}'
+
+
 def build_teams_card(matched, slow_apis, meta, total, dashboard_url):
     """Build a Microsoft Teams Adaptive Card (message envelope) summarizing
     severity counts and the top high-severity patterns ('what needs attention').
@@ -1178,7 +1206,8 @@ def build_teams_card(matched, slow_apis, meta, total, dashboard_url):
 
     if high_patterns:
         items = '\n'.join(
-            f"- **{m['rule']['title']}** ({m['count']:,}) · {m['rule']['category']}"
+            f"- [**{m['rule']['title']}**]({dd_logs_url(m['rule']['match']['value'], meta)}) "
+            f"({m['count']:,}) · {m['rule']['category']}"
             for m in high_patterns
         )
         body.append({
@@ -1192,6 +1221,23 @@ def build_teams_card(matched, slow_apis, meta, total, dashboard_url):
     else:
         body.append({'type': 'TextBlock', 'text': '✅ No high-severity patterns in this window.',
                      'color': 'Good', 'spacing': 'Medium', 'wrap': True})
+
+    # Slow APIs — list each endpoint (below the red block), linked to its slowest trace.
+    if slow_apis:
+        slow_items = '\n'.join(
+            f"- [**{s['resource']}**]"
+            f"({dd_apm_trace_url((s['samples'][0]['trace_id'] if s.get('samples') else ''), meta['site'])}) "
+            f"· p95 {s['p95']:.1f}s · p99 {s['p99']:.1f}s · {s['count']:,}×"
+            for s in slow_apis
+        )
+        body.append({
+            'type': 'Container', 'style': 'warning', 'bleed': True, 'spacing': 'Medium',
+            'items': [
+                {'type': 'TextBlock', 'text': '🐌 Slow APIs (&gt;2s) · click for trace', 'weight': 'Bolder',
+                 'color': 'Warning', 'wrap': True},
+                {'type': 'TextBlock', 'text': slow_items, 'wrap': True},
+            ],
+        })
 
     return {
         'type': 'message',
