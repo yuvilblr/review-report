@@ -135,34 +135,34 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 <div><span class="label">Datadog Site</span><span class="value">datadoghq.com</span></div>
 </div>
 </div>
-<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-07-06 06:51:24 UTC</strong></div>
+<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-07-07 06:28:45 UTC</strong></div>
 </div>
 </header>
 <div class="tabs"><button class="tab-btn active" data-tab="backend">🖥️ Backend · logs &amp; APM</button><button class="tab-btn" data-tab="frontend">🌐 Frontend · RUM</button></div>
 <div id="tab-backend" class="tab-pane active">
 <div class="stats-grid">
-<div class="stat-card"><div class="stat-value">302</div><div class="stat-label">Total events</div></div>
-<div class="stat-card"><div class="stat-value">6</div><div class="stat-label">Distinct patterns</div></div>
-<div class="stat-card high"><div class="stat-value">0</div><div class="stat-label">High severity patterns</div></div>
-<div class="stat-card"><div class="stat-value">2</div><div class="stat-label">Pods affected</div></div>
+<div class="stat-card"><div class="stat-value">352</div><div class="stat-label">Total events</div></div>
+<div class="stat-card"><div class="stat-value">8</div><div class="stat-label">Distinct patterns</div></div>
+<div class="stat-card high"><div class="stat-value">2</div><div class="stat-label">High severity patterns</div></div>
+<div class="stat-card"><div class="stat-value">8</div><div class="stat-label">Pods affected</div></div>
 </div>
 <div class="sev-summary">
 <h3>Severity distribution (by event count)</h3>
 
         <div class="sev-bar">
-            <div class="sev-segment sev-high" style="flex:0" title="High: 0"></div>
-            <div class="sev-segment sev-medium" style="flex:294" title="Medium: 294">294</div>
-            <div class="sev-segment sev-low" style="flex:8" title="Low: 8"></div>
+            <div class="sev-segment sev-high" style="flex:6" title="High: 6"></div>
+            <div class="sev-segment sev-medium" style="flex:292" title="Medium: 292">292</div>
+            <div class="sev-segment sev-low" style="flex:54" title="Low: 54">54</div>
         </div>
 <div class="sev-legend">
-<span><span class="sev-dot sev-high"></span>High: 0</span>
-<span><span class="sev-dot sev-medium"></span>Medium: 294</span>
-<span><span class="sev-dot sev-low"></span>Low: 8</span>
+<span><span class="sev-dot sev-high"></span>High: 6</span>
+<span><span class="sev-dot sev-medium"></span>Medium: 292</span>
+<span><span class="sev-dot sev-low"></span>Low: 54</span>
 </div>
 </div>
 
     <section class="slow-apis-section">
-        <h2 class="section-title">🐌 Top 5 slow APIs <span class="section-stats">p95 or p99 &gt; 1s • click a row for span samples</span></h2>
+        <h2 class="section-title">🐌 Top 7 slow APIs <span class="section-stats">p95 or p99 &gt; 1s • click a row for span samples</span></h2>
         <div class="table-wrap">
             <table class="slow-table">
                 <thead>
@@ -177,50 +177,68 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                     </tr>
                 </thead>
                 <tbody>
-        <tr class="api-row" data-idx="0" data-resource="GET /production" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-06T06:01:09.546Z&quot;, &quot;duration_sec&quot;: 4.24, &quot;trace_id&quot;: &quot;6a47bed6000000005a3e5cc0a4e0ee71&quot;, &quot;span_id&quot;: &quot;6761813781298384514&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-5-183.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}, {&quot;timestamp&quot;: &quot;2026-07-05T08:05:16.255Z&quot;, &quot;duration_sec&quot;: 3.831, &quot;trace_id&quot;: &quot;6a499bdf000000001efcb0fa95fbf583&quot;, &quot;span_id&quot;: &quot;4458711358845241159&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-54.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}, {&quot;timestamp&quot;: &quot;2026-07-05T10:05:18.112Z&quot;, &quot;duration_sec&quot;: 3.734, &quot;trace_id&quot;: &quot;6a47bed6000000005a3e5cc0a4e0ee71&quot;, &quot;span_id&quot;: &quot;3837717799782024377&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-5-183.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}, {&quot;timestamp&quot;: &quot;2026-07-05T14:20:05.162Z&quot;, &quot;duration_sec&quot;: 3.625, &quot;trace_id&quot;: &quot;6a499bdf000000001efcb0fa95fbf583&quot;, &quot;span_id&quot;: &quot;956271906523192150&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-54.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T05:10:28.39Z&quot;, &quot;duration_sec&quot;: 3.512, &quot;trace_id&quot;: &quot;6a47bed6000000005a3e5cc0a4e0ee71&quot;, &quot;span_id&quot;: &quot;4918873777571818984&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-5-183.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}]">
-            <td class="api-name"><code>GET /production</code> <span class="drill-icon">⤴</span></td>
-            <td class="num">284</td>
-            <td class="num">2.73s</td>
-            <td class="num">3.01s</td>
-            <td class="num cell-warn">3.34s</td>
-            <td class="num cell-warn">3.73s</td>
-            <td class="num">4.24s</td>
-        </tr>
-        <tr class="api-row" data-idx="1" data-resource="POST /launch_lti" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-06T06:18:38.88Z&quot;, &quot;duration_sec&quot;: 3.026, &quot;trace_id&quot;: &quot;14524459192870878964&quot;, &quot;span_id&quot;: &quot;7017502834628525055&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-54.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T06:21:19.132Z&quot;, &quot;duration_sec&quot;: 2.866, &quot;trace_id&quot;: &quot;217704333442201509&quot;, &quot;span_id&quot;: &quot;1249157745295743187&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-5-183.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T06:17:39.139Z&quot;, &quot;duration_sec&quot;: 2.846, &quot;trace_id&quot;: &quot;14720834746003220323&quot;, &quot;span_id&quot;: &quot;130672361275937721&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-5-183.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T06:22:35.579Z&quot;, &quot;duration_sec&quot;: 2.758, &quot;trace_id&quot;: &quot;6462211108889780526&quot;, &quot;span_id&quot;: &quot;5074947476453732183&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-5-183.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T06:05:49.164Z&quot;, &quot;duration_sec&quot;: 2.692, &quot;trace_id&quot;: &quot;8927907944473469212&quot;, &quot;span_id&quot;: &quot;1262110859858921701&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-54.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}]">
-            <td class="api-name"><code>POST /launch_lti</code> <span class="drill-icon">⤴</span></td>
-            <td class="num">5</td>
-            <td class="num">2.84s</td>
-            <td class="num">2.85s</td>
-            <td class="num cell-warn">3.03s</td>
-            <td class="num cell-warn">3.03s</td>
-            <td class="num">3.03s</td>
-        </tr>
-        <tr class="api-row" data-idx="2" data-resource="POST /certificate/v1/emailCertificateSingleUser" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-06T06:22:56.043Z&quot;, &quot;duration_sec&quot;: 3.006, &quot;trace_id&quot;: &quot;15826923145782218019&quot;, &quot;span_id&quot;: &quot;1554823735205124911&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-5-183.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://api-eupreprod-gateway.laerdalblr.in/certificate/v1/emailCertificateSingleUser&quot;}]">
-            <td class="api-name"><code>POST /certificate/v1/emailCertificateSingleUser</code> <span class="drill-icon">⤴</span></td>
-            <td class="num">1</td>
-            <td class="num">3.01s</td>
-            <td class="num">3.01s</td>
-            <td class="num cell-warn">3.01s</td>
-            <td class="num cell-warn">3.01s</td>
-            <td class="num">3.01s</td>
-        </tr>
-        <tr class="api-row" data-idx="3" data-resource="POST /certificate/v1/certificates" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-06T06:22:39.429Z&quot;, &quot;duration_sec&quot;: 2.468, &quot;trace_id&quot;: &quot;15037749435585925533&quot;, &quot;span_id&quot;: &quot;4241304368602025471&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-54.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://api-eupreprod-gateway.laerdalblr.in/certificate/v1/certificates&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T06:22:39.42Z&quot;, &quot;duration_sec&quot;: 0.174, &quot;trace_id&quot;: &quot;15037749435585925533&quot;, &quot;span_id&quot;: &quot;5234019620456170449&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-54.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://api-eupreprod-gateway.laerdalblr.in/certificate/v1/certificates&quot;}]">
-            <td class="api-name"><code>POST /certificate/v1/certificates</code> <span class="drill-icon">⤴</span></td>
+        <tr class="api-row" data-idx="0" data-resource="GET /all" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-06T13:04:46.577Z&quot;, &quot;duration_sec&quot;: 37685.312, &quot;trace_id&quot;: &quot;6a4ba7ee0000000050fb660a57ea7988&quot;, &quot;span_id&quot;: &quot;5835369936799299976&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-5-207.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://stream.launchdarkly.com/all&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T15:54:18.798Z&quot;, &quot;duration_sec&quot;: 26621.224, &quot;trace_id&quot;: &quot;6a4bcfaa0000000067da0834cce17939&quot;, &quot;span_id&quot;: &quot;7483302753698150713&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-1-205.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://stream.launchdarkly.com/all&quot;}]">
+            <td class="api-name"><code>GET /all</code> <span class="drill-icon">⤴</span></td>
             <td class="num">2</td>
-            <td class="num">1.32s</td>
-            <td class="num">2.47s</td>
-            <td class="num cell-warn">2.47s</td>
-            <td class="num cell-warn">2.47s</td>
-            <td class="num">2.47s</td>
+            <td class="num">8h 55m</td>
+            <td class="num">10h 28m</td>
+            <td class="num cell-critical">10h 28m</td>
+            <td class="num cell-critical">10h 28m</td>
+            <td class="num">10h 28m</td>
         </tr>
-        <tr class="api-row" data-idx="4" data-resource="GET /certificate/v1/certificates/:?" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-06T06:22:54.388Z&quot;, &quot;duration_sec&quot;: 1.541, &quot;trace_id&quot;: &quot;15826923145782218019&quot;, &quot;span_id&quot;: &quot;1014497018471741455&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-5-183.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://api-eupreprod-gateway.laerdalblr.in/certificate/v1/certificates/17954&quot;}]">
+        <tr class="api-row" data-idx="1" data-resource="GET /certificate/v1/certificates/:?" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-06T10:20:46.167Z&quot;, &quot;duration_sec&quot;: 8.697, &quot;trace_id&quot;: &quot;15840046000497580572&quot;, &quot;span_id&quot;: &quot;2774784047271641264&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-6-39.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://api-eupreprod-gateway.laerdalblr.in/certificate/v1/certificates/17931&quot;}]">
             <td class="api-name"><code>GET /certificate/v1/certificates/:?</code> <span class="drill-icon">⤴</span></td>
             <td class="num">1</td>
-            <td class="num">1.54s</td>
-            <td class="num">1.54s</td>
-            <td class="num cell-slow">1.54s</td>
-            <td class="num cell-slow">1.54s</td>
-            <td class="num">1.54s</td>
+            <td class="num">8.70s</td>
+            <td class="num">8.70s</td>
+            <td class="num cell-critical">8.70s</td>
+            <td class="num cell-critical">8.70s</td>
+            <td class="num">8.70s</td>
+        </tr>
+        <tr class="api-row" data-idx="2" data-resource="POST /launch_lti" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-06T10:39:42.59Z&quot;, &quot;duration_sec&quot;: 3.729, &quot;trace_id&quot;: &quot;15027009392122967215&quot;, &quot;span_id&quot;: &quot;3716537148798561673&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-6-39.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T07:00:23.12Z&quot;, &quot;duration_sec&quot;: 3.704, &quot;trace_id&quot;: &quot;6585104673601227488&quot;, &quot;span_id&quot;: &quot;8334860638401618225&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-54.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T09:23:05.979Z&quot;, &quot;duration_sec&quot;: 3.663, &quot;trace_id&quot;: &quot;1333845095598676182&quot;, &quot;span_id&quot;: &quot;4397999237124096529&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-54.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T11:15:29.127Z&quot;, &quot;duration_sec&quot;: 3.577, &quot;trace_id&quot;: &quot;6505796050016813447&quot;, &quot;span_id&quot;: &quot;4143040604709686680&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-6-39.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T07:24:08.512Z&quot;, &quot;duration_sec&quot;: 3.495, &quot;trace_id&quot;: &quot;7119789974397482936&quot;, &quot;span_id&quot;: &quot;3374840777280043149&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-5-183.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne-prodtest.contentservice.net/launch_lti&quot;}]">
+            <td class="api-name"><code>POST /launch_lti</code> <span class="drill-icon">⤴</span></td>
+            <td class="num">20</td>
+            <td class="num">3.14s</td>
+            <td class="num">3.07s</td>
+            <td class="num cell-warn">3.73s</td>
+            <td class="num cell-warn">3.73s</td>
+            <td class="num">3.73s</td>
+        </tr>
+        <tr class="api-row" data-idx="3" data-resource="GET /production" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-06T14:08:06.465Z&quot;, &quot;duration_sec&quot;: 3.63, &quot;trace_id&quot;: &quot;6a4b9cb00000000056bf4d7d9265041f&quot;, &quot;span_id&quot;: &quot;6572390958769897281&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-189.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}, {&quot;timestamp&quot;: &quot;2026-07-07T02:04:45.726Z&quot;, &quot;duration_sec&quot;: 3.572, &quot;trace_id&quot;: &quot;6a4ba7ee000000002ba57a58f3d25cc8&quot;, &quot;span_id&quot;: &quot;5550045495877517306&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-5-207.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T15:06:23.15Z&quot;, &quot;duration_sec&quot;: 3.542, &quot;trace_id&quot;: &quot;6a4ba7ee000000002ba57a58f3d25cc8&quot;, &quot;span_id&quot;: &quot;8499683564964494483&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-5-207.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T08:02:37.038Z&quot;, &quot;duration_sec&quot;: 3.496, &quot;trace_id&quot;: &quot;6a499bdf000000001efcb0fa95fbf583&quot;, &quot;span_id&quot;: &quot;2749482547889338293&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-54.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T14:18:15.098Z&quot;, &quot;duration_sec&quot;: 3.445, &quot;trace_id&quot;: &quot;6a4b9cb00000000056bf4d7d9265041f&quot;, &quot;span_id&quot;: &quot;944835160138550545&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-189.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;101&quot;, &quot;http_url&quot;: &quot;https://nhupd0yjvb.execute-api.eu-west-1.amazonaws.com:443/production&quot;}]">
+            <td class="api-name"><code>GET /production</code> <span class="drill-icon">⤴</span></td>
+            <td class="num">284</td>
+            <td class="num">2.38s</td>
+            <td class="num">2.97s</td>
+            <td class="num cell-warn">3.32s</td>
+            <td class="num cell-warn">3.54s</td>
+            <td class="num">3.63s</td>
+        </tr>
+        <tr class="api-row" data-idx="4" data-resource="GET /curriculum-designer/v2/completions/status" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-06T09:08:02.739Z&quot;, &quot;duration_sec&quot;: 2.45, &quot;trace_id&quot;: &quot;6a4b70720000000022a99faa1a28269b&quot;, &quot;span_id&quot;: &quot;4306069660342232972&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-54.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://preprod-eu-ms-api.laerdalblr.in/curriculum-designer/v2/completions/status&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T08:42:34.37Z&quot;, &quot;duration_sec&quot;: 1.114, &quot;trace_id&quot;: &quot;6a4b6a7a000000003a00af5ec42fa828&quot;, &quot;span_id&quot;: &quot;4082261365973704222&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-6-39.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://preprod-eu-ms-api.laerdalblr.in/curriculum-designer/v2/completions/status&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T11:29:03.168Z&quot;, &quot;duration_sec&quot;: 1.036, &quot;trace_id&quot;: &quot;6a4b917f0000000007fb8db9075d9ee1&quot;, &quot;span_id&quot;: &quot;8391419966100928494&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-6-39.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://preprod-eu-ms-api.laerdalblr.in/curriculum-designer/v2/completions/status&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T09:26:04.032Z&quot;, &quot;duration_sec&quot;: 0.995, &quot;trace_id&quot;: &quot;6a4b74ab000000006fa9bda14fc31d4b&quot;, &quot;span_id&quot;: &quot;4169417953144467672&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-6-39.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://preprod-eu-ms-api.laerdalblr.in/curriculum-designer/v2/completions/status&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T09:20:51.493Z&quot;, &quot;duration_sec&quot;: 0.942, &quot;trace_id&quot;: &quot;6a4b7373000000007dd777e2bc972a03&quot;, &quot;span_id&quot;: &quot;8301542835707673913&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-0-54.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://preprod-eu-ms-api.laerdalblr.in/curriculum-designer/v2/completions/status&quot;}]">
+            <td class="api-name"><code>GET /curriculum-designer/v2/completions/status</code> <span class="drill-icon">⤴</span></td>
+            <td class="num">23</td>
+            <td class="num">0.87s</td>
+            <td class="num">0.88s</td>
+            <td class="num cell-slow">1.11s</td>
+            <td class="num cell-warn">2.45s</td>
+            <td class="num">2.45s</td>
+        </tr>
+        <tr class="api-row" data-idx="5" data-resource="POST /certificate/v1/certificates" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-06T07:25:55.463Z&quot;, &quot;duration_sec&quot;: 2.103, &quot;trace_id&quot;: &quot;2299055168090227902&quot;, &quot;span_id&quot;: &quot;8880354219214431940&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-5-183.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://api-eupreprod-gateway.laerdalblr.in/certificate/v1/certificates&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T10:20:29.311Z&quot;, &quot;duration_sec&quot;: 1.498, &quot;trace_id&quot;: &quot;1816023511869799193&quot;, &quot;span_id&quot;: &quot;5421558725511649608&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-6-39.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://api-eupreprod-gateway.laerdalblr.in/certificate/v1/certificates&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T07:00:40.838Z&quot;, &quot;duration_sec&quot;: 1.371, &quot;trace_id&quot;: &quot;469648795287628452&quot;, &quot;span_id&quot;: &quot;3309271975308057860&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-5-183.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://api-eupreprod-gateway.laerdalblr.in/certificate/v1/certificates&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T07:00:40.84Z&quot;, &quot;duration_sec&quot;: 0.307, &quot;trace_id&quot;: &quot;469648795287628452&quot;, &quot;span_id&quot;: &quot;5068776077914545447&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-5-183.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://api-eupreprod-gateway.laerdalblr.in/certificate/v1/certificates&quot;}, {&quot;timestamp&quot;: &quot;2026-07-06T10:20:29.314Z&quot;, &quot;duration_sec&quot;: 0.238, &quot;trace_id&quot;: &quot;1816023511869799193&quot;, &quot;span_id&quot;: &quot;2392305799042529513&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-6-39.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://api-eupreprod-gateway.laerdalblr.in/certificate/v1/certificates&quot;}]">
+            <td class="api-name"><code>POST /certificate/v1/certificates</code> <span class="drill-icon">⤴</span></td>
+            <td class="num">6</td>
+            <td class="num">0.95s</td>
+            <td class="num">1.37s</td>
+            <td class="num cell-warn">2.10s</td>
+            <td class="num cell-warn">2.10s</td>
+            <td class="num">2.10s</td>
+        </tr>
+        <tr class="api-row" data-idx="6" data-resource="POST /certificate/v1/emailCertificateSingleUser" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-06T10:20:54.974Z&quot;, &quot;duration_sec&quot;: 1.192, &quot;trace_id&quot;: &quot;15840046000497580572&quot;, &quot;span_id&quot;: &quot;6263361883754724782&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-17-6-39.eu-west-1.compute.internal-rqi-preprod-eu&quot;, &quot;env&quot;: &quot;rqillp-lp-preprod-eu&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://api-eupreprod-gateway.laerdalblr.in/certificate/v1/emailCertificateSingleUser&quot;}]">
+            <td class="api-name"><code>POST /certificate/v1/emailCertificateSingleUser</code> <span class="drill-icon">⤴</span></td>
+            <td class="num">1</td>
+            <td class="num">1.19s</td>
+            <td class="num">1.19s</td>
+            <td class="num cell-slow">1.19s</td>
+            <td class="num cell-slow">1.19s</td>
+            <td class="num">1.19s</td>
         </tr></tbody>
             </table>
         </div>
@@ -303,31 +321,65 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 <div class="toc">
 <h3>Jump to category</h3>
 <div class="toc-links">
+        <a href="#cat-LaunchDarkly-Connectivity" class="toc-link">
+            <span class="toc-emoji">🌐</span>
+            <span class="toc-name">LaunchDarkly Connectivity</span>
+            <span class="toc-count">2</span>
+            
+        </a>
         <a href="#cat-AWS-WebSocket" class="toc-link">
             <span class="toc-emoji">🔌</span>
             <span class="toc-name">AWS WebSocket</span>
-            <span class="toc-count">284</span>
+            <span class="toc-count">281</span>
             
         </a>
         <a href="#cat-Authentication" class="toc-link">
             <span class="toc-emoji">🔐</span>
             <span class="toc-name">Authentication</span>
-            <span class="toc-count">8</span>
+            <span class="toc-count">54</span>
             
         </a>
         <a href="#cat-Other---Uncategorized" class="toc-link">
             <span class="toc-emoji">❓</span>
             <span class="toc-name">Other / Uncategorized</span>
-            <span class="toc-count">10</span>
-            
+            <span class="toc-count">15</span>
+            <span class="toc-high">2↑</span>
         </a></div>
 </div>
 
         <section class="category-section">
             <h2 class="category-title">
+                <span class="cat-emoji">🌐</span>
+                LaunchDarkly Connectivity
+                <span class="cat-stats">1 pattern • 2 events</span>
+            </h2>
+            <div class="cards-grid">
+            <div class="card sev-medium">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <span class="sev-badge sev-medium">MEDIUM</span>
+                        <h3 class="card-title">LaunchDarkly streaming I/O errors</h3>
+                    </div>
+                    <div class="card-count">2</div>
+                </div>
+                <div class="card-body">
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">warn: [LaunchDarkly] Received I/O error (the request completed unexpectedly) for streaming request - will retry</code></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-06T23:18:00.514Z</code><span class="meta-label">Last:</span> <code>2026-07-06T23:32:52.313Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-q6629<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-7d75567547-2wsr2<span class="pod-count">1</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">LaunchDarkly uses Server-Sent Events for real-time flag updates. The SDK is reporting that the long-lived stream connection drops periodically and reconnects. Likely cause: network proxy/NAT idle timeout terminating connections, firewall connection-timeout, or transient regional network glitches.</div></div>
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">During each disconnection window the pod won&#x27;t receive real-time flag updates. Once reconnected, it gets the latest state. Brief windows of slightly stale flag values.</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Check NAT gateway TCP idle timeout (default 350s on AWS) — may need keepalive
+2. Verify firewall is not intercepting long-lived TCP connections
+3. If using a proxy, ensure SSE/HTTP-streaming is supported
+4. Consider switching SDK to polling mode if streaming continues to be unreliable</pre></div>
+                </div>
+            </div></div>
+        </section>
+        <section class="category-section">
+            <h2 class="category-title">
                 <span class="cat-emoji">🔌</span>
                 AWS WebSocket
-                <span class="cat-stats">1 pattern • 284 events</span>
+                <span class="cat-stats">1 pattern • 281 events</span>
             </h2>
             <div class="cards-grid">
             <div class="card sev-medium">
@@ -336,12 +388,12 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                         <span class="sev-badge sev-medium">MEDIUM</span>
                         <h3 class="card-title">AWS WebSocket disconnect → reconnect loop</h3>
                     </div>
-                    <div class="card-count">284</div>
+                    <div class="card-count">281</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Disconnected from AWS - attempting reconnect 1/10 in 5000ms</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-05T06:52:41.573Z</code><span class="meta-label">Last:</span> <code>2026-07-06T06:41:48.220Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-64tgg<span class="pod-count">142</span></span><span class="pod-chip">rqillp-lp-7d75567547-x4sdt<span class="pod-count">142</span></span></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-06T06:31:25.026Z</code><span class="meta-label">Last:</span> <code>2026-07-07T06:25:33.759Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-q6629<span class="pod-count">94</span></span><span class="pod-chip">rqillp-lp-7d75567547-2wsr2<span class="pod-count">50</span></span><span class="pod-chip">rqillp-lp-7d75567547-ng4z4<span class="pod-count">35</span></span><span class="pod-chip">rqillp-lp-7d75567547-64tgg<span class="pod-count">35</span></span><span class="pod-chip">rqillp-lp-7d75567547-z6pzb<span class="pod-count">27</span></span><span class="pod-chip">rqillp-lp-7d75567547-dwgw6<span class="pod-count">21</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">AWS WebSocket client repeatedly disconnects and reconnects. Most disconnections recover on the first retry (5000ms backoff). High volume suggests this is constant background churn — likely server-side termination (AWS API Gateway WebSocket idle timeout, NAT gateway TCP idle timeout, or ALB connection settings) that the client recovers from.</div></div>
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">During each ~5s reconnect window, any push messages from AWS are missed. Sustained loss of real-time updates impacts users watching live course state.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Check AWS API Gateway WebSocket idle timeout (default 10 min), NAT gateway TCP idle timeout, ALB connection settings
@@ -355,7 +407,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
             <h2 class="category-title">
                 <span class="cat-emoji">🔐</span>
                 Authentication
-                <span class="cat-stats">1 pattern • 8 events</span>
+                <span class="cat-stats">2 patterns • 54 events</span>
             </h2>
             <div class="cards-grid">
             <div class="card sev-low">
@@ -364,15 +416,32 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                         <span class="sev-badge sev-low">LOW</span>
                         <h3 class="card-title">Unauthorized</h3>
                     </div>
-                    <div class="card-count">8</div>
+                    <div class="card-count">38</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Unauthorized</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-05T09:12:55.605Z</code><span class="meta-label">Last:</span> <code>2026-07-06T06:17:39.520Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-x4sdt<span class="pod-count">4</span></span><span class="pod-chip">rqillp-lp-7d75567547-64tgg<span class="pod-count">4</span></span></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-06T07:00:23.090Z</code><span class="meta-label">Last:</span> <code>2026-07-06T14:05:32.441Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-z6pzb<span class="pod-count">19</span></span><span class="pod-chip">rqillp-lp-7d75567547-64tgg<span class="pod-count">14</span></span><span class="pod-chip">rqillp-lp-7d75567547-x4sdt<span class="pod-count">3</span></span><span class="pod-chip">rqillp-lp-7d75567547-dwgw6<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-7d75567547-q6629<span class="pod-count">1</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Generic &#x27;Unauthorized&#x27; responses returned to clients. Most are expected: expired tokens, missing auth headers, or invalid credentials hitting protected endpoints. Without correlated request paths, hard to tell if any subset is anomalous.</div></div>
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Expected. Users with expired sessions get prompted to re-login. No action needed unless rate spikes anomalously.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Not a bug. To improve observability: log the request URL alongside `Unauthorized` so you can distinguish normal expired-token cases from auth misconfiguration.</pre></div>
+                </div>
+            </div>
+            <div class="card sev-low">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <span class="sev-badge sev-low">LOW</span>
+                        <h3 class="card-title">Refresh token required / expired</h3>
+                    </div>
+                    <div class="card-count">16</div>
+                </div>
+                <div class="card-body">
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Refresh token is required</code></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-06T09:33:50.675Z</code><span class="meta-label">Last:</span> <code>2026-07-06T09:34:45.740Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-z6pzb<span class="pod-count">11</span></span><span class="pod-chip">rqillp-lp-7d75567547-64tgg<span class="pod-count">5</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Normal session-lifecycle response — when an access token expires, the client should send a refresh token; if it doesn&#x27;t or the refresh token itself expired, the app responds with these warnings.</div></div>
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Expected. User is prompted to re-login.</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">No fix needed. Could downgrade these from warn to info to reduce noise.</pre></div>
                 </div>
             </div></div>
         </section>
@@ -380,39 +449,56 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
             <h2 class="category-title">
                 <span class="cat-emoji">❓</span>
                 Other / Uncategorized
-                <span class="cat-stats">4 patterns • 10 events</span>
+                <span class="cat-stats">4 patterns • 15 events</span>
             </h2>
             <div class="cards-grid">
             <div class="card sev-medium">
                 <div class="card-header">
                     <div class="card-title-row">
                         <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">Bad Request Exception</h3>
+                        <h3 class="card-title">Invalid course id for this user</h3>
                     </div>
-                    <div class="card-count">5</div>
+                    <div class="card-count">6</div>
                 </div>
                 <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Bad Request Exception</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-06T05:43:58.137Z</code><span class="meta-label">Last:</span> <code>2026-07-06T06:39:43.144Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-64tgg<span class="pod-count">3</span></span><span class="pod-chip">rqillp-lp-7d75567547-x4sdt<span class="pod-count">2</span></span></div>
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Invalid course id for this user</code></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-06T09:54:33.458Z</code><span class="meta-label">Last:</span> <code>2026-07-06T10:49:34.461Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-64tgg<span class="pod-count">4</span></span><span class="pod-chip">rqillp-lp-7d75567547-z6pzb<span class="pod-count">2</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an warning-level log. Add a CATALOG entry to classify and explain it.</div></div>
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
                 </div>
             </div>
-            <div class="card sev-medium">
+            <div class="card sev-high">
                 <div class="card-header">
                     <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">Cannot OPTIONS /lp-api/api/v1/announcements</h3>
+                        <span class="sev-badge sev-high">HIGH</span>
+                        <h3 class="card-title">User 618213 (org 109871) has no license mapping for course 509</h3>
                     </div>
                     <div class="card-count">3</div>
                 </div>
                 <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot OPTIONS /lp-api/api/v1/announcements</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-06T06:16:45.319Z</code><span class="meta-label">Last:</span> <code>2026-07-06T06:16:49.323Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-64tgg<span class="pod-count">2</span></span><span class="pod-chip">rqillp-lp-7d75567547-x4sdt<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an warning-level log. Add a CATALOG entry to classify and explain it.</div></div>
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">User 618213 (org 109871) has no license mapping for course 509</code></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-06T10:49:30.517Z</code><span class="meta-label">Last:</span> <code>2026-07-06T10:49:34.461Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-64tgg<span class="pod-count">2</span></span><span class="pod-chip">rqillp-lp-7d75567547-z6pzb<span class="pod-count">1</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an error-level log. Add a CATALOG entry to classify and explain it.</div></div>
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
+                </div>
+            </div>
+            <div class="card sev-high">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <span class="sev-badge sev-high">HIGH</span>
+                        <h3 class="card-title">User 617752 (org 109871) has no license mapping for course 509</h3>
+                    </div>
+                    <div class="card-count">3</div>
+                </div>
+                <div class="card-body">
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">User 617752 (org 109871) has no license mapping for course 509</code></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-06T09:54:33.458Z</code><span class="meta-label">Last:</span> <code>2026-07-06T09:54:36.459Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-64tgg<span class="pod-count">2</span></span><span class="pod-chip">rqillp-lp-7d75567547-z6pzb<span class="pod-count">1</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an error-level log. Add a CATALOG entry to classify and explain it.</div></div>
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
                 </div>
@@ -421,31 +507,14 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 <div class="card-header">
                     <div class="card-title-row">
                         <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">Cannot OPTIONS /lp-api/api/v1/auth/tokens</h3>
+                        <h3 class="card-title">Bad Request Exception</h3>
                     </div>
-                    <div class="card-count">1</div>
+                    <div class="card-count">3</div>
                 </div>
                 <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot OPTIONS /lp-api/api/v1/auth/tokens</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-06T06:16:45.319Z</code><span class="meta-label">Last:</span> <code>2026-07-06T06:16:45.319Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-64tgg<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an warning-level log. Add a CATALOG entry to classify and explain it.</div></div>
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                </div>
-            </div>
-            <div class="card sev-medium">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <h3 class="card-title">Http Exception</h3>
-                    </div>
-                    <div class="card-count">1</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Http Exception</code></div>
-                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-06T06:07:09.972Z</code><span class="meta-label">Last:</span> <code>2026-07-06T06:07:09.972Z</code></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-64tgg<span class="pod-count">1</span></span></div>
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Bad Request Exception</code></div>
+                    <div class="timestamps"><span class="meta-label">First:</span> <code>2026-07-06T06:39:43.144Z</code><span class="meta-label">Last:</span> <code>2026-07-06T11:48:41.747Z</code></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-7d75567547-z6pzb<span class="pod-count">2</span></span><span class="pod-chip">rqillp-lp-7d75567547-64tgg<span class="pod-count">1</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Not yet in the RCA catalog — surfaced automatically because it is an warning-level log. Add a CATALOG entry to classify and explain it.</div></div>
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
@@ -455,27 +524,27 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 </div>
 <div id="tab-frontend" class="tab-pane">
     <div class="stats-grid">
-        <div class="stat-card high"><div class="stat-value">4</div><div class="stat-label">Frontend errors</div></div>
+        <div class="stat-card high"><div class="stat-value">18</div><div class="stat-label">Frontend errors</div></div>
         <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">Distinct messages</div></div>
-        <div class="stat-card"><div class="stat-value">4</div><div class="stat-label">Console-source</div></div>
-        <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Pages with errors (top)</div></div>
+        <div class="stat-card"><div class="stat-value">18</div><div class="stat-label">Console-source</div></div>
+        <div class="stat-card"><div class="stat-value">4</div><div class="stat-label">Pages with errors (top)</div></div>
     </div>
     <div class="sev-summary">
         <h3>Error sources</h3>
-        <div class="pods-row"><span class="pod-chip">console<span class="pod-count">4</span></span></div>
+        <div class="pods-row"><span class="pod-chip">console<span class="pod-count">18</span></span></div>
     </div>
     <section class="slow-apis-section">
         <h2 class="section-title">🌐 Top frontend errors <span class="section-stats">RUM · preprod-eulaerdallearning · grouped by message</span></h2>
         <div class="table-wrap">
             <table class="slow-table">
                 <thead><tr><th>Error message</th><th>Source</th><th class="num">Count</th><th>Sample page</th></tr></thead>
-                <tbody><tr><td><code>Failed to fetch announcements: {</code></td><td>console</td><td class="num">3</td><td><a href="https://eubugbasheupreprod.laerdalblr.in/lp/auth?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25JZCI6MTA1MTgyLCJjb3Vyc2VJZCI6Nzc3LCJ2ZHJTdWJzY3JpcHRpb25JZCI6MzIxNzMsImZpcnN0X25hbWUiOiJ0ZXN0IiwibGFzdF9uYW1lIjoidGVzdCIsImNvdXJzZV9uYW1lIjoiSGVhcnRDb2Rlwq4gMjAyNSBCTFMgQ29tcGxldGUgIiwiZW1haWxfcmVxdWlyZWQiOmZhbHNlLCJ1bmlxdWVJZCI6InRpcmFsaTc2OTdAanNuY29zLmNvbSIsIm9yZ19uYW1lIjoiQnVnIEJhc2ggOC4wLjMtTE1TLUVkaXQiLCJ2YWxpZF9mcm9tIjoiMjAyNi0wNy0wNlQwNjoxNjo0MC4wNjlaIiwidmFsaWRfdG8iOiIyMDI4LTA3LTA2VDA2OjE2OjQwLjA2OVoiLCJ0eXBlIjoicmVnaXN0cmF0aW9uIiwib3R0Ijp0cnVlLCJpYXQiOjE3ODMzMTg2MDAsImV4cCI6MTc4MzMxOTIwMH0.YeZRamSAg87x4D7pvwFc2m1sBRTDr4GCMxnguevunGM&amp;dispatchVersion=9.0&amp;skipSelfRegistration=1" target="_blank">https://eubugbasheupreprod.laerdalblr.in/lp/auth?token=eyJhbGciOiJIUzI</a></td></tr><tr><td><code>Error caught: {</code></td><td>console</td><td class="num">1</td><td><a href="https://eubugbasheupreprod.laerdalblr.in/lp/auth?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25JZCI6MTA1MTgyLCJjb3Vyc2VJZCI6Nzc3LCJ2ZHJTdWJzY3JpcHRpb25JZCI6MzIxNzMsImZpcnN0X25hbWUiOiJ0ZXN0IiwibGFzdF9uYW1lIjoidGVzdCIsImNvdXJzZV9uYW1lIjoiSGVhcnRDb2Rlwq4gMjAyNSBCTFMgQ29tcGxldGUgIiwiZW1haWxfcmVxdWlyZWQiOmZhbHNlLCJ1bmlxdWVJZCI6InRpcmFsaTc2OTdAanNuY29zLmNvbSIsIm9yZ19uYW1lIjoiQnVnIEJhc2ggOC4wLjMtTE1TLUVkaXQiLCJ2YWxpZF9mcm9tIjoiMjAyNi0wNy0wNlQwNjoxNjo0MC4wNjlaIiwidmFsaWRfdG8iOiIyMDI4LTA3LTA2VDA2OjE2OjQwLjA2OVoiLCJ0eXBlIjoicmVnaXN0cmF0aW9uIiwib3R0Ijp0cnVlLCJpYXQiOjE3ODMzMTg2MDAsImV4cCI6MTc4MzMxOTIwMH0.YeZRamSAg87x4D7pvwFc2m1sBRTDr4GCMxnguevunGM&amp;dispatchVersion=9.0&amp;skipSelfRegistration=1" target="_blank">https://eubugbasheupreprod.laerdalblr.in/lp/auth?token=eyJhbGciOiJIUzI</a></td></tr></tbody>
+                <tbody><tr><td><code>Failed to fetch announcements: {</code></td><td>console</td><td class="num">16</td><td><a href="https://preprod-eulaerdallearning.laerdalblr.in/lp" target="_blank">https://preprod-eulaerdallearning.laerdalblr.in/lp</a></td></tr><tr><td><code>Error caught: {</code></td><td>console</td><td class="num">2</td><td><a href="https://preprod-eulaerdallearning.laerdalblr.in/lp/courses/d45acca2-5e87-4b9b-8ad6-f1af53201f0a" target="_blank">https://preprod-eulaerdallearning.laerdalblr.in/lp/courses/d45acca2-5e</a></td></tr></tbody>
             </table>
         </div>
     </section></div>
 <footer>
 <p>Generated from Datadog Logs API for <code>service:rqillp-lp env:rqillp-lp-preprod-eu</code> over the last 1d.</p>
-<p style="margin-top:8px;">302 events across 6 patterns • 2 pods affected</p>
+<p style="margin-top:8px;">352 events across 8 patterns • 8 pods affected</p>
 </footer>
 </div>
 <script>
