@@ -394,7 +394,8 @@ def fetch_http_spans(site, api_key, app_key, service, env, from_, to_):
     return d.get('data', [])
 
 
-def compute_slow_apis(spans, slow_threshold_sec=1.0, top_n=15, sample_per_endpoint=5):
+def compute_slow_apis(spans, slow_threshold_sec=2.0, top_n=15, sample_per_endpoint=5,
+                      exclude_resources=('GET /all',)):
     """
     Group spans by resource_name, compute count/avg/p50/p95/p99 in SECONDS,
     return top N where p95 > threshold, sorted by p99 desc.
@@ -406,6 +407,8 @@ def compute_slow_apis(spans, slow_threshold_sec=1.0, top_n=15, sample_per_endpoi
     for e in spans:
         a = e.get('attributes', {})
         res = a.get('resource_name') or 'unknown'
+        if res in exclude_resources:   # skip long-lived/streaming endpoints (e.g. GET /all)
+            continue
         custom = a.get('custom') or {}
         dur_ns = custom.get('duration')
         if dur_ns is None:
@@ -666,7 +669,7 @@ def render_slow_apis_table(slow_apis):
         </tr>'''
     return f'''
     <section class="slow-apis-section">
-        <h2 class="section-title">🐌 Top {len(slow_apis)} slow APIs <span class="section-stats">p95 or p99 &gt; 1s • click a row for span samples</span></h2>
+        <h2 class="section-title">🐌 Top {len(slow_apis)} slow APIs <span class="section-stats">p95 or p99 &gt; 2s • excludes GET /all • click a row for span samples</span></h2>
         <div class="table-wrap">
             <table class="slow-table">
                 <thead>
@@ -1169,7 +1172,7 @@ def build_teams_card(matched, slow_apis, meta, total, dashboard_url):
             {'title': '🟠 Medium', 'value': f"{med:,}"},
             {'title': '🟢 Low', 'value': f"{low:,}"},
             {'title': 'Patterns', 'value': str(len(matched))},
-            {'title': 'Slow APIs (>1s)', 'value': str(len(slow_apis))},
+            {'title': 'Slow APIs (>2s)', 'value': str(len(slow_apis))},
         ]},
     ]
 
@@ -1257,8 +1260,8 @@ def main():
     # 3. APM spans for slow-API table
     spans = fetch_http_spans(args.site, api_key, app_key, args.service, args.env, from_, to_)
     print(f"  APM http.request spans: {len(spans)}", file=sys.stderr)
-    slow_apis = compute_slow_apis(spans, slow_threshold_sec=1.0, top_n=15)
-    print(f"  Slow APIs (p95 or p99 > 1s): {len(slow_apis)}", file=sys.stderr)
+    slow_apis = compute_slow_apis(spans, slow_threshold_sec=2.0, top_n=15)
+    print(f"  Slow APIs (p95 or p99 > 2s, excl GET /all): {len(slow_apis)}", file=sys.stderr)
 
     # Classify and match
     classified = classify(all_events)
