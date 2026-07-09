@@ -52,7 +52,7 @@ jobs:
             --window 1d \
             --service rqillp-lp \
             --env eu-learning-prod \
-            --span-operation express.request \
+            --span-operation express.request,http.request \
             --output error-dashboard.html \
             --teams-card teams-card.json \
             --rum-app-id 435b9647-49ef-4d7b-95e4-fb95c31626e9 \

@@ -372,14 +372,21 @@ def fetch_logs(site, api_key, app_key, query, from_, to_, max_pages=20):
     return all_events
 
 
-def fetch_http_spans(site, api_key, app_key, service, env, from_, to_, operation='http.request'):
-    """Pull APM http.request spans for performance analysis."""
+def fetch_http_spans(site, api_key, app_key, service, env, from_, to_, operation='http.request',
+                     exclude_hosts=('launchdarkly',)):
+    """Pull APM inbound + outbound spans for performance analysis. `operation` may be a
+    comma-separated list (e.g. 'express.request,http.request') to cover both the service's own
+    endpoints and its outbound dependency calls. LaunchDarkly SDK hosts are excluded so its
+    background streaming/event calls don't masquerade as slow/failing APIs."""
+    ops = [o.strip() for o in operation.split(',') if o.strip()]
+    op_clause = f'operation_name:({" OR ".join(ops)})' if len(ops) > 1 else f'operation_name:{ops[0]}'
+    excl = ' '.join(f'-@http.url_details.host:*{h}*' for h in exclude_hosts)
     payload = {
         'data': {
             'type': 'search_request',
             'attributes': {
                 'filter': {
-                    'query': f'env:{env} service:{service} operation_name:{operation}',
+                    'query': f'env:{env} service:{service} {op_clause} {excl}'.strip(),
                     'from': from_,
                     'to': to_,
                 },
