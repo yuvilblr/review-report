@@ -417,6 +417,13 @@ def compute_slow_apis(spans, slow_threshold_sec=2.0, top_n=15, sample_per_endpoi
         if res in exclude_resources:   # skip long-lived/streaming endpoints (e.g. GET /all)
             continue
         custom = a.get('custom') or {}
+        _http = custom.get('http') if isinstance(custom.get('http'), dict) else {}
+        try:
+            _code = int(_http.get('status_code'))
+        except (TypeError, ValueError):
+            _code = None
+        if _code == 101:   # WebSocket/SSE upgrade — long-lived connection, not request latency
+            continue
         dur_ns = custom.get('duration')
         if dur_ns is None:
             try:
@@ -473,10 +480,11 @@ def compute_slow_apis(spans, slow_threshold_sec=2.0, top_n=15, sample_per_endpoi
 
 
 def compute_4xx(spans, min_hits=10, rate_threshold=0.20, top_n=15):
-    """Per-endpoint 4xx volume/rate from http.request spans. A row is a 'spike' (→ attention)
-    when its 4xx rate >= threshold with a small hit floor; expected 401s on auth endpoints
-    are ignored (token refresh naturally 401s)."""
-    per = defaultdict(lambda: {'total': 0, 'c4xx': 0, 'codes': Counter()})
+    """Per-endpoint ERROR volume/rate (4xx + 5xx + span error flag) across ALL spans —
+    inbound endpoints AND outbound dependency calls, so a failing or high-error-rate
+    dependency surfaces. A row is a 'spike' (→ attention) when its error rate >= threshold
+    with a small hit floor; expected 401s on auth endpoints are ignored (token refresh)."""
+    per = defaultdict(lambda: {'total': 0, 'errs': 0, 'codes': Counter()})
     for e in spans:
         a = e.get('attributes', {})
         res = a.get('resource_name') or 'unknown'
@@ -485,25 +493,28 @@ def compute_4xx(spans, min_hits=10, rate_threshold=0.20, top_n=15):
         try:
             code = int(http.get('status_code'))
         except (TypeError, ValueError):
-            continue
+            code = None
+        err_flag = a.get('error', 0) == 1 if isinstance(a.get('error'), int) else bool(a.get('error'))
+        is_err = bool((code is not None and code >= 400) or err_flag)
+        if code == 401 and 'auth' in res.lower():
+            is_err = False  # token-refresh 401s are expected
         d = per[res]
         d['total'] += 1
-        if 400 <= code <= 499:
-            if code == 401 and 'auth' in res.lower():
-                continue  # token-refresh 401s are expected — don't count them
-            d['c4xx'] += 1
-            d['codes'][code] += 1
+        if is_err:
+            d['errs'] += 1
+            if code:
+                d['codes'][code] += 1
     rows = []
     for res, d in per.items():
-        if not d['c4xx']:
+        if not d['errs']:
             continue
-        rate = d['c4xx'] / d['total'] if d['total'] else 0.0
+        rate = d['errs'] / d['total'] if d['total'] else 0.0
         rows.append({
-            'resource': res, 'total': d['total'], 'c4xx': d['c4xx'], 'rate': rate,
+            'resource': res, 'total': d['total'], 'errs': d['errs'], 'rate': rate,
             'codes': dict(d['codes']),
-            'spike': d['c4xx'] >= min_hits and rate >= rate_threshold,
+            'spike': d['errs'] >= min_hits and rate >= rate_threshold,
         })
-    rows.sort(key=lambda r: (not r['spike'], -r['c4xx']))
+    rows.sort(key=lambda r: (not r['spike'], -r['errs']))
     return rows[:top_n]
 
 
@@ -711,12 +722,12 @@ def render_4xx_table(four_xx, meta):
         badge = (' <span style="background:#dc2626;color:#fff;padding:1px 6px;border-radius:4px;'
                  'font-size:11px;font-weight:600;">SPIKE</span>') if r['spike'] else ''
         q = (f'service:{meta["service"]} env:{meta["env"]} '
-             f'resource_name:"{r["resource"]}" @http.status_code:[400 TO 499]')
+             f'resource_name:"{r["resource"]}" @http.status_code:[400 TO 599]')
         rate_cls = 'cell-warn' if r['spike'] else ''
         rows += f'''
         <tr>
             <td class="api-name"><a href="{esc(dd_traces_url(q, meta))}" target="_blank"><code>{esc(r["resource"])}</code></a>{badge}</td>
-            <td class="num">{r["c4xx"]:,}</td>
+            <td class="num">{r["errs"]:,}</td>
             <td class="num">{r["total"]:,}</td>
             <td class="num {rate_cls}">{r["rate"] * 100:.0f}%</td>
             <td>{esc(codes)}</td>
@@ -724,10 +735,10 @@ def render_4xx_table(four_xx, meta):
     n_spike = sum(1 for r in four_xx if r['spike'])
     return f'''
     <section class="slow-apis-section">
-        <h2 class="section-title">🚦 4xx hotspots <span class="section-stats">{n_spike} spike(s) &ge;20% • expected 401s on auth excluded • click for traces</span></h2>
+        <h2 class="section-title">🚦 Error-prone endpoints <span class="section-stats">{n_spike} spike(s) &ge;20% err-rate • 4xx+5xx, inbound &amp; outbound • expected 401s on auth excluded • click for traces</span></h2>
         <div class="table-wrap">
             <table class="slow-table">
-                <thead><tr><th>Endpoint</th><th class="num">4xx</th><th class="num">Total</th><th class="num">Rate</th><th>Codes</th></tr></thead>
+                <thead><tr><th>Endpoint</th><th class="num">Errors</th><th class="num">Total</th><th class="num">Rate</th><th>Codes</th></tr></thead>
                 <tbody>{rows}</tbody>
             </table>
         </div>
@@ -1330,7 +1341,7 @@ def build_teams_card(matched, slow_apis, meta, total, dashboard_url, four_xx=Non
             {'title': '🟢 Low', 'value': f"{low:,}"},
             {'title': 'Patterns', 'value': str(len(matched))},
             {'title': 'Slow APIs (>2s)', 'value': str(len(slow_apis))},
-            {'title': '4xx spikes', 'value': str(len(spikes))},
+            {'title': 'Error spikes', 'value': str(len(spikes))},
         ]},
     ]
 
@@ -1342,10 +1353,10 @@ def build_teams_card(matched, slow_apis, meta, total, dashboard_url, four_xx=Non
     for r in spikes:
         codes = ', '.join(f"{c}×{n}" for c, n in sorted(r['codes'].items()))
         q = (f'service:{meta["service"]} env:{meta["env"]} '
-             f'resource_name:"{r["resource"]}" @http.status_code:[400 TO 499]')
+             f'resource_name:"{r["resource"]}" @http.status_code:[400 TO 599]')
         attention_lines.append(
-            f"- 🚦 [**{r['resource']}**]({dd_traces_url(q, meta)}) — {r['rate']:.0%} 4xx "
-            f"({r['c4xx']}/{r['total']}) · {codes}")
+            f"- 🚦 [**{r['resource']}**]({dd_traces_url(q, meta)}) — {r['rate']:.0%} errors "
+            f"({r['errs']}/{r['total']}) · {codes}")
     if attention_lines:
         body.append({
             'type': 'Container', 'style': 'attention', 'bleed': True, 'spacing': 'Medium',
@@ -1450,7 +1461,7 @@ def main():
     slow_apis = compute_slow_apis(spans, slow_threshold_sec=2.0, top_n=15)
     print(f"  Slow APIs (p95 or p99 > 2s, excl GET /all): {len(slow_apis)}", file=sys.stderr)
     four_xx = compute_4xx(spans)
-    print(f"  4xx endpoints: {len(four_xx)} ({sum(1 for r in four_xx if r['spike'])} spike)", file=sys.stderr)
+    print(f"  Error-prone endpoints: {len(four_xx)} ({sum(1 for r in four_xx if r['spike'])} spike)", file=sys.stderr)
 
     # Classify and match
     classified = classify(all_events)
