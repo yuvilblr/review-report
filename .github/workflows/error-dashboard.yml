@@ -54,7 +54,9 @@ jobs:
             --env eu-learning-prod \
             --span-operation express.request \
             --output error-dashboard.html \
-            --teams-card teams-card.json
+            --teams-card teams-card.json \
+            --rum-app-id 435b9647-49ef-4d7b-95e4-fb95c31626e9 \
+            --rum-env prod-eulaerdallearning
           code=$?
           set -e
           if [ "$code" -eq 0 ]; then
