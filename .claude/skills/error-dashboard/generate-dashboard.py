@@ -372,14 +372,14 @@ def fetch_logs(site, api_key, app_key, query, from_, to_, max_pages=20):
     return all_events
 
 
-def fetch_http_spans(site, api_key, app_key, service, env, from_, to_):
+def fetch_http_spans(site, api_key, app_key, service, env, from_, to_, operation='http.request'):
     """Pull APM http.request spans for performance analysis."""
     payload = {
         'data': {
             'type': 'search_request',
             'attributes': {
                 'filter': {
-                    'query': f'env:{env} service:{service} operation_name:http.request',
+                    'query': f'env:{env} service:{service} operation_name:{operation}',
                     'from': from_,
                     'to': to_,
                 },
@@ -1070,7 +1070,7 @@ def render_html(matched, unmatched, slow_apis, meta, rum_html='', four_xx=None):
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Error Dashboard — {esc(meta["env"])}</title>
+<title>Learner Portal — Health Report ({esc(meta["env"])})</title>
 <style>
 * {{ box-sizing: border-box; margin: 0; padding: 0; }}
 body {{ font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.5; font-size: 14px; }}
@@ -1194,7 +1194,7 @@ footer code {{ background: rgba(255,255,255,0.1); padding: 1px 6px; border-radiu
 <header class="dash-header">
 <div class="header-grid">
 <div>
-<h1>🚨 Error Dashboard</h1>
+<h1>🩺 Learner Portal — Health Report</h1>
 <p class="subtitle">Errors & Root Cause Analysis from Datadog Logs</p>
 <div class="header-meta">
 <div><span class="label">Service</span><span class="value">{esc(meta["service"])}</span></div>
@@ -1311,7 +1311,7 @@ def build_teams_card(matched, slow_apis, meta, total, dashboard_url, four_xx=Non
     alert = high > 0 or bool(spikes)
     body = [
         {'type': 'TextBlock',
-         'text': ('🚨 ' if alert else '📊 ') + f"Error Dashboard — {meta['service']}",
+         'text': ('🚨 ' if alert else '🩺 ') + "Learner Portal — Health Report",
          'weight': 'Bolder', 'size': 'Medium', 'wrap': True},
         {'type': 'TextBlock',
          'text': f"{meta['env']} · last {meta['window']} · {meta['generated_at']}",
@@ -1393,6 +1393,8 @@ def main():
     p.add_argument('--window', default='2d', help='Time window (Datadog syntax: 1h/4h/1d/2d/7d)')
     p.add_argument('--service', default='rqillp-lp', help='Service tag')
     p.add_argument('--env', default='rqillp-lp-preprod-eu', help='Environment tag')
+    p.add_argument('--span-operation', default='http.request',
+                   help='APM operation_name for inbound server spans (http.request for preprod, express.request for prod)')
     p.add_argument('--site', default='datadoghq.com', help='Datadog site (e.g. datadoghq.com or datadoghq.eu)')
     p.add_argument('--output', default='/workspace/lp-ui/docs/error-dashboard.html', help='Output HTML path')
     p.add_argument('--teams-card', default=None, help='If set, write a Microsoft Teams Adaptive Card (message JSON) summarizing severity + top high-severity patterns to this path')
@@ -1436,8 +1438,8 @@ def main():
         sys.exit(3)  # distinct from 1 (uncaught crash) and 2 (missing credentials)
 
     # 3. APM spans for slow-API table
-    spans = fetch_http_spans(args.site, api_key, app_key, args.service, args.env, from_, to_)
-    print(f"  APM http.request spans: {len(spans)}", file=sys.stderr)
+    spans = fetch_http_spans(args.site, api_key, app_key, args.service, args.env, from_, to_, args.span_operation)
+    print(f"  APM {args.span_operation} spans: {len(spans)}", file=sys.stderr)
     slow_apis = compute_slow_apis(spans, slow_threshold_sec=2.0, top_n=15)
     print(f"  Slow APIs (p95 or p99 > 2s, excl GET /all): {len(slow_apis)}", file=sys.stderr)
     four_xx = compute_4xx(spans)

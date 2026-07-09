@@ -51,11 +51,10 @@ jobs:
           python3 .claude/skills/error-dashboard/generate-dashboard.py \
             --window 1d \
             --service rqillp-lp \
-            --env rqillp-lp-preprod-eu \
+            --env eu-learning-prod \
+            --span-operation express.request \
             --output error-dashboard.html \
-            --teams-card teams-card.json \
-            --rum-app-id 3d458308-e843-489f-be05-7a1a38523e5a \
-            --rum-env preprod-eulaerdallearning
+            --teams-card teams-card.json
           code=$?
           set -e
           if [ "$code" -eq 0 ]; then
