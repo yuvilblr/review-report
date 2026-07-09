@@ -487,6 +487,12 @@ def classify(events):
 
         # Pino-structured (NestJS)
         if 'msg' in nested or 'context' in nested or 'level' in nested:
+            res = nested.get('res') if isinstance(nested.get('res'), dict) else {}
+            status = res.get('statusCode') if res.get('statusCode') is not None else nested.get('statusCode')
+            try:
+                status = int(status) if status is not None else None
+            except (TypeError, ValueError):
+                status = None
             entry = {
                 'ts': a.get('timestamp'),
                 'msg': (nested.get('msg') or '').strip(),
@@ -495,6 +501,7 @@ def classify(events):
                 'host': a.get('host'),
                 'pod': pod,
                 'level': nested.get('level'),
+                'status': status,  # HTTP status if this log is tied to a request (@res.statusCode / @statusCode)
             }
             lvl = nested.get('level')
             if lvl == 50: out['nestjs_errors'].append(entry)
@@ -525,6 +532,23 @@ def matches(entry_msg, rule):
     if rule['type'] == 'regex':
         return bool(re.search(rule['value'], entry_msg))
     return False
+
+
+_UUID_RE = re.compile(r'\b[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\b', re.I)
+
+
+def _norm_msg(msg):
+    """Collapse volatile IDs so one bug = one signature (User 618167 / 618168 -> User <n>)."""
+    s = re.sub(r'\s+', ' ', (msg or '').strip())
+    s = _UUID_RE.sub('<id>', s)
+    s = re.sub(r'\b\d{2,}\b', '<n>', s)
+    return s[:120] or '(no message)'
+
+
+def _search_literal(norm):
+    """A real, ID-free phrase from a normalized signature — used to build a matching @msg query."""
+    parts = [p.strip(' :?=/&()[]') for p in re.split(r'<id>|<n>', norm) if len(p.strip(' :?=/&()[]')) >= 4]
+    return max(parts, key=len) if parts else norm
 
 
 def apply_catalog(classified):
@@ -574,36 +598,38 @@ def apply_catalog(classified):
             'sample_msg': events[0]['msg'][:200] if events else '',
         })
     # Fold UNCATALOGUED events into matched so every error is surfaced even without a
-    # catalog entry: error-stream events default to HIGH (red), warn-stream to MEDIUM.
-    # The catalog only refines this (e.g. downgrading known-benign errors). `unmatched`
-    # is still returned for the "add these to the catalog" hint in main().
+    # catalog entry. Severity is FAILURE-driven: HIGH only when a 5xx request is behind the
+    # message; otherwise MEDIUM (an error-level log alone is not a failure). Signatures are
+    # normalized (IDs -> <n>/<id>) so the same bug collapses to one line. `unmatched` is
+    # still returned for the "add these to the catalog" hint in main().
     uncat = {}
     for u in unmatched:
-        src = u.get('source', '')
-        sev = 'high' if src in ('nestjs_error', 'ld_error') else 'medium'
-        norm = re.sub(r'\s+', ' ', (u.get('msg') or '').strip())[:120] or '(no message)'
-        uncat.setdefault((norm, sev), []).append(u)
-    for (msg_key, sev), evs in uncat.items():
+        uncat.setdefault(_norm_msg(u.get('msg')), []).append(u)
+    for msg_key, evs in uncat.items():
+        codes = sorted({e['status'] for e in evs if e.get('status') and e['status'] >= 500})
+        failed = bool(codes)
+        sev = 'high' if failed else 'medium'
+        why = (f'A request failed with {", ".join(str(c) for c in codes)} — needs attention.' if failed
+               else 'Error/warn-level log with no failing (5xx) request behind it — likely handled / '
+                    'business logic. Add a CATALOG entry to classify it.')
         timestamps = [e['ts'] for e in evs if e.get('ts')]
         pods = Counter(e['pod'] for e in evs if e.get('pod'))
-        level = 'error-level' if sev == 'high' else 'warning-level'
         matched.append({
             'rule': {
                 'category': 'Other / Uncategorized',
                 'severity': sev,
                 'title': msg_key[:80] or '(no message)',
-                'rca': f'Not yet in the RCA catalog — surfaced automatically because it is an {level} '
-                       'log. Add a CATALOG entry to classify and explain it.',
-                'impact': 'Unknown — investigate.',
+                'rca': why,
+                'impact': 'Unknown — investigate.' if failed else 'Likely none (request did not 5xx).',
                 'fix': 'Add this pattern to CATALOG in generate-dashboard.py.',
-                'match': {'type': 'contains', 'value': msg_key},
+                'match': {'type': 'contains', 'value': _search_literal(msg_key)},
             },
             'count': len(evs),
             'first_seen': min(timestamps) if timestamps else '',
             'last_seen': max(timestamps) if timestamps else '',
             'pods': dict(pods),
             'contexts': {},
-            'sample_msg': msg_key,
+            'sample_msg': (evs[0].get('msg') or msg_key)[:200],
         })
 
     matched.sort(key=lambda x: -x['count'])
@@ -1181,11 +1207,15 @@ def _literal_from_match(match):
 
 
 def dd_logs_url(match, meta):
-    """Deep-link to the Logs Explorer: service + env + a literal phrase (free-text on msg), time-boxed."""
+    """Deep-link to the Logs Explorer, time-boxed. The human message lives in the @msg
+    attribute, which is NOT full-text indexed and does NOT match quoted phrases — only
+    token wildcards work. So match ordered alphanumeric tokens: @msg:*tok1*tok2*..."""
     from urllib.parse import quote
     from datetime import datetime, timezone
-    phrase = _literal_from_match(match).replace('"', ' ').strip()[:80]
-    q = f'service:{meta["service"]} env:{meta["env"]}' + (f' "{phrase}"' if phrase else '')
+    tokens = re.findall(r'[A-Za-z0-9]+', _literal_from_match(match))[:12]
+    q = f'service:{meta["service"]} env:{meta["env"]}'
+    if tokens:
+        q += ' @msg:*' + '*'.join(tokens) + '*'
     to_ms = int(datetime.now(timezone.utc).timestamp() * 1000)
     from_ms = to_ms - _window_to_seconds(meta.get('window', '1d')) * 1000
     return f'https://app.{meta["site"]}/logs?query={quote(q)}&from_ts={from_ms}&to_ts={to_ms}'
