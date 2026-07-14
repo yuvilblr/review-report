@@ -974,7 +974,7 @@ def render_rum_section(rum, meta):
     </section>'''
 
 
-def render_html(matched, unmatched, slow_apis, meta, rum_html='', four_xx=None):
+def render_html(matched, unmatched, slow_apis, meta, rum_html='', four_xx=None, ai_summary=None):
     total_events = sum(m['count'] for m in matched)  # matched already includes uncatalogued events
     high = sum(m['count'] for m in matched if m['rule']['severity'] == 'high')
     med = sum(m['count'] for m in matched if m['rule']['severity'] == 'medium')
@@ -1083,6 +1083,17 @@ def render_html(matched, unmatched, slow_apis, meta, rum_html='', four_xx=None):
                       "});\n</script>")
     else:
         tab_bar = frontend_pane = tab_script = ''
+
+    ai_summary_html = ''
+    if ai_summary:
+        ai_summary_html = (
+            '<div style="background:#eef2ff;border:1px solid #c7d2fe;border-left:4px solid #4f46e5;'
+            'border-radius:12px;padding:16px 20px;margin-bottom:24px;">'
+            '<div style="font-weight:700;color:#3730a3;margin-bottom:6px;font-size:14px;">'
+            '🧠 AI summary'
+            '</div>'
+            f'<div style="color:#1e293b;line-height:1.55;">{esc(ai_summary)}</div>'
+            '</div>')
 
     html_doc = f'''<!DOCTYPE html>
 <html lang="en">
@@ -1224,6 +1235,7 @@ footer code {{ background: rgba(255,255,255,0.1); padding: 1px 6px; border-radiu
 <div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">{esc(meta["generated_at"])}</strong></div>
 </div>
 </header>
+{ai_summary_html}
 {tab_bar}
 <div class="stats-grid">
 <div class="stat-card"><div class="stat-value">{total_events:,}</div><div class="stat-label">Total events</div></div>
@@ -1316,7 +1328,113 @@ def dd_traces_url(query, meta):
     return f'https://app.{meta["site"]}/apm/traces?query={quote(query)}&from_ts={from_ms}&to_ts={to_ms}&paused=true'
 
 
-def build_teams_card(matched, slow_apis, meta, total, dashboard_url, four_xx=None):
+# ----------------------------------------------------------------------------
+# AI NARRATIVE LAYER (optional — only runs when ANTHROPIC_API_KEY is set)
+# ----------------------------------------------------------------------------
+# Everything above is deterministic. This layer adds two model-generated bits:
+#   1. an on-call exec summary at the top of the card + dashboard, and
+#   2. a drafted root cause for patterns that have no CATALOG entry yet.
+# Best-effort: any failure prints a warning and the dashboard still renders.
+
+def anthropic_message(prompt, api_key, model='claude-opus-4-8', max_tokens=1024, system=None):
+    """One Claude call via raw HTTP (stdlib urllib, mirroring dd_post). Returns the
+    concatenated text blocks, or None on any error (the AI layer is non-blocking)."""
+    import urllib.request
+    import urllib.error
+    body = {'model': model, 'max_tokens': max_tokens,
+            'messages': [{'role': 'user', 'content': prompt}]}
+    if system:
+        body['system'] = system
+    req = urllib.request.Request(
+        'https://api.anthropic.com/v1/messages',
+        data=json.dumps(body).encode(),
+        headers={'x-api-key': api_key,
+                 'anthropic-version': '2023-06-01',
+                 'content-type': 'application/json'})
+    try:
+        with urllib.request.urlopen(req, timeout=90) as resp:
+            data = json.load(resp)
+        return ''.join(b.get('text', '') for b in data.get('content', [])
+                       if b.get('type') == 'text').strip()
+    except urllib.error.HTTPError as e:
+        detail = ''
+        try:
+            detail = ' — ' + e.read().decode()[:300]
+        except Exception:
+            pass
+        print(f"  ⚠️  AI call failed: HTTP {e.code}{detail}", file=sys.stderr)
+    except Exception as e:
+        print(f"  ⚠️  AI call failed: {e}", file=sys.stderr)
+    return None
+
+
+def ai_exec_summary(matched, slow_apis, four_xx, meta, total, api_key, model):
+    """A 2-3 sentence on-call executive summary of tonight's findings."""
+    high = [m for m in matched if m['rule']['severity'] == 'high']
+    spikes = [r for r in (four_xx or []) if r.get('spike')]
+    facts = {
+        'service': meta['service'], 'env': meta['env'], 'window': meta['window'],
+        'total_events': total,
+        'high_severity_patterns': [f"{m['rule']['title']} (x{m['count']})" for m in high[:8]],
+        'slow_apis': [f"{s['resource']} p95={s['p95']:.1f}s ({s['count']}x)"
+                      for s in (slow_apis or [])[:8]],
+        'error_spikes': [f"{r['resource']} {r['rate']:.0%} errors ({r['errs']}/{r['total']})"
+                         for r in spikes[:8]],
+    }
+    prompt = (
+        "You are the on-call SRE for the Learner Portal (NestJS API 'rqillp-lp' + React UI 'lp-ui'). "
+        "Below are tonight's error-dashboard findings as JSON. Write a 2-3 sentence executive summary "
+        "for the engineer who was just paged: the single most important thing to look at first, anything "
+        "notably new or worsening, and whether the service is overall healthy. Be specific — name the "
+        "endpoints/patterns that matter. Plain prose only: no preamble, no bullet points, no headers.\n\n"
+        f"Findings:\n{json.dumps(facts, indent=2)}"
+    )
+    return anthropic_message(prompt, api_key, model=model, max_tokens=400)
+
+
+def ai_autofill_rca(matched, meta, api_key, model):
+    """Draft a likely root cause for each pattern that has no CATALOG entry
+    ('Other / Uncategorized'). One batched call; mutates matched in place.
+    Returns the number of patterns filled."""
+    uncat = [m for m in matched if m['rule'].get('category') == 'Other / Uncategorized']
+    if not uncat:
+        return 0
+    items = [{'id': i,
+              'message': m['rule'].get('title', ''),
+              'sample': m.get('sample_msg', ''),
+              'count': m['count'],
+              'saw_5xx': m['rule'].get('severity') == 'high'}
+             for i, m in enumerate(uncat)]
+    prompt = (
+        "You are an SRE for the Learner Portal (NestJS API 'rqillp-lp' + React UI 'lp-ui'; "
+        "Prisma/Postgres, Valkey cache, LaunchDarkly, LTI/AICC content launch). Each item below is an "
+        "uncatalogued error/warning log pattern with no known root cause yet ('saw_5xx' means a request "
+        "actually failed with a 5xx). For each, write a 1-2 sentence likely root-cause analysis: what it "
+        "means, the most probable cause, and the first thing to check. If genuinely unsure, say so briefly. "
+        'Return ONLY a JSON array, no other text: [{"id": <id>, "rca": "..."}].\n\n'
+        f"Patterns:\n{json.dumps(items, indent=2)}"
+    )
+    resp = anthropic_message(prompt, api_key, model=model, max_tokens=2000)
+    if not resp:
+        return 0
+    try:
+        m0 = re.search(r'\[.*\]', resp, re.S)
+        arr = json.loads(m0.group(0) if m0 else resp)
+    except Exception as e:
+        print(f"  ⚠️  AI RCA parse failed: {e}", file=sys.stderr)
+        return 0
+    by_id = {o['id']: o['rca'] for o in arr
+             if isinstance(o, dict) and 'id' in o and o.get('rca')}
+    filled = 0
+    for i, m in enumerate(uncat):
+        rca = (by_id.get(i) or '').strip()
+        if rca:
+            m['rule']['rca'] = rca + '  🤖 AI-generated — verify before acting.'
+            filled += 1
+    return filled
+
+
+def build_teams_card(matched, slow_apis, meta, total, dashboard_url, four_xx=None, ai_summary=None):
     """Build a Microsoft Teams Adaptive Card (message envelope) summarizing
     severity counts and the top high-severity patterns ('what needs attention').
     `matched` is already sorted by event count descending."""
@@ -1344,6 +1462,11 @@ def build_teams_card(matched, slow_apis, meta, total, dashboard_url, four_xx=Non
             {'title': 'Error spikes', 'value': str(len(spikes))},
         ]},
     ]
+    if ai_summary:
+        body.insert(2, {
+            'type': 'Container', 'style': 'emphasis', 'spacing': 'Small', 'bleed': True,
+            'items': [{'type': 'TextBlock', 'text': '🧠 ' + ai_summary, 'wrap': True}],
+        })
 
     attention_lines = [
         f"- [**{m['rule']['title']}**]({dd_logs_url(m['rule']['match'], meta)}) "
@@ -1419,6 +1542,8 @@ def main():
     p.add_argument('--dashboard-url', default='https://yuvilblr.github.io/review-report/error-dashboard.html', help='URL the Teams card "Open dashboard" button links to')
     p.add_argument('--rum-app-id', default=None, help='RUM application.id; if set, adds a Frontend (RUM) tab analyzing frontend/console errors')
     p.add_argument('--rum-env', default='preprod-eulaerdallearning', help='RUM env tag used to filter frontend errors')
+    p.add_argument('--ai-model', default='claude-opus-4-8',
+                   help='Claude model for the optional AI narrative (exec summary + auto-RCA). Only used when ANTHROPIC_API_KEY is set.')
     args = p.parse_args()
 
     api_key = os.environ.get('DD_API_KEY')
@@ -1492,7 +1617,24 @@ def main():
         'rum_env': args.rum_env if args.rum_app_id else '',
         'generated_at': datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M:%S UTC'),
     }
-    html_doc = render_html(matched, unmatched, slow_apis, meta, rum_html=rum_html, four_xx=four_xx)
+    total = sum(m['count'] for m in matched)  # matched includes uncatalogued events
+
+    # 5. Optional AI narrative layer — best-effort, only when ANTHROPIC_API_KEY is set.
+    ai_summary = None
+    anthropic_key = os.environ.get('ANTHROPIC_API_KEY')
+    if anthropic_key:
+        print(f"Generating AI narrative with {args.ai_model} ...", file=sys.stderr)
+        n_rca = ai_autofill_rca(matched, meta, anthropic_key, args.ai_model)
+        if n_rca:
+            print(f"  AI drafted RCA for {n_rca} uncatalogued pattern(s)", file=sys.stderr)
+        ai_summary = ai_exec_summary(matched, slow_apis, four_xx, meta, total,
+                                     anthropic_key, args.ai_model)
+        print(f"  AI exec summary: {'generated' if ai_summary else 'unavailable'}", file=sys.stderr)
+    else:
+        print("  (ANTHROPIC_API_KEY not set — skipping AI narrative layer)", file=sys.stderr)
+
+    html_doc = render_html(matched, unmatched, slow_apis, meta,
+                           rum_html=rum_html, four_xx=four_xx, ai_summary=ai_summary)
 
     out_dir = os.path.dirname(args.output)
     if out_dir:
@@ -1500,7 +1642,6 @@ def main():
     with open(args.output, 'w') as f:
         f.write(html_doc)
 
-    total = sum(m['count'] for m in matched)  # matched now includes uncatalogued events
     print(f"\n✓ Dashboard written: {args.output}")
     print(f"  Total events: {total:,}")
     print(f"  Matched patterns: {len(matched)}")
@@ -1508,7 +1649,8 @@ def main():
 
     # Optional: emit a Microsoft Teams Adaptive Card summarizing what needs attention.
     if args.teams_card:
-        card = build_teams_card(matched, slow_apis, meta, total, args.dashboard_url, four_xx=four_xx)
+        card = build_teams_card(matched, slow_apis, meta, total, args.dashboard_url,
+                                four_xx=four_xx, ai_summary=ai_summary)
         card_dir = os.path.dirname(args.teams_card)
         if card_dir:
             os.makedirs(card_dir, exist_ok=True)

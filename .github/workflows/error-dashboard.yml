@@ -8,8 +8,11 @@ name: Daily Datadog Error Dashboard
 #
 # REQUIRED SETUP (one time):
 #   1. Repo Settings -> Secrets and variables -> Actions -> New repository secret:
-#        DD_API_KEY  = <your Datadog API key>
-#        DD_APP_KEY  = <your Datadog Application key>  (ideally a read-only scoped key)
+#        DD_API_KEY        = <your Datadog API key>
+#        DD_APP_KEY        = <your Datadog Application key>  (ideally a read-only scoped key)
+#        ANTHROPIC_API_KEY = <your Anthropic API key>  (OPTIONAL — enables the AI exec
+#                            summary + auto-RCA. If absent, the dashboard still builds,
+#                            just without the AI narrative.)
 #   2. Repo Settings -> Pages -> Source: "Deploy from a branch", Branch: main, Folder: / (root)
 #
 # You can also trigger it by hand from the Actions tab (workflow_dispatch).
@@ -46,6 +49,8 @@ jobs:
         env:
           DD_API_KEY: ${{ secrets.DD_API_KEY }}
           DD_APP_KEY: ${{ secrets.DD_APP_KEY }}
+          # Optional: enables the AI exec summary + auto-RCA. Skipped cleanly if unset.
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           set +e
           python3 .claude/skills/error-dashboard/generate-dashboard.py \
@@ -53,6 +58,7 @@ jobs:
             --service rqillp-lp \
             --env eu-learning-prod \
             --span-operation express.request,http.request \
+            --ai-model claude-opus-4-8 \
             --output error-dashboard.html \
             --teams-card teams-card.json \
             --rum-app-id 435b9647-49ef-4d7b-95e4-fb95c31626e9 \
