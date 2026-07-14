@@ -1008,8 +1008,15 @@ def render_html(matched, unmatched, slow_apis, meta, rum_html='', four_xx=None, 
                     for p, n in sorted(m['pods'].items(), key=lambda x: -x[1])[:6]
                 )
                 pods_html = f'<div class="pods-row"><span class="meta-label">Pods:</span>{chips}</div>'
+            rec = m.get('recency')
+            rec_badge = f'<span class="rec-badge rec-{rec["key"]}">{rec["emoji"]} {rec["label"]}</span>' if rec else ''
             ts_html = ''
-            if m.get('first_seen') or m.get('last_seen'):
+            if rec:
+                _fs = esc((m.get('first_seen') or '')[:19])
+                _ls = esc((m.get('last_seen') or '')[:19])
+                ts_html = (f'<div class="timestamps">{rec["emoji"]} <strong>{rec["label"]}</strong> · {esc(rec["phrase"])} '
+                           f'<span style="color:#94a3b8;">({_fs} → {_ls} UTC)</span></div>')
+            elif m.get('first_seen') or m.get('last_seen'):
                 ts_html = f'<div class="timestamps"><span class="meta-label">First:</span> <code>{esc(m["first_seen"] or "-")}</code><span class="meta-label">Last:</span> <code>{esc(m["last_seen"] or "-")}</code></div>'
             sev = r['severity']
             cards.append(f'''
@@ -1017,6 +1024,7 @@ def render_html(matched, unmatched, slow_apis, meta, rum_html='', four_xx=None, 
                 <div class="card-header">
                     <div class="card-title-row">
                         <span class="sev-badge sev-{sev}">{sev.upper()}</span>
+                        {rec_badge}
                         <h3 class="card-title">{esc(r["title"])}</h3>
                     </div>
                     <div class="card-count">{m["count"]:,}</div>
@@ -1095,6 +1103,18 @@ def render_html(matched, unmatched, slow_apis, meta, rum_html='', four_xx=None, 
             f'<div style="color:#1e293b;line-height:1.55;">{esc(ai_summary)}</div>'
             '</div>')
 
+    rec_counts = Counter(m['recency']['key'] for m in matched if m.get('recency'))
+    rollup_html = ''
+    if rec_counts:
+        _order = [('ongoing', '🔴', 'ongoing'), ('tapering', '🟠', 'tapering'), ('settled', '✅', 'settled')]
+        _seg = ' · '.join(f'{em} <strong>{rec_counts[k]}</strong> {lbl}'
+                          for k, em, lbl in _order if rec_counts.get(k))
+        rollup_html = (
+            '<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;'
+            'padding:12px 18px;margin-bottom:20px;font-size:14px;color:#334155;">'
+            f'<strong>Status of {sum(rec_counts.values())} pattern(s):</strong> {_seg} '
+            '<span style="color:#94a3b8;">· “settled” = not seen recently (heuristic, not confirmed resolved)</span></div>')
+
     html_doc = f'''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1154,6 +1174,10 @@ section.category-section {{ margin-bottom: 32px; }}
 .sev-badge.sev-low {{ background: #65a30d; }}
 .card-body {{ padding: 20px; }}
 .meta-label {{ font-size: 11px; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; margin-right: 8px; font-weight: 600; }}
+.rec-badge {{ font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; margin-right: 8px; white-space: nowrap; }}
+.rec-ongoing {{ background: #fee2e2; color: #991b1b; }}
+.rec-tapering {{ background: #ffedd5; color: #9a3412; }}
+.rec-settled {{ background: #dcfce7; color: #166534; }}
 .pattern-row, .timestamps, .pods-row {{ margin-bottom: 12px; font-size: 13px; }}
 .pattern {{ display: inline-block; background: #f1f5f9; padding: 8px 12px; border-radius: 4px; font-family: "SF Mono", Monaco, Consolas, monospace; font-size: 12px; color: #0f172a; margin-top: 4px; word-break: break-all; }}
 .timestamps code {{ background: #f1f5f9; padding: 2px 6px; border-radius: 3px; font-size: 11px; margin-right: 12px; }}
@@ -1252,6 +1276,7 @@ footer code {{ background: rgba(255,255,255,0.1); padding: 1px 6px; border-radiu
 <span><span class="sev-dot sev-low"></span>Low: {low:,}</span>
 </div>
 </div>
+{rollup_html}
 {render_slow_apis_table(slow_apis)}
     {render_4xx_table(four_xx or [], meta)}
 <div class="toc">
@@ -1329,6 +1354,64 @@ def dd_traces_url(query, meta):
 
 
 # ----------------------------------------------------------------------------
+# RECENCY / STATUS (is a pattern still active, tapering, or already settled?)
+# ----------------------------------------------------------------------------
+# The report sums the whole window, so a burst that stopped hours ago looks the
+# same as one happening right now. These derive a status from a pattern's
+# first_seen/last_seen relative to report time. NOTE: within a single window,
+# "settled" means "not seen recently" — a heuristic, not confirmed resolution
+# (that needs cross-run state).
+
+def _parse_ts(s):
+    """Datadog ISO-8601 timestamp (or epoch ms) -> aware UTC datetime, or None."""
+    if not s:
+        return None
+    if isinstance(s, (int, float)):
+        return datetime.fromtimestamp(s / 1000 if s > 1e12 else s, timezone.utc)
+    try:
+        return datetime.fromisoformat(str(s).replace('Z', '+00:00'))
+    except ValueError:
+        return None
+
+
+def _fmt_dur(seconds):
+    """Compact human duration: '<1m', '45m', '6h 12m', '2d 3h'."""
+    seconds = int(max(0, seconds))
+    if seconds < 60:
+        return '<1m'
+    d, rem = divmod(seconds, 86400)
+    h, rem = divmod(rem, 3600)
+    m = rem // 60
+    if d:
+        return f'{d}d {h}h' if h else f'{d}d'
+    if h:
+        return f'{h}h {m}m' if m else f'{h}h'
+    return f'{m}m'
+
+
+def classify_recency(first_seen, last_seen, now, ongoing_max=1800, tapering_max=10800):
+    """Status from recency (now - last_seen) + active span (last - first).
+    Defaults: ongoing <=30m, tapering <=3h, else settled. Returns a dict or None."""
+    ls = _parse_ts(last_seen)
+    if ls is None:
+        return None
+    fs = _parse_ts(first_seen)
+    age = (now - ls).total_seconds()
+    span = (ls - fs).total_seconds() if fs else 0
+    if age <= ongoing_max:
+        key, emoji, label = 'ongoing', '🔴', 'Ongoing'
+    elif age <= tapering_max:
+        key, emoji, label = 'tapering', '🟠', 'Tapering'
+    else:
+        key, emoji, label = 'settled', '✅', 'Settled'
+    phrase = 'last seen just now' if age < 60 else f'last seen {_fmt_dur(age)} ago'
+    if span >= 60:
+        phrase += f' · active {_fmt_dur(span)}'
+    return {'key': key, 'emoji': emoji, 'label': label,
+            'age_sec': age, 'span_sec': span, 'ago': _fmt_dur(age), 'phrase': phrase}
+
+
+# ----------------------------------------------------------------------------
 # AI NARRATIVE LAYER (optional — only runs when ANTHROPIC_API_KEY is set)
 # ----------------------------------------------------------------------------
 # Everything above is deterministic. This layer adds two model-generated bits:
@@ -1390,7 +1473,12 @@ def ai_exec_summary(matched, slow_apis, four_xx, meta, total, api_key, model):
     facts = {
         'service': meta['service'], 'env': meta['env'], 'window': meta['window'],
         'total_events': total,
-        'high_severity_patterns': [f"{m['rule']['title']} (x{m['count']})" for m in high[:8]],
+        'high_severity_patterns': [
+            f"{m['rule']['title']} (x{m['count']}"
+            + (f", {m['recency']['label'].lower()}, {m['recency']['ago']} since last seen)"
+               if m.get('recency') else ")")
+            for m in high[:8]],
+        'status_rollup': dict(Counter(m['recency']['key'] for m in matched if m.get('recency'))),
         'slow_apis': [f"{s['resource']} p95={s['p95']:.1f}s ({s['count']}x)"
                       for s in (slow_apis or [])[:8]],
         'error_spikes': [f"{r['resource']} {r['rate']:.0%} errors ({r['errs']}/{r['total']})"
@@ -1399,8 +1487,9 @@ def ai_exec_summary(matched, slow_apis, four_xx, meta, total, api_key, model):
     prompt = (
         "You are the on-call SRE for the Learner Portal (NestJS API 'rqillp-lp' + React UI 'lp-ui'). "
         "Below are tonight's error-dashboard findings as JSON. Write a 2-3 sentence executive summary "
-        "for the engineer who was just paged: the single most important thing to look at first, anything "
-        "notably new or worsening, and whether the service is overall healthy. Be specific — name the "
+        "for the engineer who was just paged: the single most important thing to look at first, WHICH "
+        "issues are still active vs. appear to have settled (use recency + status_rollup — don't alarm "
+        "about things that stopped hours ago), and whether the service is overall healthy. Be specific — name the "
         "endpoints/patterns that matter. Plain prose only: no preamble, no bullet points, no headers.\n\n"
         f"Findings:\n{json.dumps(facts, indent=2)}"
     )
@@ -1460,6 +1549,9 @@ def build_teams_card(matched, slow_apis, meta, total, dashboard_url, four_xx=Non
 
     spikes = [r for r in (four_xx or []) if r.get('spike')]
     alert = high > 0 or bool(spikes)
+    _rc = Counter(m['recency']['key'] for m in matched if m.get('recency'))
+    rec_summary = ' · '.join(f"{em}{_rc[k]}" for k, em in
+                             (('ongoing', '🔴'), ('tapering', '🟠'), ('settled', '✅')) if _rc.get(k)) or '—'
     body = [
         {'type': 'TextBlock',
          'text': ('🚨 ' if alert else '🩺 ') + "Learner Portal — Health Report",
@@ -1473,6 +1565,7 @@ def build_teams_card(matched, slow_apis, meta, total, dashboard_url, four_xx=Non
             {'title': '🟠 Medium', 'value': f"{med:,}"},
             {'title': '🟢 Low', 'value': f"{low:,}"},
             {'title': 'Patterns', 'value': str(len(matched))},
+            {'title': 'Status', 'value': rec_summary},
             {'title': 'Slow APIs (>2s)', 'value': str(len(slow_apis))},
             {'title': 'Error spikes', 'value': str(len(spikes))},
         ]},
@@ -1483,9 +1576,12 @@ def build_teams_card(matched, slow_apis, meta, total, dashboard_url, four_xx=Non
             'items': [{'type': 'TextBlock', 'text': '🧠 ' + ai_summary, 'wrap': True}],
         })
 
+    def _rec_tag(m):
+        rec = m.get('recency')
+        return f" · {rec['emoji']} {rec['phrase']}" if rec else ""
     attention_lines = [
         f"- [**{m['rule']['title']}**]({dd_logs_url(m['rule']['match'], meta)}) "
-        f"({m['count']:,}) · {m['rule']['category']}"
+        f"({m['count']:,}) · {m['rule']['category']}{_rec_tag(m)}"
         for m in high_patterns
     ]
     for r in spikes:
@@ -1606,6 +1702,11 @@ def main():
     # Classify and match
     classified = classify(all_events)
     matched, unmatched = apply_catalog(classified)
+
+    # Recency/status per pattern (ongoing vs. tapering vs. settled) from first/last seen.
+    now_dt = datetime.now(timezone.utc)
+    for _m in matched:
+        _m['recency'] = classify_recency(_m.get('first_seen'), _m.get('last_seen'), now_dt)
 
     if unmatched:
         print(f"\n⚠️  {len(unmatched)} unmatched event(s) — patterns not in catalog:", file=sys.stderr)
