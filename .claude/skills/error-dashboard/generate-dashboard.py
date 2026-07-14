@@ -1336,35 +1336,50 @@ def dd_traces_url(query, meta):
 #   2. a drafted root cause for patterns that have no CATALOG entry yet.
 # Best-effort: any failure prints a warning and the dashboard still renders.
 
-def anthropic_message(prompt, api_key, model='claude-opus-4-8', max_tokens=1024, system=None):
-    """One Claude call via raw HTTP (stdlib urllib, mirroring dd_post). Returns the
-    concatenated text blocks, or None on any error (the AI layer is non-blocking)."""
+def anthropic_message(prompt, api_key, model='claude-opus-4-8', max_tokens=1024, system=None,
+                      max_retries=4):
+    """One Claude call via raw HTTP (stdlib urllib, mirroring dd_post). Retries transient
+    errors (429 rate-limit / 5xx overload), honoring Retry-After. Returns the concatenated
+    text blocks, or None on persistent failure (the AI layer is non-blocking)."""
     import urllib.request
     import urllib.error
-    body = {'model': model, 'max_tokens': max_tokens,
-            'messages': [{'role': 'user', 'content': prompt}]}
-    if system:
-        body['system'] = system
-    req = urllib.request.Request(
-        'https://api.anthropic.com/v1/messages',
-        data=json.dumps(body).encode(),
-        headers={'x-api-key': api_key,
-                 'anthropic-version': '2023-06-01',
-                 'content-type': 'application/json'})
-    try:
-        with urllib.request.urlopen(req, timeout=90) as resp:
-            data = json.load(resp)
-        return ''.join(b.get('text', '') for b in data.get('content', [])
-                       if b.get('type') == 'text').strip()
-    except urllib.error.HTTPError as e:
-        detail = ''
+    import time
+    payload = json.dumps({
+        'model': model, 'max_tokens': max_tokens,
+        'messages': [{'role': 'user', 'content': prompt}],
+        **({'system': system} if system else {}),
+    }).encode()
+    headers = {'x-api-key': api_key, 'anthropic-version': '2023-06-01',
+               'content-type': 'application/json'}
+    for attempt in range(max_retries + 1):
         try:
-            detail = ' — ' + e.read().decode()[:300]
-        except Exception:
-            pass
-        print(f"  ⚠️  AI call failed: HTTP {e.code}{detail}", file=sys.stderr)
-    except Exception as e:
-        print(f"  ⚠️  AI call failed: {e}", file=sys.stderr)
+            req = urllib.request.Request('https://api.anthropic.com/v1/messages',
+                                         data=payload, headers=headers)
+            with urllib.request.urlopen(req, timeout=120) as resp:
+                data = json.load(resp)
+            return ''.join(b.get('text', '') for b in data.get('content', [])
+                           if b.get('type') == 'text').strip()
+        except urllib.error.HTTPError as e:
+            detail = ''
+            try:
+                detail = ' — ' + e.read().decode()[:200]
+            except Exception:
+                pass
+            if e.code in (429, 500, 503, 529) and attempt < max_retries:
+                try:
+                    wait = float(e.headers.get('retry-after'))
+                except (TypeError, ValueError, AttributeError):
+                    wait = 2 ** attempt  # 1, 2, 4, 8 s
+                wait = min(wait, 60)
+                print(f"  ⚠️  AI call HTTP {e.code}; retry {attempt + 1}/{max_retries} "
+                      f"in {wait:.0f}s{detail}", file=sys.stderr)
+                time.sleep(wait)
+                continue
+            print(f"  ⚠️  AI call failed: HTTP {e.code}{detail}", file=sys.stderr)
+            return None
+        except Exception as e:
+            print(f"  ⚠️  AI call failed: {e}", file=sys.stderr)
+            return None
     return None
 
 
