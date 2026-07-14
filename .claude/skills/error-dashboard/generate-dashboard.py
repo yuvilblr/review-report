@@ -1313,7 +1313,7 @@ def dd_traces_url(query, meta):
     from datetime import datetime, timezone
     to_ms = int(datetime.now(timezone.utc).timestamp() * 1000)
     from_ms = to_ms - _window_to_seconds(meta.get('window', '1d')) * 1000
-    return f'https://app.{meta["site"]}/apm/traces?query={quote(query)}&start={from_ms}&end={to_ms}&paused=true'
+    return f'https://app.{meta["site"]}/apm/traces?query={quote(query)}&from_ts={from_ms}&to_ts={to_ms}&paused=true'
 
 
 def build_teams_card(matched, slow_apis, meta, total, dashboard_url, four_xx=None):
