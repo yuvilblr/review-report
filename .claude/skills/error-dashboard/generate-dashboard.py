@@ -555,6 +555,7 @@ def classify(events):
                 'pod': pod,
                 'level': nested.get('level'),
                 'status': status,  # HTTP status if this log is tied to a request (@res.statusCode / @statusCode)
+                'raw': nested,     # full structured payload (stack/req/res/context) for evidence-based RCA
             }
             lvl = nested.get('level')
             if lvl == 50: out['nestjs_errors'].append(entry)
@@ -649,6 +650,7 @@ def apply_catalog(classified):
             'pods': dict(pods),
             'contexts': dict(contexts),
             'sample_msg': events[0]['msg'][:200] if events else '',
+            'samples': [e['raw'] for e in events[:2] if e.get('raw')],
         })
     # Fold UNCATALOGUED events into matched so every error is surfaced even without a
     # catalog entry. Severity is FAILURE-driven: HIGH only when a 5xx request is behind the
@@ -683,6 +685,7 @@ def apply_catalog(classified):
             'pods': dict(pods),
             'contexts': {},
             'sample_msg': (evs[0].get('msg') or msg_key)[:200],
+            'samples': [e['raw'] for e in evs[:2] if e.get('raw')],
         })
 
     matched.sort(key=lambda x: -x['count'])
@@ -1019,6 +1022,11 @@ def render_html(matched, unmatched, slow_apis, meta, rum_html='', four_xx=None, 
             elif m.get('first_seen') or m.get('last_seen'):
                 ts_html = f'<div class="timestamps"><span class="meta-label">First:</span> <code>{esc(m["first_seen"] or "-")}</code><span class="meta-label">Last:</span> <code>{esc(m["last_seen"] or "-")}</code></div>'
             sev = r['severity']
+            deep_html = ''
+            if m.get('deep_rca'):
+                deep_html = ('<div class="rca-block" style="background:#faf5ff;border-left-color:#7c3aed;">'
+                             '<div class="rca-label">🔎 Evidence-based analysis (AI)</div>'
+                             f'<div class="rca-text">{esc(m["deep_rca"])}</div></div>')
             cards.append(f'''
             <div class="card sev-{sev}">
                 <div class="card-header">
@@ -1034,6 +1042,7 @@ def render_html(matched, unmatched, slow_apis, meta, rum_html='', four_xx=None, 
                     {ts_html}
                     {pods_html}
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">{esc(r["rca"])}</div></div>
+                    {deep_html}
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">{esc(r["impact"])}</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">{esc(r["fix"])}</pre></div>
                     <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="{esc(dd_logs_url(r["match"], meta))}">🔍 View matching logs in Datadog →</a></div>
@@ -1496,45 +1505,114 @@ def ai_exec_summary(matched, slow_apis, four_xx, meta, total, api_key, model):
     return anthropic_message(prompt, api_key, model=model, max_tokens=400)
 
 
-def ai_autofill_rca(matched, meta, api_key, model):
-    """Draft a likely root cause for each pattern that has no CATALOG entry
-    ('Other / Uncategorized'). One batched call; mutates matched in place.
-    Returns the number of patterns filled."""
-    uncat = [m for m in matched if m['rule'].get('category') == 'Other / Uncategorized']
-    if not uncat:
+# ---- aggressive redaction: nothing sensitive leaves for the model ----------
+# Applied to every log record before it is sent to the Anthropic API. Redacts by
+# KEY NAME (auth/token/email/name/...) and by VALUE shape (emails, JWTs, k=secret,
+# long opaque tokens). Aggressive by design: over-redacting is fine, leaking isn't.
+_SENSITIVE_KEY = re.compile(
+    r'(authoriz|token|password|passwd|secret|api[_-]?key|apikey|cookie|jwt|bearer|'
+    r'ssn|social|dob|birth|e-?mail|phone|mobile|firstname|lastname|surname|fullname|'
+    r'given_?name|family_?name|address|postcode|zip|credential|session|otp|pin)', re.I)
+_EMAIL_RE = re.compile(r'[\w.+-]+@[\w-]+\.[\w.-]+')
+# Bounded segments (no unbounded runs next to '.') so it stays strictly linear — the
+# class excludes '.', so there is no ambiguous backtracking. Real JWTs fit easily.
+_JWT_RE = re.compile(r'\b[A-Za-z0-9_-]{8,300}\.[A-Za-z0-9_-]{8,3000}\.[A-Za-z0-9_-]{8,3000}\b')
+_KV_SECRET_RE = re.compile(
+    r'((?:token|password|passwd|secret|api[_-]?key|apikey|auth|jwt|bearer|code|key)\s*[=:]\s*)'
+    r'["\']?[^&\s"\'}]+', re.I)
+_LONGTOKEN_RE = re.compile(r'\b[A-Za-z0-9_\-]{32,}\b')
+
+
+def _redact_str(s, maxlen=600):
+    if not isinstance(s, str):
+        return s
+    if len(s) > 2000:            # cap regex input first — defends against ReDoS on huge fields
+        s = s[:2000] + '…'
+    s = _EMAIL_RE.sub('<email>', s)
+    s = _JWT_RE.sub('<jwt>', s)
+    s = _KV_SECRET_RE.sub(r'\1<redacted>', s)
+    s = _LONGTOKEN_RE.sub('<token>', s)
+    return s if len(s) <= maxlen else s[:maxlen] + '…'
+
+
+def _redact(obj, depth=0):
+    """Strip secrets/PII from a log record before it goes to the model."""
+    if depth > 6:
+        return '<…>'
+    if isinstance(obj, dict):
+        return {k: ('<redacted>' if _SENSITIVE_KEY.search(str(k)) else _redact(v, depth + 1))
+                for k, v in obj.items()}
+    if isinstance(obj, list):
+        return [_redact(v, depth + 1) for v in obj[:8]]
+    if isinstance(obj, str):
+        return _redact_str(obj)
+    return obj
+
+
+def ai_deep_rca(matched, meta, api_key, model, max_patterns=20, samples_per=2):
+    """Evidence-based RCA: send REDACTED sample log records (stack, HTTP fields, context)
+    for each failure pattern to the model so it diagnoses from the actual logs, not just the
+    message. Uncatalogued -> fills rule.rca; catalogued -> adds deep_rca (curated RCA kept).
+    Mutates matched in place; returns the number of patterns analysed."""
+    targets = sorted((m for m in matched if m['rule'].get('severity') in ('high', 'medium')),
+                     key=lambda m: -m['count'])
+    dropped = max(0, len(targets) - max_patterns)
+    targets = targets[:max_patterns]
+    if not targets:
         return 0
-    items = [{'id': i,
-              'message': m['rule'].get('title', ''),
-              'sample': m.get('sample_msg', ''),
-              'count': m['count'],
-              'saw_5xx': m['rule'].get('severity') == 'high'}
-             for i, m in enumerate(uncat)]
+    if dropped:
+        print(f"  (deep RCA: top {max_patterns} failure patterns by volume; "
+              f"{dropped} lower-volume skipped)", file=sys.stderr)
+    items = []
+    for i, m in enumerate(targets):
+        recs = [r for r in (m.get('samples') or []) if r] or [{'message': m.get('sample_msg', '')}]
+        red = []
+        for r in recs[:samples_per]:
+            blob = json.dumps(_redact(r), ensure_ascii=False)
+            red.append(blob if len(blob) <= 2500 else blob[:2500] + '…')
+        catalogued = m['rule'].get('category') != 'Other / Uncategorized'
+        items.append({
+            'id': i,
+            'title': m['rule'].get('title', ''),
+            'category': m['rule'].get('category', ''),
+            'count': m['count'],
+            'known_rca': (m['rule'].get('rca', '') or '')[:300] if catalogued else '',
+            'sample_records': red,
+        })
     prompt = (
-        "You are an SRE for the Learner Portal (NestJS API 'rqillp-lp' + React UI 'lp-ui'; "
-        "Prisma/Postgres, Valkey cache, LaunchDarkly, LTI/AICC content launch). Each item below is an "
-        "uncatalogued error/warning log pattern with no known root cause yet ('saw_5xx' means a request "
-        "actually failed with a 5xx). For each, write a 1-2 sentence likely root-cause analysis: what it "
-        "means, the most probable cause, and the first thing to check. If genuinely unsure, say so briefly. "
+        "You are an SRE debugging the Learner Portal (NestJS API 'rqillp-lp' + React UI 'lp-ui'; "
+        "Prisma/Postgres, Valkey cache, LaunchDarkly, LTI/AICC content launch). For each failure pattern "
+        "below you get REDACTED sample log records — stack traces, HTTP method/path/status, context, and "
+        "whatever request/response fields survived redaction (secrets/PII are already <redacted>/<token>/"
+        "<email>). Read the evidence and give a concrete 2-3 sentence root-cause analysis: what actually "
+        "failed (cite the stack frame / status / field you used), the most probable cause, and the first "
+        "thing to check. If 'known_rca' is present, confirm or refine it against the evidence. If the "
+        "records don't support a conclusion, say what's missing. Do NOT invent values not in the records. "
         'Return ONLY a JSON array, no other text: [{"id": <id>, "rca": "..."}].\n\n'
-        f"Patterns:\n{json.dumps(items, indent=2)}"
+        f"Failure patterns:\n{json.dumps(items, ensure_ascii=False, indent=2)}"
     )
-    resp = anthropic_message(prompt, api_key, model=model, max_tokens=2000)
+    resp = anthropic_message(prompt, api_key, model=model, max_tokens=3000)
     if not resp:
         return 0
     try:
         m0 = re.search(r'\[.*\]', resp, re.S)
         arr = json.loads(m0.group(0) if m0 else resp)
     except Exception as e:
-        print(f"  ⚠️  AI RCA parse failed: {e}", file=sys.stderr)
+        print(f"  ⚠️  AI deep-RCA parse failed: {e}", file=sys.stderr)
         return 0
     by_id = {o['id']: o['rca'] for o in arr
              if isinstance(o, dict) and 'id' in o and o.get('rca')}
     filled = 0
-    for i, m in enumerate(uncat):
+    for i, m in enumerate(targets):
         rca = (by_id.get(i) or '').strip()
-        if rca:
-            m['rule']['rca'] = rca + '  🤖 AI-generated — verify before acting.'
-            filled += 1
+        if not rca:
+            continue
+        tagged = rca + '  🤖 AI, from redacted sample logs — verify before acting.'
+        if m['rule'].get('category') == 'Other / Uncategorized':
+            m['rule']['rca'] = tagged
+        else:
+            m['deep_rca'] = tagged
+        filled += 1
     return filled
 
 
@@ -1740,9 +1818,9 @@ def main():
     anthropic_key = os.environ.get('ANTHROPIC_API_KEY')
     if anthropic_key:
         print(f"Generating AI narrative with {args.ai_model} ...", file=sys.stderr)
-        n_rca = ai_autofill_rca(matched, meta, anthropic_key, args.ai_model)
+        n_rca = ai_deep_rca(matched, meta, anthropic_key, args.ai_model)
         if n_rca:
-            print(f"  AI drafted RCA for {n_rca} uncatalogued pattern(s)", file=sys.stderr)
+            print(f"  AI deep RCA (from redacted logs) for {n_rca} failure pattern(s)", file=sys.stderr)
         ai_summary = ai_exec_summary(matched, slow_apis, four_xx, meta, total,
                                      anthropic_key, args.ai_model)
         print(f"  AI exec summary: {'generated' if ai_summary else 'unavailable'}", file=sys.stderr)
