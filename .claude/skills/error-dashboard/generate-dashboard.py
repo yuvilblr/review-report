@@ -1626,6 +1626,11 @@ def ai_deep_rca(matched, meta, api_key, model, max_patterns=20, samples_per=2):
     return filled
 
 
+# Categories muted from the TEAMS CARD only (still shown in full in the HTML dashboard):
+# constant, self-recovering background noise that would otherwise clutter the alert.
+CARD_MUTE_CATEGORIES = {'AWS WebSocket'}
+
+
 def build_teams_card(matched, slow_apis, meta, total, dashboard_url, four_xx=None, ai_summary=None):
     """Build a Microsoft Teams Adaptive Card (message envelope) summarizing
     severity counts and the top high-severity patterns ('what needs attention').
@@ -1633,7 +1638,8 @@ def build_teams_card(matched, slow_apis, meta, total, dashboard_url, four_xx=Non
     def sev_total(s):
         return sum(m['count'] for m in matched if m['rule']['severity'] == s)
     high, med, low = sev_total('high'), sev_total('medium'), sev_total('low')
-    high_patterns = [m for m in matched if m['rule']['severity'] == 'high'][:5]
+    high_patterns = [m for m in matched if m['rule']['severity'] == 'high'
+                     and m['rule'].get('category') not in CARD_MUTE_CATEGORIES][:5]
 
     spikes = [r for r in (four_xx or []) if r.get('spike')]
     alert = high > 0 or bool(spikes)
@@ -1696,6 +1702,7 @@ def build_teams_card(matched, slow_apis, meta, total, dashboard_url, four_xx=Non
     def _rec_key(m):
         return (m.get('recency') or {}).get('key')
     active_extra = [m for m in matched if id(m) not in high_ids
+                    and m['rule'].get('category') not in CARD_MUTE_CATEGORIES
                     and m['rule'].get('severity') == 'medium' and _rec_key(m) in ('ongoing', 'tapering')][:5]
     if active_extra:
         body.append({
@@ -1710,6 +1717,7 @@ def build_teams_card(matched, slow_apis, meta, total, dashboard_url, four_xx=Non
         })
 
     settled_extra = [m for m in matched if id(m) not in high_ids
+                     and m['rule'].get('category') not in CARD_MUTE_CATEGORIES
                      and m['rule'].get('severity') == 'medium' and _rec_key(m) == 'settled']
     if settled_extra:
         body.append({
