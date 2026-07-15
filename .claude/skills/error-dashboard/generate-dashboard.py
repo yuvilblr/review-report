@@ -484,7 +484,7 @@ def compute_4xx(spans, min_hits=10, rate_threshold=0.20, top_n=15):
     inbound endpoints AND outbound dependency calls, so a failing or high-error-rate
     dependency surfaces. A row is a 'spike' (→ attention) when its error rate >= threshold
     with a small hit floor; expected 401s on auth endpoints are ignored (token refresh)."""
-    per = defaultdict(lambda: {'total': 0, 'errs': 0, 'codes': Counter()})
+    per = defaultdict(lambda: {'total': 0, 'errs': 0, 'codes': Counter(), 'first': None, 'last': None})
     for e in spans:
         a = e.get('attributes', {})
         res = a.get('resource_name') or 'unknown'
@@ -504,6 +504,12 @@ def compute_4xx(spans, min_hits=10, rate_threshold=0.20, top_n=15):
             d['errs'] += 1
             if code:
                 d['codes'][code] += 1
+            ts = a.get('start_timestamp')
+            if ts:
+                if d['first'] is None or ts < d['first']:
+                    d['first'] = ts
+                if d['last'] is None or ts > d['last']:
+                    d['last'] = ts
     rows = []
     for res, d in per.items():
         if not d['errs']:
@@ -513,6 +519,7 @@ def compute_4xx(spans, min_hits=10, rate_threshold=0.20, top_n=15):
             'resource': res, 'total': d['total'], 'errs': d['errs'], 'rate': rate,
             'codes': dict(d['codes']),
             'spike': d['errs'] >= min_hits and rate >= rate_threshold,
+            'first_seen': d['first'] or '', 'last_seen': d['last'] or '',
         })
     rows.sort(key=lambda r: (not r['spike'], -r['errs']))
     return rows[:top_n]
@@ -727,6 +734,8 @@ def render_4xx_table(four_xx, meta):
         q = (f'service:{meta["service"]} env:{meta["env"]} '
              f'resource_name:"{r["resource"]}" @http.status_code:[400 TO 599]')
         rate_cls = 'cell-warn' if r['spike'] else ''
+        _rec = r.get('recency')
+        rec_cell = (f'{_rec["emoji"]} {esc(_rec["label"])} · {esc(_rec["phrase"])}') if _rec else '—'
         rows += f'''
         <tr>
             <td class="api-name"><a href="{esc(dd_traces_url(q, meta))}" target="_blank"><code>{esc(r["resource"])}</code></a>{badge}</td>
@@ -734,6 +743,7 @@ def render_4xx_table(four_xx, meta):
             <td class="num">{r["total"]:,}</td>
             <td class="num {rate_cls}">{r["rate"] * 100:.0f}%</td>
             <td>{esc(codes)}</td>
+            <td>{rec_cell}</td>
         </tr>'''
     n_spike = sum(1 for r in four_xx if r['spike'])
     return f'''
@@ -741,7 +751,7 @@ def render_4xx_table(four_xx, meta):
         <h2 class="section-title">🚦 Error-prone endpoints <span class="section-stats">{n_spike} spike(s) &ge;20% err-rate • 4xx+5xx, inbound &amp; outbound • expected 401s on auth excluded • click for traces</span></h2>
         <div class="table-wrap">
             <table class="slow-table">
-                <thead><tr><th>Endpoint</th><th class="num">Errors</th><th class="num">Total</th><th class="num">Rate</th><th>Codes</th></tr></thead>
+                <thead><tr><th>Endpoint</th><th class="num">Errors</th><th class="num">Total</th><th class="num">Rate</th><th>Codes</th><th>Status</th></tr></thead>
                 <tbody>{rows}</tbody>
             </table>
         </div>
@@ -1668,7 +1678,7 @@ def build_teams_card(matched, slow_apis, meta, total, dashboard_url, four_xx=Non
              f'resource_name:"{r["resource"]}" @http.status_code:[400 TO 599]')
         attention_lines.append(
             f"- 🚦 [**{r['resource']}**]({dd_traces_url(q, meta)}) — {r['rate']:.0%} errors "
-            f"({r['errs']}/{r['total']}) · {codes}")
+            f"({r['errs']}/{r['total']}) · {codes}{_rec_tag(r)}")
     if attention_lines:
         body.append({
             'type': 'Container', 'style': 'attention', 'bleed': True, 'spacing': 'Medium',
@@ -1785,6 +1795,8 @@ def main():
     now_dt = datetime.now(timezone.utc)
     for _m in matched:
         _m['recency'] = classify_recency(_m.get('first_seen'), _m.get('last_seen'), now_dt)
+    for _r in four_xx:
+        _r['recency'] = classify_recency(_r.get('first_seen'), _r.get('last_seen'), now_dt)
 
     if unmatched:
         print(f"\n⚠️  {len(unmatched)} unmatched event(s) — patterns not in catalog:", file=sys.stderr)
