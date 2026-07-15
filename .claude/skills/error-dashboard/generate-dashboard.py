@@ -1688,8 +1688,43 @@ def build_teams_card(matched, slow_apis, meta, total, dashboard_url, four_xx=Non
                 {'type': 'TextBlock', 'text': '\n'.join(attention_lines), 'wrap': True},
             ],
         })
-    else:
-        body.append({'type': 'TextBlock', 'text': '✅ No failures or 4xx spikes in this window.',
+
+    # Below the hard failure/spike bar but recency says these are worth surfacing anyway,
+    # so the card is never a false "all clear" while issues are live. Medium-severity only
+    # (low = known-benign). Skip anything already in the red block above.
+    high_ids = {id(m) for m in high_patterns}
+    def _rec_key(m):
+        return (m.get('recency') or {}).get('key')
+    active_extra = [m for m in matched if id(m) not in high_ids
+                    and m['rule'].get('severity') == 'medium' and _rec_key(m) in ('ongoing', 'tapering')][:5]
+    if active_extra:
+        body.append({
+            'type': 'Container', 'style': 'warning', 'bleed': True, 'spacing': 'Medium',
+            'items': [
+                {'type': 'TextBlock', 'text': '🟠 Still active — worth a look', 'weight': 'Bolder',
+                 'color': 'Warning', 'wrap': True},
+                {'type': 'TextBlock', 'wrap': True, 'text': '\n'.join(
+                    f"- [**{m['rule']['title']}**]({dd_logs_url(m['rule']['match'], meta)}) "
+                    f"({m['count']:,}) · {m['rule']['category']}{_rec_tag(m)}" for m in active_extra)},
+            ],
+        })
+
+    settled_extra = [m for m in matched if id(m) not in high_ids
+                     and m['rule'].get('severity') == 'medium' and _rec_key(m) == 'settled']
+    if settled_extra:
+        body.append({
+            'type': 'Container', 'style': 'good', 'bleed': True, 'spacing': 'Medium',
+            'items': [
+                {'type': 'TextBlock', 'text': '✅ Appears settled — verify', 'weight': 'Bolder',
+                 'color': 'Good', 'wrap': True},
+                {'type': 'TextBlock', 'wrap': True,
+                 'text': f"{len(settled_extra)} pattern(s) not seen recently — likely resolved, "
+                         "but confirm they haven’t recurred (single-window heuristic)."},
+            ],
+        })
+
+    if not (attention_lines or active_extra or settled_extra):
+        body.append({'type': 'TextBlock', 'text': '✅ No failures or active issues in this window.',
                      'color': 'Good', 'spacing': 'Medium', 'wrap': True})
 
     # Slow APIs — list each endpoint (below the red block), linked to its slowest trace.
