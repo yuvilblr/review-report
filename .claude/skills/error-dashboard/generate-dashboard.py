@@ -1004,7 +1004,7 @@ def render_html(matched, unmatched, slow_apis, meta, rum_html='', four_xx=None, 
         by_cat[m['rule']['category']].append(m)
 
     # Ordered categories
-    cat_order = list(CATEGORY_EMOJI.keys())
+    cat_order = list(CATEGORY_EMOJI.keys()) + [c for c in by_cat if c not in CATEGORY_EMOJI]
     sections_html = []
     for cat in cat_order:
         items = by_cat.get(cat, [])
@@ -1560,9 +1560,9 @@ def _redact(obj, depth=0):
 
 
 def ai_deep_rca(matched, meta, api_key, model, max_patterns=20, samples_per=2):
-    """Evidence-based RCA: send REDACTED sample log records (stack, HTTP fields, context)
-    for each failure pattern to the model so it diagnoses from the actual logs, not just the
-    message. Uncatalogued -> fills rule.rca; catalogued -> adds deep_rca (curated RCA kept).
+    """Evidence-based RCA + auto-categorisation from REDACTED sample log records.
+    Uncatalogued -> fills rule.rca AND auto-assigns rule.category + rule.fix (so the pattern
+    leaves 'Other / Uncategorized'); catalogued -> adds deep_rca (curated RCA/category kept).
     Mutates matched in place; returns the number of patterns analysed."""
     targets = sorted((m for m in matched if m['rule'].get('severity') in ('high', 'medium')),
                      key=lambda m: -m['count'])
@@ -1589,6 +1589,7 @@ def ai_deep_rca(matched, meta, api_key, model, max_patterns=20, samples_per=2):
             'known_rca': (m['rule'].get('rca', '') or '')[:300] if catalogued else '',
             'sample_records': red,
         })
+    known_cats = sorted({r['category'] for r in CATALOG if r.get('category') != 'Other / Uncategorized'})
     prompt = (
         "You are an SRE debugging the Learner Portal (NestJS API 'rqillp-lp' + React UI 'lp-ui'; "
         "Prisma/Postgres, Valkey cache, LaunchDarkly, LTI/AICC content launch). For each failure pattern "
@@ -1597,8 +1598,13 @@ def ai_deep_rca(matched, meta, api_key, model, max_patterns=20, samples_per=2):
         "<email>). Read the evidence and give a concrete 2-3 sentence root-cause analysis: what actually "
         "failed (cite the stack frame / status / field you used), the most probable cause, and the first "
         "thing to check. If 'known_rca' is present, confirm or refine it against the evidence. If the "
-        "records don't support a conclusion, say what's missing. Do NOT invent values not in the records. "
-        'Return ONLY a JSON array, no other text: [{"id": <id>, "rca": "..."}].\n\n'
+        "records don't support a conclusion, say what's missing. Do NOT invent values not in the records.\n"
+        "When a pattern's category is 'Other / Uncategorized', ALSO auto-classify it: set \"category\" to the "
+        "best fit from this known set — " + ", ".join(known_cats) + " — or a short new category if none fit; "
+        "and give a concrete one-line \"fix\".\n"
+        "Return ONLY a JSON array, no other text: "
+        '[{"id": <id>, "rca": "...", "category": "...", "fix": "..."}] '
+        "(category and fix are only needed for 'Other / Uncategorized' items).\n\n"
         f"Failure patterns:\n{json.dumps(items, ensure_ascii=False, indent=2)}"
     )
     resp = anthropic_message(prompt, api_key, model=model, max_tokens=3000)
@@ -1610,18 +1616,26 @@ def ai_deep_rca(matched, meta, api_key, model, max_patterns=20, samples_per=2):
     except Exception as e:
         print(f"  ⚠️  AI deep-RCA parse failed: {e}", file=sys.stderr)
         return 0
-    by_id = {o['id']: o['rca'] for o in arr
+    by_id = {o['id']: o for o in arr
              if isinstance(o, dict) and 'id' in o and o.get('rca')}
     filled = 0
     for i, m in enumerate(targets):
-        rca = (by_id.get(i) or '').strip()
+        o = by_id.get(i)
+        rca = (o.get('rca') or '').strip() if o else ''
         if not rca:
             continue
-        tagged = rca + '  🤖 AI, from redacted sample logs — verify before acting.'
         if m['rule'].get('category') == 'Other / Uncategorized':
-            m['rule']['rca'] = tagged
+            # auto-classify the uncatalogued pattern from the AI's answer
+            cat = (o.get('category') or '').strip()
+            if cat and cat != 'Other / Uncategorized':
+                m['rule']['category'] = cat
+                m['rule']['ai_categorized'] = True
+            fix = (o.get('fix') or '').strip()
+            if fix:
+                m['rule']['fix'] = fix
+            m['rule']['rca'] = rca + '  🤖 AI-categorised + RCA from redacted logs — verify before acting.'
         else:
-            m['deep_rca'] = tagged
+            m['deep_rca'] = rca + '  🤖 AI, from redacted sample logs — verify before acting.'
         filled += 1
     return filled
 
