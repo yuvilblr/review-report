@@ -139,15 +139,15 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 <div><span class="label">Datadog Site</span><span class="value">datadoghq.com</span></div>
 </div>
 </div>
-<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-07-15 15:35:13 UTC</strong></div>
+<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-07-16 05:24:22 UTC</strong></div>
 </div>
 </header>
 
 <div class="tabs"><button class="tab-btn active" data-tab="backend">🖥️ Backend · logs &amp; APM</button><button class="tab-btn" data-tab="frontend">🌐 Frontend · RUM</button></div>
 <div id="tab-backend" class="tab-pane active">
 <div class="stats-grid">
-<div class="stat-card"><div class="stat-value">461</div><div class="stat-label">Total events</div></div>
-<div class="stat-card"><div class="stat-value">28</div><div class="stat-label">Distinct patterns</div></div>
+<div class="stat-card"><div class="stat-value">477</div><div class="stat-label">Total events</div></div>
+<div class="stat-card"><div class="stat-value">29</div><div class="stat-label">Distinct patterns</div></div>
 <div class="stat-card high"><div class="stat-value">1</div><div class="stat-label">High severity patterns</div></div>
 <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">Pods affected</div></div>
 </div>
@@ -156,225 +156,87 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 
         <div class="sev-bar">
             <div class="sev-segment sev-high" style="flex:2" title="High: 2"></div>
-            <div class="sev-segment sev-medium" style="flex:352" title="Medium: 352">352</div>
-            <div class="sev-segment sev-low" style="flex:107" title="Low: 107">107</div>
+            <div class="sev-segment sev-medium" style="flex:383" title="Medium: 383">383</div>
+            <div class="sev-segment sev-low" style="flex:92" title="Low: 92">92</div>
         </div>
 <div class="sev-legend">
 <span><span class="sev-dot sev-high"></span>High: 2</span>
-<span><span class="sev-dot sev-medium"></span>Medium: 352</span>
-<span><span class="sev-dot sev-low"></span>Low: 107</span>
+<span><span class="sev-dot sev-medium"></span>Medium: 383</span>
+<span><span class="sev-dot sev-low"></span>Low: 92</span>
 </div>
 </div>
-<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 18px;margin-bottom:20px;font-size:14px;color:#334155;"><strong>Status of 28 pattern(s):</strong> 🔴 <strong>1</strong> ongoing · 🟠 <strong>10</strong> tapering · ✅ <strong>17</strong> settled <span style="color:#94a3b8;">· “settled” = not seen recently (heuristic, not confirmed resolved)</span></div>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 18px;margin-bottom:20px;font-size:14px;color:#334155;"><strong>Status of 29 pattern(s):</strong> 🔴 <strong>1</strong> ongoing · 🟠 <strong>3</strong> tapering · ✅ <strong>25</strong> settled <span style="color:#94a3b8;">· “settled” = not seen recently (heuristic, not confirmed resolved)</span></div>
 
-    <section class="slow-apis-section">
-        <h2 class="section-title">🐌 Top 4 slow APIs <span class="section-stats">p95 or p99 &gt; 2s • excludes GET /all • click a row for span samples</span></h2>
-        <div class="table-wrap">
-            <table class="slow-table">
-                <thead>
-                    <tr>
-                        <th>Endpoint</th>
-                        <th class="num">Hits</th>
-                        <th class="num">avg</th>
-                        <th class="num">p50</th>
-                        <th class="num">p95</th>
-                        <th class="num">p99</th>
-                        <th class="num">max</th>
-                    </tr>
-                </thead>
-                <tbody>
-        <tr class="api-row" data-idx="0" data-resource="GET /lp-api/api/v1/curriculum/courses" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-15T12:16:16.47Z&quot;, &quot;duration_sec&quot;: 4.536, &quot;trace_id&quot;: &quot;6a577a10000000002140e163bc867ddb&quot;, &quot;span_id&quot;: &quot;2396162820242046427&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-7-190.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;http://eu.learning.laerdal.com/lp-api/api/v1/curriculum/courses?licenseId=edb0640f-4552-47d7-8e0c-f73542f37de7&amp;courseId=902&quot;}, {&quot;timestamp&quot;: &quot;2026-07-15T11:43:45.806Z&quot;, &quot;duration_sec&quot;: 1.781, &quot;trace_id&quot;: &quot;16077851615772924112&quot;, &quot;span_id&quot;: &quot;2229269094140761106&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-1-73.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;http://eu.learning.laerdal.com/lp-api/api/v1/curriculum/courses?licenseId=e9c6da61-c787-45f5-a131-78ae6c2fbba5&amp;courseId=34&quot;}, {&quot;timestamp&quot;: &quot;2026-07-15T11:44:39.21Z&quot;, &quot;duration_sec&quot;: 1.354, &quot;trace_id&quot;: &quot;13966650458569649139&quot;, &quot;span_id&quot;: &quot;3407410436726739645&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-1-73.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;http://eu.learning.laerdal.com/lp-api/api/v1/curriculum/courses?licenseId=7c48d5a6-466d-412b-9951-67eeebdf2682&amp;courseId=34&quot;}, {&quot;timestamp&quot;: &quot;2026-07-15T10:05:11.111Z&quot;, &quot;duration_sec&quot;: 1.172, &quot;trace_id&quot;: &quot;6903107701932652980&quot;, &quot;span_id&quot;: &quot;5732319678568467912&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-7-190.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;http://eu.learning.laerdal.com/lp-api/api/v1/curriculum/courses?licenseId=c8207f73-29ff-4588-b5e1-a2f41265c800&amp;courseId=902&quot;}, {&quot;timestamp&quot;: &quot;2026-07-15T11:19:55.129Z&quot;, &quot;duration_sec&quot;: 1.108, &quot;trace_id&quot;: &quot;1971285562417940790&quot;, &quot;span_id&quot;: &quot;4795029965863155304&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-7-190.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;GET&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;http://eu.learning.laerdal.com/lp-api/api/v1/curriculum/courses?licenseId=7dd1d42c-9c29-4eab-b2f2-29f82a8a7b4f&amp;courseId=902&quot;}]">
-            <td class="api-name"><code>GET /lp-api/api/v1/curriculum/courses</code> <span class="drill-icon">⤴</span></td>
-            <td class="num">55</td>
-            <td class="num">0.85s</td>
-            <td class="num">0.85s</td>
-            <td class="num cell-slow">1.35s</td>
-            <td class="num cell-warn">4.54s</td>
-            <td class="num">4.54s</td>
-        </tr>
-        <tr class="api-row" data-idx="1" data-resource="POST /launch_lti" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-15T12:16:16.556Z&quot;, &quot;duration_sec&quot;: 4.449, &quot;trace_id&quot;: &quot;6a577a10000000002140e163bc867ddb&quot;, &quot;span_id&quot;: &quot;8134481335247918822&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-7-190.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-15T11:43:45.81Z&quot;, &quot;duration_sec&quot;: 1.777, &quot;trace_id&quot;: &quot;16077851615772924112&quot;, &quot;span_id&quot;: &quot;4551660740599091693&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-1-73.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-15T11:44:39.34Z&quot;, &quot;duration_sec&quot;: 1.224, &quot;trace_id&quot;: &quot;13966650458569649139&quot;, &quot;span_id&quot;: &quot;1525506136321959458&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-1-73.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-15T11:19:55.134Z&quot;, &quot;duration_sec&quot;: 1.102, &quot;trace_id&quot;: &quot;1971285562417940790&quot;, &quot;span_id&quot;: &quot;4122323008159106060&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-7-190.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne.contentservice.net/launch_lti&quot;}, {&quot;timestamp&quot;: &quot;2026-07-15T10:05:11.205Z&quot;, &quot;duration_sec&quot;: 1.077, &quot;trace_id&quot;: &quot;6903107701932652980&quot;, &quot;span_id&quot;: &quot;7743421492072495319&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-7-190.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://cs2ne.contentservice.net/launch_lti&quot;}]">
-            <td class="api-name"><code>POST /launch_lti</code> <span class="drill-icon">⤴</span></td>
-            <td class="num">52</td>
-            <td class="num">0.85s</td>
-            <td class="num">0.81s</td>
-            <td class="num cell-slow">1.22s</td>
-            <td class="num cell-warn">4.45s</td>
-            <td class="num">4.45s</td>
-        </tr>
-        <tr class="api-row" data-idx="2" data-resource="POST /lp-api/api/v1/licenses/:licenseId/lis/completion" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-15T12:16:17.675Z&quot;, &quot;duration_sec&quot;: 3.318, &quot;trace_id&quot;: &quot;6a577a10000000002140e163bc867ddb&quot;, &quot;span_id&quot;: &quot;4261854153175893946&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-1-73.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;http://eu.learning.laerdal.com/lp-api/api/v1/licenses/edb0640f-4552-47d7-8e0c-f73542f37de7/lis/completion&quot;}, {&quot;timestamp&quot;: &quot;2026-07-15T14:27:26.938Z&quot;, &quot;duration_sec&quot;: 1.092, &quot;trace_id&quot;: &quot;10520502108754697194&quot;, &quot;span_id&quot;: &quot;6242262680552770259&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-1-73.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;http://eu.learning.laerdal.com/lp-api/api/v1/licenses/5c7e3402-de5d-4e0f-b2ac-eeca627b4b0e/lis/completion&quot;}, {&quot;timestamp&quot;: &quot;2026-07-15T11:32:19.56Z&quot;, &quot;duration_sec&quot;: 0.409, &quot;trace_id&quot;: &quot;10865298122466639667&quot;, &quot;span_id&quot;: &quot;5530202155150769553&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-1-73.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;http://eu.learning.laerdal.com/lp-api/api/v1/licenses/7dd1d42c-9c29-4eab-b2f2-29f82a8a7b4f/lis/completion&quot;}, {&quot;timestamp&quot;: &quot;2026-07-15T10:05:11.898Z&quot;, &quot;duration_sec&quot;: 0.372, &quot;trace_id&quot;: &quot;6903107701932652980&quot;, &quot;span_id&quot;: &quot;5176886630780667411&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-1-73.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;http://eu.learning.laerdal.com/lp-api/api/v1/licenses/c8207f73-29ff-4588-b5e1-a2f41265c800/lis/completion&quot;}, {&quot;timestamp&quot;: &quot;2026-07-15T11:41:59.42Z&quot;, &quot;duration_sec&quot;: 0.361, &quot;trace_id&quot;: &quot;13729103256282723211&quot;, &quot;span_id&quot;: &quot;745830975693094090&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-1-73.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;http://eu.learning.laerdal.com/lp-api/api/v1/licenses/e9c6da61-c787-45f5-a131-78ae6c2fbba5/lis/completion&quot;}]">
-            <td class="api-name"><code>POST /lp-api/api/v1/licenses/:licenseId/lis/completion</code> <span class="drill-icon">⤴</span></td>
-            <td class="num">58</td>
-            <td class="num">0.32s</td>
-            <td class="num">0.25s</td>
-            <td class="num cell-slow">0.41s</td>
-            <td class="num cell-warn">3.32s</td>
-            <td class="num">3.32s</td>
-        </tr>
-        <tr class="api-row" data-idx="3" data-resource="POST /certificate/v1/certificates" data-samples="[{&quot;timestamp&quot;: &quot;2026-07-15T12:16:17.757Z&quot;, &quot;duration_sec&quot;: 3.235, &quot;trace_id&quot;: &quot;6a577a10000000002140e163bc867ddb&quot;, &quot;span_id&quot;: &quot;6555962865617396001&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-1-73.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://api-euprod-gateway.eu.learning.laerdal.com/certificate/v1/certificates&quot;}, {&quot;timestamp&quot;: &quot;2026-07-15T14:27:27.011Z&quot;, &quot;duration_sec&quot;: 1.018, &quot;trace_id&quot;: &quot;10520502108754697194&quot;, &quot;span_id&quot;: &quot;3467421062174066907&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-1-73.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;error&quot;, &quot;is_error&quot;: true, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;&quot;, &quot;http_url&quot;: &quot;https://api-euprod-gateway.eu.learning.laerdal.com/certificate/v1/certificates&quot;}, {&quot;timestamp&quot;: &quot;2026-07-15T11:32:19.621Z&quot;, &quot;duration_sec&quot;: 0.347, &quot;trace_id&quot;: &quot;10865298122466639667&quot;, &quot;span_id&quot;: &quot;6564326659832659560&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-1-73.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://api-euprod-gateway.eu.learning.laerdal.com/certificate/v1/certificates&quot;}, {&quot;timestamp&quot;: &quot;2026-07-15T10:05:11.975Z&quot;, &quot;duration_sec&quot;: 0.295, &quot;trace_id&quot;: &quot;6903107701932652980&quot;, &quot;span_id&quot;: &quot;3344426443288915613&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-1-73.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://api-euprod-gateway.eu.learning.laerdal.com/certificate/v1/certificates&quot;}, {&quot;timestamp&quot;: &quot;2026-07-15T11:41:59.923Z&quot;, &quot;duration_sec&quot;: 0.289, &quot;trace_id&quot;: &quot;13729103256282723211&quot;, &quot;span_id&quot;: &quot;9181903037350284458&quot;, &quot;service&quot;: &quot;rqillp-lp&quot;, &quot;host&quot;: &quot;ip-10-21-1-73.eu-west-1.compute.internal-rqi-prod-eu&quot;, &quot;env&quot;: &quot;eu-learning-prod&quot;, &quot;status&quot;: &quot;ok&quot;, &quot;is_error&quot;: false, &quot;http_method&quot;: &quot;POST&quot;, &quot;http_status_code&quot;: &quot;200&quot;, &quot;http_url&quot;: &quot;https://api-euprod-gateway.eu.learning.laerdal.com/certificate/v1/certificates&quot;}]">
-            <td class="api-name"><code>POST /certificate/v1/certificates</code> <span class="drill-icon">⤴</span></td>
-            <td class="num">69</td>
-            <td class="num">0.23s</td>
-            <td class="num">0.17s</td>
-            <td class="num cell-slow">0.29s</td>
-            <td class="num cell-warn">3.24s</td>
-            <td class="num">3.24s</td>
-        </tr></tbody>
-            </table>
-        </div>
-    </section>
-
-    <!-- Span samples modal -->
-    <div id="span-modal" class="modal-backdrop" style="display:none;" onclick="if(event.target===this)this.style.display='none'">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 id="modal-title">Span samples</h3>
-                <button class="modal-close" onclick="document.getElementById('span-modal').style.display='none'">✕</button>
-            </div>
-            <div id="modal-body" class="modal-body"></div>
-        </div>
-    </div>
-
-    <script>
-    (function() {
-        const rows = document.querySelectorAll('.api-row');
-        const modal = document.getElementById('span-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalBody = document.getElementById('modal-body');
-
-        function escapeHtml(s) {
-            return String(s||'').replace(/[&<>"']/g, c => ({
-                '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
-            })[c]);
-        }
-
-        rows.forEach(row => {
-            row.addEventListener('click', () => {
-                const resource = row.getAttribute('data-resource');
-                let samples;
-                try { samples = JSON.parse(row.getAttribute('data-samples')); }
-                catch(e) { samples = []; }
-
-                modalTitle.textContent = 'Span samples — ' + resource;
-
-                if (!samples.length) {
-                    modalBody.innerHTML = '<p class="no-samples">No span samples captured for this endpoint.</p>';
-                } else {
-                    const html = samples.map((s, i) => {
-                        const errBadge = s.is_error ? '<span class="span-error-badge">ERROR</span>' : '';
-                        const statusCode = s.http_status_code ? ` <span class="span-status">${escapeHtml(s.http_status_code)}</span>` : '';
-                        const method = s.http_method ? `<span class="span-method">${escapeHtml(s.http_method)}</span>` : '';
-                        return `
-                            <div class="span-card">
-                                <div class="span-card-head">
-                                    <span class="span-idx">#${i+1}</span>
-                                    <span class="span-duration">${s.duration_sec.toFixed(2)}s</span>
-                                    ${method}
-                                    ${statusCode}
-                                    ${errBadge}
-                                </div>
-                                <div class="span-card-body">
-                                    <div class="span-row"><span class="span-label">Time:</span> <code>${escapeHtml(s.timestamp)}</code></div>
-                                    <div class="span-row"><span class="span-label">Host:</span> <code>${escapeHtml(s.host)}</code></div>
-                                    <div class="span-row"><span class="span-label">Trace ID:</span> <code>${escapeHtml(s.trace_id)}</code></div>
-                                    <div class="span-row"><span class="span-label">Span ID:</span> <code>${escapeHtml(s.span_id)}</code></div>
-                                    ${s.http_url ? `<div class="span-row"><span class="span-label">URL:</span> <code>${escapeHtml(s.http_url)}</code></div>` : ''}
-                                    <div class="span-row">
-                                        <a class="trace-link" target="_blank" href="https://app.datadoghq.com/apm/trace/${encodeURIComponent(s.trace_id)}${s.span_id ? '?spanID=' + encodeURIComponent(s.span_id) : ''}">
-                                            🔗 Open trace in Datadog
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>`;
-                    }).join('');
-                    modalBody.innerHTML = html;
-                }
-                modal.style.display = 'flex';
-            });
-        });
-
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') modal.style.display = 'none';
-        });
-    })();
-    </script>
     
     <section class="slow-apis-section">
-        <h2 class="section-title">🚦 Error-prone endpoints <span class="section-stats">0 spike(s) &ge;20% err-rate • 4xx+5xx, inbound &amp; outbound • expected 401s on auth excluded • click for traces</span></h2>
+        <h2 class="section-title">🚦 Error-prone endpoints <span class="section-stats">1 spike(s) &ge;20% err-rate • 4xx+5xx, inbound &amp; outbound • expected 401s on auth excluded • click for traces</span></h2>
         <div class="table-wrap">
             <table class="slow-table">
                 <thead><tr><th>Endpoint</th><th class="num">Errors</th><th class="num">Total</th><th class="num">Rate</th><th>Codes</th><th>Status</th></tr></thead>
                 <tbody>
         <tr>
-            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22POST%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784043348639&amp;to_ts=1784129748639&amp;paused=true" target="_blank"><code>POST</code></a></td>
-            <td class="num">6</td>
-            <td class="num">6</td>
-            <td class="num ">100%</td>
-            <td>404×6</td>
-            <td>🟠 Tapering · last seen 40m ago · active 3h 25m</td>
+            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22GET%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784093096639&amp;to_ts=1784179496639&amp;paused=true" target="_blank"><code>GET</code></a> <span style="background:#dc2626;color:#fff;padding:1px 6px;border-radius:4px;font-size:11px;font-weight:600;">SPIKE</span></td>
+            <td class="num">11</td>
+            <td class="num">11</td>
+            <td class="num cell-warn">100%</td>
+            <td>404×11</td>
+            <td>🟠 Tapering · last seen 54m ago · active 13h 54m</td>
         </tr>
         <tr>
-            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22GET%20/curriculum-designer/v2/completions/status%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784043348639&amp;to_ts=1784129748639&amp;paused=true" target="_blank"><code>GET /curriculum-designer/v2/completions/status</code></a></td>
-            <td class="num">6</td>
-            <td class="num">29</td>
-            <td class="num ">21%</td>
-            <td>404×6</td>
-            <td>✅ Settled · last seen 3h 45m ago · active 44m</td>
-        </tr>
-        <tr>
-            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22GET%20/lp-api/api/v1/curriculum/courses%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784043348640&amp;to_ts=1784129748640&amp;paused=true" target="_blank"><code>GET /lp-api/api/v1/curriculum/courses</code></a></td>
+            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22POST%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784093096639&amp;to_ts=1784179496639&amp;paused=true" target="_blank"><code>POST</code></a></td>
             <td class="num">4</td>
-            <td class="num">55</td>
-            <td class="num ">7%</td>
-            <td>401×1, 403×2, 503×1</td>
-            <td>✅ Settled · last seen 5h 7m ago · active 21m</td>
-        </tr>
-        <tr>
-            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22GET%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784043348640&amp;to_ts=1784129748640&amp;paused=true" target="_blank"><code>GET</code></a></td>
-            <td class="num">3</td>
-            <td class="num">3</td>
+            <td class="num">4</td>
             <td class="num ">100%</td>
-            <td>404×3</td>
-            <td>🟠 Tapering · last seen 41m ago · active 18m</td>
+            <td>404×4</td>
+            <td>✅ Settled · last seen 14h 29m ago · active 27m</td>
         </tr>
         <tr>
-            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22OPTIONS%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784043348640&amp;to_ts=1784129748640&amp;paused=true" target="_blank"><code>OPTIONS</code></a></td>
+            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22OPTIONS%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784093096639&amp;to_ts=1784179496639&amp;paused=true" target="_blank"><code>OPTIONS</code></a></td>
             <td class="num">2</td>
             <td class="num">2</td>
             <td class="num ">100%</td>
             <td>404×2</td>
-            <td>✅ Settled · last seen 3h 14m ago · active 7m</td>
+            <td>✅ Settled · last seen 13h 43m ago</td>
         </tr>
         <tr>
-            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22POST%20/certificate/v1/certificates%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784043348640&amp;to_ts=1784129748640&amp;paused=true" target="_blank"><code>POST /certificate/v1/certificates</code></a></td>
-            <td class="num">1</td>
-            <td class="num">69</td>
-            <td class="num ">1%</td>
-            <td></td>
-            <td>🟠 Tapering · last seen 1h 7m ago</td>
-        </tr>
-        <tr>
-            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22POST%20/lp-api/api/v1/auth/app/tokens%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784043348640&amp;to_ts=1784129748640&amp;paused=true" target="_blank"><code>POST /lp-api/api/v1/auth/app/tokens</code></a></td>
+            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22GET%20/lp-api/api/v1/curriculum/courses%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784093096639&amp;to_ts=1784179496639&amp;paused=true" target="_blank"><code>GET /lp-api/api/v1/curriculum/courses</code></a></td>
             <td class="num">1</td>
             <td class="num">9</td>
             <td class="num ">11%</td>
-            <td>400×1</td>
-            <td>✅ Settled · last seen 3h 40m ago</td>
+            <td>401×1</td>
+            <td>🟠 Tapering · last seen 1h ago</td>
         </tr>
         <tr>
-            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22POST%20/launch_lti%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784043348640&amp;to_ts=1784129748640&amp;paused=true" target="_blank"><code>POST /launch_lti</code></a></td>
-            <td class="num">1</td>
-            <td class="num">52</td>
-            <td class="num ">2%</td>
-            <td></td>
-            <td>✅ Settled · last seen 5h 29m ago</td>
-        </tr>
-        <tr>
-            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22GET%20/v1/api/organizations/%3A%3F/languages%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784043348640&amp;to_ts=1784129748640&amp;paused=true" target="_blank"><code>GET /v1/api/organizations/:?/languages</code></a></td>
+            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22GET%20/lp-api/api/v1/announcements%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784093096639&amp;to_ts=1784179496639&amp;paused=true" target="_blank"><code>GET /lp-api/api/v1/announcements</code></a></td>
             <td class="num">1</td>
             <td class="num">5</td>
             <td class="num ">20%</td>
+            <td>401×1</td>
+            <td>🟠 Tapering · last seen 1h ago</td>
+        </tr>
+        <tr>
+            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22GET%20/v1/api/organizations/%3A%3F/languages%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784093096639&amp;to_ts=1784179496639&amp;paused=true" target="_blank"><code>GET /v1/api/organizations/:?/languages</code></a></td>
+            <td class="num">1</td>
+            <td class="num">3</td>
+            <td class="num ">33%</td>
             <td>404×1</td>
-            <td>🟠 Tapering · last seen 2h ago</td>
+            <td>✅ Settled · last seen 15h 49m ago</td>
+        </tr>
+        <tr>
+            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22POST%20/lp-api/api/v1/auth/app/tokens%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784093096639&amp;to_ts=1784179496639&amp;paused=true" target="_blank"><code>POST /lp-api/api/v1/auth/app/tokens</code></a></td>
+            <td class="num">1</td>
+            <td class="num">4</td>
+            <td class="num ">25%</td>
+            <td>400×1</td>
+            <td>✅ Settled · last seen 5h 29m ago</td>
+        </tr>
+        <tr>
+            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22POST%20/certificate/v1/certificates%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784093096639&amp;to_ts=1784179496639&amp;paused=true" target="_blank"><code>POST /certificate/v1/certificates</code></a></td>
+            <td class="num">1</td>
+            <td class="num">11</td>
+            <td class="num ">9%</td>
+            <td></td>
+            <td>✅ Settled · last seen 14h 56m ago</td>
         </tr></tbody>
             </table>
         </div>
@@ -385,7 +247,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
         <a href="#cat-LaunchDarkly-Connectivity" class="toc-link">
             <span class="toc-emoji">🌐</span>
             <span class="toc-name">LaunchDarkly Connectivity</span>
-            <span class="toc-count">4</span>
+            <span class="toc-count">6</span>
             
         </a>
         <a href="#cat-AWS-WebSocket" class="toc-link">
@@ -397,7 +259,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
         <a href="#cat-Authentication" class="toc-link">
             <span class="toc-emoji">🔐</span>
             <span class="toc-name">Authentication</span>
-            <span class="toc-count">99</span>
+            <span class="toc-count">84</span>
             
         </a>
         <a href="#cat-External-Service---Org-Data" class="toc-link">
@@ -421,7 +283,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
         <a href="#cat-Other---Uncategorized" class="toc-link">
             <span class="toc-emoji">❓</span>
             <span class="toc-name">Other / Uncategorized</span>
-            <span class="toc-count">92</span>
+            <span class="toc-count">121</span>
             <span class="toc-high">1↑</span>
         </a></div>
 </div>
@@ -430,7 +292,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
             <h2 class="category-title">
                 <span class="cat-emoji">🌐</span>
                 LaunchDarkly Connectivity
-                <span class="cat-stats">1 pattern • 4 events</span>
+                <span class="cat-stats">1 pattern • 6 events</span>
             </h2>
             <div class="cards-grid">
             <div class="card sev-medium">
@@ -440,12 +302,12 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                         <span class="rec-badge rec-settled">✅ Settled</span>
                         <h3 class="card-title">LaunchDarkly streaming I/O errors</h3>
                     </div>
-                    <div class="card-count">4</div>
+                    <div class="card-count">6</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">warn: [LaunchDarkly] Received I/O error (the request completed unexpectedly) for streaming request - will retry</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 6h 52m ago · active 7h 14m <span style="color:#94a3b8;">(2026-07-15T01:28:06 → 2026-07-15T08:43:05 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">2</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 5h 7m ago · active 15h 55m <span style="color:#94a3b8;">(2026-07-15T08:21:54 → 2026-07-16T00:17:04 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">3</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">3</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">LaunchDarkly uses Server-Sent Events for real-time flag updates. The SDK is reporting that the long-lived stream connection drops periodically and reconnects. Likely cause: network proxy/NAT idle timeout terminating connections, firewall connection-timeout, or transient regional network glitches.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">During each disconnection window the pod won&#x27;t receive real-time flag updates. Once reconnected, it gets the latest state. Brief windows of slightly stale flag values.</div></div>
@@ -453,7 +315,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 2. Verify firewall is not intercepting long-lived TCP connections
 3. If using a proxy, ensure SSE/HTTP-streaming is supported
 4. Consider switching SDK to polling mode if streaming continues to be unreliable</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AReceived%2AI%2AO%2Aerror%2A&amp;from_ts=1784043348638&amp;to_ts=1784129748638">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AReceived%2AI%2AO%2Aerror%2A&amp;from_ts=1784093096638&amp;to_ts=1784179496638">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
@@ -475,7 +337,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Disconnected from AWS - attempting reconnect 1/10 in 5000ms</code></div>
-                    <div class="timestamps">🔴 <strong>Ongoing</strong> · last seen 9m ago · active 23h 50m <span style="color:#94a3b8;">(2026-07-14T15:35:24 → 2026-07-15T15:25:37 UTC)</span></div>
+                    <div class="timestamps">🔴 <strong>Ongoing</strong> · last seen just now · active 23h 49m <span style="color:#94a3b8;">(2026-07-15T05:33:38 → 2026-07-16T05:23:28 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">123</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">122</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">AWS WebSocket client repeatedly disconnects and reconnects. Most disconnections recover on the first retry (5000ms backoff). High volume suggests this is constant background churn — likely server-side termination (AWS API Gateway WebSocket idle timeout, NAT gateway TCP idle timeout, or ALB connection settings) that the client recovers from.</div></div>
                     
@@ -484,7 +346,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 2. Implement WebSocket-level keepalive pings to prevent idle timeout
 3. Add metrics tracking time-since-last-successful-message to detect silent drops
 4. Investigate if AWS API Gateway is in a degraded state during these intervals</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ADisconnected%2Afrom%2AAWS%2A&amp;from_ts=1784043348638&amp;to_ts=1784129748638">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ADisconnected%2Afrom%2AAWS%2A&amp;from_ts=1784093096638&amp;to_ts=1784179496638">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
@@ -492,7 +354,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
             <h2 class="category-title">
                 <span class="cat-emoji">🔐</span>
                 Authentication
-                <span class="cat-stats">3 patterns • 99 events</span>
+                <span class="cat-stats">3 patterns • 84 events</span>
             </h2>
             <div class="cards-grid">
             <div class="card sev-low">
@@ -502,17 +364,17 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                         <span class="rec-badge rec-tapering">🟠 Tapering</span>
                         <h3 class="card-title">Unauthorized</h3>
                     </div>
-                    <div class="card-count">76</div>
+                    <div class="card-count">69</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Unauthorized</code></div>
-                    <div class="timestamps">🟠 <strong>Tapering</strong> · last seen 2h 51m ago · active 7h 37m <span style="color:#94a3b8;">(2026-07-15T05:06:00 → 2026-07-15T12:43:14 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">40</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">36</span></span></div>
+                    <div class="timestamps">🟠 <strong>Tapering</strong> · last seen 1h ago · active 22h 58m <span style="color:#94a3b8;">(2026-07-15T05:25:41 → 2026-07-16T04:24:04 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">35</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">34</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Generic &#x27;Unauthorized&#x27; responses returned to clients. Most are expected: expired tokens, missing auth headers, or invalid credentials hitting protected endpoints. Without correlated request paths, hard to tell if any subset is anomalous.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Expected. Users with expired sessions get prompted to re-login. No action needed unless rate spikes anomalously.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Not a bug. To improve observability: log the request URL alongside `Unauthorized` so you can distinguish normal expired-token cases from auth misconfiguration.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AUnauthorized%2A&amp;from_ts=1784043348638&amp;to_ts=1784129748638">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AUnauthorized%2A&amp;from_ts=1784093096638&amp;to_ts=1784179496638">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>
             <div class="card sev-low">
@@ -522,17 +384,17 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                         <span class="rec-badge rec-settled">✅ Settled</span>
                         <h3 class="card-title">Refresh token required / expired</h3>
                     </div>
-                    <div class="card-count">19</div>
+                    <div class="card-count">11</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Refresh token is required</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 5h 55m ago · active 4h 33m <span style="color:#94a3b8;">(2026-07-15T05:06:01 → 2026-07-15T09:39:31 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">13</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">6</span></span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 19h 44m ago · active 4h 13m <span style="color:#94a3b8;">(2026-07-15T05:25:42 → 2026-07-15T09:39:31 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">7</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">4</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Normal session-lifecycle response — when an access token expires, the client should send a refresh token; if it doesn&#x27;t or the refresh token itself expired, the app responds with these warnings.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Expected. User is prompted to re-login.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">No fix needed. Could downgrade these from warn to info to reduce noise.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ARefresh%2Atoken%2Ais%2Arequired%2A&amp;from_ts=1784043348638&amp;to_ts=1784129748638">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ARefresh%2Atoken%2Ais%2Arequired%2A&amp;from_ts=1784093096638&amp;to_ts=1784179496638">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>
             <div class="card sev-low">
@@ -546,13 +408,13 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Launch token has already been used</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 5h 55m ago · active 3h 2m <span style="color:#94a3b8;">(2026-07-15T06:36:44 → 2026-07-15T09:39:31 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 19h 44m ago · active 3h 2m <span style="color:#94a3b8;">(2026-07-15T06:36:44 → 2026-07-15T09:39:31 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">2</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">LTI launch tokens are single-use by design (replay protection). Repeated attempts to reuse a token. Could be users clicking the launch link twice, browser back button, or replay of a captured URL.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">User cannot launch the course via the reused link. Working as designed.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">No fix needed. If reuse rate spikes, investigate whether the launch UI is causing accidental double-clicks (button not disabled after click).</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ALaunch%2Atoken%2Ahas%2Aalready%2Abeen%2Aused%2A&amp;from_ts=1784043348638&amp;to_ts=1784129748638">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ALaunch%2Atoken%2Ahas%2Aalready%2Abeen%2Aused%2A&amp;from_ts=1784093096638&amp;to_ts=1784179496638">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
@@ -567,14 +429,14 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 <div class="card-header">
                     <div class="card-title-row">
                         <span class="sev-badge sev-medium">MEDIUM</span>
-                        <span class="rec-badge rec-tapering">🟠 Tapering</span>
+                        <span class="rec-badge rec-settled">✅ Settled</span>
                         <h3 class="card-title">Organization not found (404)</h3>
                     </div>
                     <div class="card-count">6</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">RQILLP-service GET /organizations/20002668/languages returned status 404: {&quot;message&quot;:&quot;Org [20002668] not found&quot;}</code></div>
-                    <div class="timestamps">🟠 <strong>Tapering</strong> · last seen 2h ago · active 4h 49m <span style="color:#94a3b8;">(2026-07-15T08:45:40 → 2026-07-15T13:34:40 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 15h 49m ago · active 4h 49m <span style="color:#94a3b8;">(2026-07-15T08:45:40 → 2026-07-15T13:34:40 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">5</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Organization IDs returned 404 from RQILLP-service when fetching languages. The app handled gracefully by falling back to default languages, but the lookup itself failed. Possible causes: orgs deleted upstream but still referenced locally, data sync lag, or bad orgId being passed.</div></div>
                     
@@ -582,27 +444,27 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Audit org references — sync with RQILLP to detect orgs that no longer exist
 2. Add metric for `org_lookup_404` and alert if rate increases
 3. Consider lazy-cleanup: when 404 received, mark the org reference as inactive locally to avoid repeat lookups</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2Alanguages%2Areturned%2Astatus%2A404%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2Alanguages%2Areturned%2Astatus%2A404%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>
             <div class="card sev-medium">
                 <div class="card-header">
                     <div class="card-title-row">
                         <span class="sev-badge sev-medium">MEDIUM</span>
-                        <span class="rec-badge rec-tapering">🟠 Tapering</span>
+                        <span class="rec-badge rec-settled">✅ Settled</span>
                         <h3 class="card-title">Failed to fetch languages — fallback used</h3>
                     </div>
                     <div class="card-count">6</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Failed to fetch languages for organization 20002668, returning fallback</code></div>
-                    <div class="timestamps">🟠 <strong>Tapering</strong> · last seen 2h ago · active 4h 49m <span style="color:#94a3b8;">(2026-07-15T08:45:40 → 2026-07-15T13:34:40 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 15h 49m ago · active 4h 49m <span style="color:#94a3b8;">(2026-07-15T08:45:40 → 2026-07-15T13:34:40 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">5</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Same as Organization not found — controller-level log of the underlying 404. The app gracefully falls back to default languages.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Same as above.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Same as Organization not found.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AFailed%2Ato%2Afetch%2Alanguages%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AFailed%2Ato%2Afetch%2Alanguages%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
@@ -617,20 +479,20 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 <div class="card-header">
                     <div class="card-title-row">
                         <span class="sev-badge sev-low">LOW</span>
-                        <span class="rec-badge rec-tapering">🟠 Tapering</span>
+                        <span class="rec-badge rec-settled">✅ Settled</span>
                         <h3 class="card-title">Vendor not matched</h3>
                     </div>
                     <div class="card-count">8</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Vendor not matched. vendorId=20002668, organizationsCount=0</code></div>
-                    <div class="timestamps">🟠 <strong>Tapering</strong> · last seen 2h ago · active 4h 49m <span style="color:#94a3b8;">(2026-07-15T08:45:40 → 2026-07-15T13:34:40 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 15h 49m ago · active 4h 49m <span style="color:#94a3b8;">(2026-07-15T08:45:40 → 2026-07-15T13:34:40 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">5</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">3</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Same root cause as &#x27;Organization not found&#x27; — vendor lookup yielded 0 organizations because the org IDs don&#x27;t exist in RQILLP. Vendor lookup follows org lookup, so when org 404s, vendor count is 0.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Vendor-specific features unavailable for these users.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Resolves with the org-not-found fix above.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AVendor%2Anot%2Amatched%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AVendor%2Anot%2Amatched%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
@@ -652,14 +514,14 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Content-Type doesn&#x27;t match Reply body, you might need a custom ExceptionFilter for non-JSON responses</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 5h 37m ago <span style="color:#94a3b8;">(2026-07-15T09:58:10 → 2026-07-15T09:58:10 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 19h 26m ago <span style="color:#94a3b8;">(2026-07-15T09:58:10 → 2026-07-15T09:58:10 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Fastify/NestJS is warning that a response Content-Type header does not match the serialized body — typically a handler returning a non-JSON body (string, stream, or error page) on a route declared as JSON without a custom ExceptionFilter. Often a downstream effect of an error path (e.g. a 503 or HTML error body) being returned through a JSON route.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">The response may be mis-serialized or rejected by clients expecting JSON. Frequently coincident with the DB/503 errors above — error responses leaving via the JSON path.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Add a custom ExceptionFilter for non-JSON responses, or ensure error handlers always return JSON
 2. If these spike alongside the DB 503s, they clear when the database issue is fixed.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AContent%2AType%2Adoesn%2At%2Amatch%2AReply%2Abody%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AContent%2AType%2Adoesn%2At%2Amatch%2AReply%2Abody%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
@@ -667,7 +529,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
             <h2 class="category-title">
                 <span class="cat-emoji">❓</span>
                 Other / Uncategorized
-                <span class="cat-stats">19 patterns • 92 events</span>
+                <span class="cat-stats">20 patterns • 121 events</span>
             </h2>
             <div class="cards-grid">
             <div class="card sev-medium">
@@ -677,17 +539,37 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                         <span class="rec-badge rec-settled">✅ Settled</span>
                         <h3 class="card-title">Cannot OPTIONS /lp-api/api/v1/announcements</h3>
                     </div>
-                    <div class="card-count">19</div>
+                    <div class="card-count">22</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot OPTIONS /lp-api/api/v1/announcements</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 3h 14m ago · active 7m <span style="color:#94a3b8;">(2026-07-15T12:13:30 → 2026-07-15T12:21:02 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">12</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">7</span></span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 13h 43m ago · active 3h 27m <span style="color:#94a3b8;">(2026-07-15T12:13:30 → 2026-07-15T15:40:36 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">13</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">9</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2AOPTIONS%2Alp%2Aapi%2Aapi%2Av1%2Aannouncements%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2AOPTIONS%2Alp%2Aapi%2Aapi%2Av1%2Aannouncements%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
+                </div>
+            </div>
+            <div class="card sev-medium">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <span class="sev-badge sev-medium">MEDIUM</span>
+                        <span class="rec-badge rec-tapering">🟠 Tapering</span>
+                        <h3 class="card-title">Cannot GET /lp-api/api/api/v1/licenses/&lt;id&gt;/lis%E2%&lt;n&gt;%A6</h3>
+                    </div>
+                    <div class="card-count">18</div>
+                </div>
+                <div class="card-body">
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot GET /lp-api/api/api/v1/licenses/5c7e3402-de5d-4e0f-b2ac-eeca627b4b0e/lis%E2%80%A6</code></div>
+                    <div class="timestamps">🟠 <strong>Tapering</strong> · last seen 55m ago · active 13h 42m <span style="color:#94a3b8;">(2026-07-15T14:46:12 → 2026-07-16T04:28:43 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">10</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">8</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
+                    
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2AGET%2Alp%2Aapi%2Aapi%2Aapi%2Av1%2Alicenses%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>
             <div class="card sev-medium">
@@ -701,13 +583,13 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">User 1293180 (org 4938) has no license mapping for course 902</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 5h 7m ago · active 3h 47m <span style="color:#94a3b8;">(2026-07-15T06:40:15 → 2026-07-15T10:27:45 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 18h 56m ago · active 3h 47m <span style="color:#94a3b8;">(2026-07-15T06:40:15 → 2026-07-15T10:27:45 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">11</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">4</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2Ahas%2Ano%2Alicense%2Amapping%2Afor%2Acourse%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2Ahas%2Ano%2Alicense%2Amapping%2Afor%2Acourse%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>
             <div class="card sev-medium">
@@ -721,13 +603,33 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Invalid course id for this user</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 5h 7m ago · active 3h 47m <span style="color:#94a3b8;">(2026-07-15T06:40:15 → 2026-07-15T10:27:45 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 18h 56m ago · active 3h 47m <span style="color:#94a3b8;">(2026-07-15T06:40:15 → 2026-07-15T10:27:45 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">11</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">4</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AInvalid%2Acourse%2Aid%2Afor%2Athis%2Auser%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AInvalid%2Acourse%2Aid%2Afor%2Athis%2Auser%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
+                </div>
+            </div>
+            <div class="card sev-medium">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <span class="sev-badge sev-medium">MEDIUM</span>
+                        <span class="rec-badge rec-settled">✅ Settled</span>
+                        <h3 class="card-title">Cannot GET /lp-api/api/api/v1/licenses/&lt;id&gt;/lis/completion</h3>
+                    </div>
+                    <div class="card-count">6</div>
+                </div>
+                <div class="card-body">
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot GET /lp-api/api/api/v1/licenses/5c7e3402-de5d-4e0f-b2ac-eeca627b4b0e/lis/completion</code></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 12h 43m ago · active 2h 5m <span style="color:#94a3b8;">(2026-07-15T14:35:27 → 2026-07-15T16:40:39 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">5</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
+                    
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2AGET%2Alp%2Aapi%2Aapi%2Aapi%2Av1%2Alicenses%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>
             <div class="card sev-medium">
@@ -741,53 +643,33 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot POST /lp-api/api/api/v1/licenses/1465228/lis/completion/completion</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 6h 28m ago · active 1h 28m <span style="color:#94a3b8;">(2026-07-15T07:38:09 → 2026-07-15T09:07:01 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 20h 17m ago · active 1h 28m <span style="color:#94a3b8;">(2026-07-15T07:38:09 → 2026-07-15T09:07:01 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">4</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2APOST%2Alp%2Aapi%2Aapi%2Aapi%2Av1%2Alicenses%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2APOST%2Alp%2Aapi%2Aapi%2Aapi%2Av1%2Alicenses%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>
             <div class="card sev-medium">
                 <div class="card-header">
                     <div class="card-title-row">
                         <span class="sev-badge sev-medium">MEDIUM</span>
-                        <span class="rec-badge rec-tapering">🟠 Tapering</span>
+                        <span class="rec-badge rec-settled">✅ Settled</span>
                         <h3 class="card-title">Bad Request Exception</h3>
                     </div>
                     <div class="card-count">5</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Bad Request Exception</code></div>
-                    <div class="timestamps">🟠 <strong>Tapering</strong> · last seen 41m ago · active 14h 58m <span style="color:#94a3b8;">(2026-07-14T23:55:02 → 2026-07-15T14:53:37 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 5h 29m ago · active 14h 47m <span style="color:#94a3b8;">(2026-07-15T09:07:20 → 2026-07-15T23:55:01 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">3</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">2</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ABad%2ARequest%2AException%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
-                </div>
-            </div>
-            <div class="card sev-medium">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <span class="rec-badge rec-tapering">🟠 Tapering</span>
-                        <h3 class="card-title">Cannot POST /lp-api/api/api/v1/licenses/&lt;id&gt;/lis/completion</h3>
-                    </div>
-                    <div class="card-count">4</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot POST /lp-api/api/api/v1/licenses/5c7e3402-de5d-4e0f-b2ac-eeca627b4b0e/lis/completion</code></div>
-                    <div class="timestamps">🟠 <strong>Tapering</strong> · last seen 40m ago · active 27m <span style="color:#94a3b8;">(2026-07-15T14:27:31 → 2026-07-15T14:55:04 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">4</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
-                    
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2APOST%2Alp%2Aapi%2Aapi%2Aapi%2Av1%2Alicenses%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ABad%2ARequest%2AException%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>
             <div class="card sev-medium">
@@ -797,17 +679,57 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                         <span class="rec-badge rec-settled">✅ Settled</span>
                         <h3 class="card-title">Cannot OPTIONS /lp-api/api/v1/auth/tokens</h3>
                     </div>
-                    <div class="card-count">4</div>
+                    <div class="card-count">5</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot OPTIONS /lp-api/api/v1/auth/tokens</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 3h 14m ago · active 3m <span style="color:#94a3b8;">(2026-07-15T12:17:27 → 2026-07-15T12:20:59 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 13h 43m ago · active 3h 23m <span style="color:#94a3b8;">(2026-07-15T12:17:27 → 2026-07-15T15:40:32 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">3</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
+                    
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2AOPTIONS%2Alp%2Aapi%2Aapi%2Av1%2Aauth%2Atokens%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
+                </div>
+            </div>
+            <div class="card sev-medium">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <span class="sev-badge sev-medium">MEDIUM</span>
+                        <span class="rec-badge rec-tapering">🟠 Tapering</span>
+                        <h3 class="card-title">Cannot GET /lp-api/api/api/v1/licenses/&lt;id&gt;/lis</h3>
+                    </div>
+                    <div class="card-count">4</div>
+                </div>
+                <div class="card-body">
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot GET /lp-api/api/api/v1/licenses/5c7e3402-de5d-4e0f-b2ac-eeca627b4b0e/lis</code></div>
+                    <div class="timestamps">🟠 <strong>Tapering</strong> · last seen 53m ago · active 2m <span style="color:#94a3b8;">(2026-07-16T04:29:08 → 2026-07-16T04:31:08 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">2</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2AOPTIONS%2Alp%2Aapi%2Aapi%2Av1%2Aauth%2Atokens%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2AGET%2Alp%2Aapi%2Aapi%2Aapi%2Av1%2Alicenses%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
+                </div>
+            </div>
+            <div class="card sev-medium">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <span class="sev-badge sev-medium">MEDIUM</span>
+                        <span class="rec-badge rec-settled">✅ Settled</span>
+                        <h3 class="card-title">Cannot POST /lp-api/api/api/v1/licenses/&lt;id&gt;/lis/completion</h3>
+                    </div>
+                    <div class="card-count">4</div>
+                </div>
+                <div class="card-body">
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot POST /lp-api/api/api/v1/licenses/5c7e3402-de5d-4e0f-b2ac-eeca627b4b0e/lis/completion</code></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 14h 29m ago · active 27m <span style="color:#94a3b8;">(2026-07-15T14:27:31 → 2026-07-15T14:55:04 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">4</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
+                    
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2APOST%2Alp%2Aapi%2Aapi%2Aapi%2Av1%2Alicenses%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>
             <div class="card sev-medium">
@@ -821,13 +743,13 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">CS API error fetching course status: CS API GET /completions/status?licenseId=1465580 returned status 404. Returning incomplete.</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 3h 45m ago <span style="color:#94a3b8;">(2026-07-15T11:49:46 → 2026-07-15T11:49:55 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 17h 34m ago <span style="color:#94a3b8;">(2026-07-15T11:49:46 → 2026-07-15T11:49:55 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACS%2AAPI%2Aerror%2Afetching%2Acourse%2Astatus%2ACS%2AAPI%2AGET%2Acompletions%2Astatus%2AlicenseId%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACS%2AAPI%2Aerror%2Afetching%2Acourse%2Astatus%2ACS%2AAPI%2AGET%2Acompletions%2Astatus%2AlicenseId%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>
             <div class="card sev-medium">
@@ -841,13 +763,13 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">CS API GET /completions/status?licenseId=1465580 returned status 404: {&quot;status&quot;:404,&quot;error&quot;:{&quot;code&quot;:&quot;UPSTREAM_ERROR&quot;,&quot;message&quot;:&quot;No completion record found for licenseId: 1465580&quot;},&quot;trace_id&quot;:&quot;49551220</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 3h 45m ago <span style="color:#94a3b8;">(2026-07-15T11:49:46 → 2026-07-15T11:49:55 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 17h 34m ago <span style="color:#94a3b8;">(2026-07-15T11:49:46 → 2026-07-15T11:49:55 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2Aerror%2Acode%2AUPSTREAM%2AERROR%2Amessag%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2Aerror%2Acode%2AUPSTREAM%2AERROR%2Amessag%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>
             <div class="card sev-medium">
@@ -861,13 +783,13 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">CS API error fetching course status: CS API GET /completions/status?licenseId=3ee4a60c-09e3-4a5f-9e6b-908858e75fce returned status 404. Returning incomplete.</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 4h 29m ago <span style="color:#94a3b8;">(2026-07-15T11:05:22 → 2026-07-15T11:05:22 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 18h 18m ago <span style="color:#94a3b8;">(2026-07-15T11:05:22 → 2026-07-15T11:05:22 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACS%2AAPI%2Aerror%2Afetching%2Acourse%2Astatus%2ACS%2AAPI%2AGET%2Acompletions%2Astatus%2AlicenseId%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACS%2AAPI%2Aerror%2Afetching%2Acourse%2Astatus%2ACS%2AAPI%2AGET%2Acompletions%2Astatus%2AlicenseId%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>
             <div class="card sev-medium">
@@ -881,13 +803,13 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">CS API GET /completions/status?licenseId=3ee4a60c-09e3-4a5f-9e6b-908858e75fce returned status 404: {&quot;status&quot;:404,&quot;error&quot;:{&quot;code&quot;:&quot;UPSTREAM_ERROR&quot;,&quot;message&quot;:&quot;No completion record found for licenseId: 3</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 4h 29m ago <span style="color:#94a3b8;">(2026-07-15T11:05:22 → 2026-07-15T11:05:22 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 18h 18m ago <span style="color:#94a3b8;">(2026-07-15T11:05:22 → 2026-07-15T11:05:22 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACS%2AAPI%2AGET%2Acompletions%2Astatus%2AlicenseId%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACS%2AAPI%2AGET%2Acompletions%2Astatus%2AlicenseId%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>
             <div class="card sev-high">
@@ -901,33 +823,13 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Content-service POST /launch_lti?manifest=manifest%2Frqi_ema_adult_infant_cpr_15_2_standalone_nl&amp;launch_as=learner is unreachable</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 5h 29m ago <span style="color:#94a3b8;">(2026-07-15T10:05:48 → 2026-07-15T10:05:48 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 19h 18m ago <span style="color:#94a3b8;">(2026-07-15T10:05:48 → 2026-07-15T10:05:48 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">A request failed with 503 — needs attention.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Unknown — investigate.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AContent%2Aservice%2APOST%2Alaunch%2Alti%2Amanifest%2Amanifest%2A2Frqi%2Aema%2Aadult%2Ainfant%2Acpr%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
-                </div>
-            </div>
-            <div class="card sev-medium">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <span class="rec-badge rec-tapering">🟠 Tapering</span>
-                        <h3 class="card-title">Cannot GET /lp-api/api/api/v1/licenses/&lt;id&gt;/lis/completion</h3>
-                    </div>
-                    <div class="card-count">2</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot GET /lp-api/api/api/v1/licenses/5c7e3402-de5d-4e0f-b2ac-eeca627b4b0e/lis/completion</code></div>
-                    <div class="timestamps">🟠 <strong>Tapering</strong> · last seen 41m ago · active 18m <span style="color:#94a3b8;">(2026-07-15T14:35:27 → 2026-07-15T14:54:10 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
-                    
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2AGET%2Alp%2Aapi%2Aapi%2Aapi%2Av1%2Alicenses%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AContent%2Aservice%2APOST%2Alaunch%2Alti%2Amanifest%2Amanifest%2A2Frqi%2Aema%2Aadult%2Ainfant%2Acpr%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>
             <div class="card sev-medium">
@@ -941,13 +843,13 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot POST /lp-api/api/api/v1/licenses/1465228/lis/completion</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 4h 5m ago <span style="color:#94a3b8;">(2026-07-15T11:29:34 → 2026-07-15T11:29:34 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 17h 54m ago <span style="color:#94a3b8;">(2026-07-15T11:29:34 → 2026-07-15T11:29:34 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2APOST%2Alp%2Aapi%2Aapi%2Aapi%2Av1%2Alicenses%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2APOST%2Alp%2Aapi%2Aapi%2Aapi%2Av1%2Alicenses%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>
             <div class="card sev-medium">
@@ -961,73 +863,53 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot POST /lp-api/api/api/v1/licenses/077f5d12-3180-45a3-9457-a342cb6ea670/lis/completion/completion</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 7h 6m ago <span style="color:#94a3b8;">(2026-07-15T08:28:20 → 2026-07-15T08:28:20 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 20h 56m ago <span style="color:#94a3b8;">(2026-07-15T08:28:20 → 2026-07-15T08:28:20 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2APOST%2Alp%2Aapi%2Aapi%2Aapi%2Av1%2Alicenses%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2APOST%2Alp%2Aapi%2Aapi%2Aapi%2Av1%2Alicenses%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>
             <div class="card sev-medium">
                 <div class="card-header">
                     <div class="card-title-row">
                         <span class="sev-badge sev-medium">MEDIUM</span>
-                        <span class="rec-badge rec-tapering">🟠 Tapering</span>
+                        <span class="rec-badge rec-settled">✅ Settled</span>
                         <h3 class="card-title">Error processing certificate claim for license &lt;id&gt;: MS-service POST /certificat</h3>
                     </div>
                     <div class="card-count">1</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Error processing certificate claim for license 5c7e3402-de5d-4e0f-b2ac-eeca627b4b0e: MS-service POST /certificate/v1/certificates is unreachable</code></div>
-                    <div class="timestamps">🟠 <strong>Tapering</strong> · last seen 1h 7m ago <span style="color:#94a3b8;">(2026-07-15T14:27:28 → 2026-07-15T14:27:28 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 14h 56m ago <span style="color:#94a3b8;">(2026-07-15T14:27:28 → 2026-07-15T14:27:28 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AMS%2Aservice%2APOST%2Acertificate%2Av1%2Acertificates%2Ais%2Aunreachable%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AMS%2Aservice%2APOST%2Acertificate%2Av1%2Acertificates%2Ais%2Aunreachable%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>
             <div class="card sev-medium">
                 <div class="card-header">
                     <div class="card-title-row">
                         <span class="sev-badge sev-medium">MEDIUM</span>
-                        <span class="rec-badge rec-tapering">🟠 Tapering</span>
+                        <span class="rec-badge rec-settled">✅ Settled</span>
                         <h3 class="card-title">MS-service POST /certificate/v1/certificates is unreachable: read ECONNRESET</h3>
                     </div>
                     <div class="card-count">1</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">MS-service POST /certificate/v1/certificates is unreachable: read ECONNRESET</code></div>
-                    <div class="timestamps">🟠 <strong>Tapering</strong> · last seen 1h 7m ago <span style="color:#94a3b8;">(2026-07-15T14:27:28 → 2026-07-15T14:27:28 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 14h 56m ago <span style="color:#94a3b8;">(2026-07-15T14:27:28 → 2026-07-15T14:27:28 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AMS%2Aservice%2APOST%2Acertificate%2Av1%2Acertificates%2Ais%2Aunreachable%2Aread%2AECONNRESET%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
-                </div>
-            </div>
-            <div class="card sev-medium">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <span class="rec-badge rec-tapering">🟠 Tapering</span>
-                        <h3 class="card-title">Cannot GET /lp-api/api/api/v1/licenses/&lt;id&gt;/lis%E2%&lt;n&gt;%A6</h3>
-                    </div>
-                    <div class="card-count">1</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot GET /lp-api/api/api/v1/licenses/5c7e3402-de5d-4e0f-b2ac-eeca627b4b0e/lis%E2%80%A6</code></div>
-                    <div class="timestamps">🟠 <strong>Tapering</strong> · last seen 49m ago <span style="color:#94a3b8;">(2026-07-15T14:46:12 → 2026-07-15T14:46:12 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
-                    
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2AGET%2Alp%2Aapi%2Aapi%2Aapi%2Av1%2Alicenses%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AMS%2Aservice%2APOST%2Acertificate%2Av1%2Acertificates%2Ais%2Aunreachable%2Aread%2AECONNRESET%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div>
             <div class="card sev-medium">
@@ -1041,40 +923,40 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot GET /lp-api/api/api/v1/licenses/077f5d12-3180-45a3-9457-a342cb6ea670/lis/completion/completion</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 6h 58m ago <span style="color:#94a3b8;">(2026-07-15T08:37:10 → 2026-07-15T08:37:10 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 20h 47m ago <span style="color:#94a3b8;">(2026-07-15T08:37:10 → 2026-07-15T08:37:10 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">1</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2AGET%2Alp%2Aapi%2Aapi%2Aapi%2Av1%2Alicenses%2A&amp;from_ts=1784043348639&amp;to_ts=1784129748639">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2AGET%2Alp%2Aapi%2Aapi%2Aapi%2Av1%2Alicenses%2A&amp;from_ts=1784093096639&amp;to_ts=1784179496639">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
 </div>
 <div id="tab-frontend" class="tab-pane">
     <div class="stats-grid">
-        <div class="stat-card high"><div class="stat-value">840</div><div class="stat-label">Frontend errors</div></div>
-        <div class="stat-card"><div class="stat-value">7</div><div class="stat-label">Distinct messages</div></div>
-        <div class="stat-card"><div class="stat-value">38</div><div class="stat-label">Console-source</div></div>
+        <div class="stat-card high"><div class="stat-value">837</div><div class="stat-label">Frontend errors</div></div>
+        <div class="stat-card"><div class="stat-value">8</div><div class="stat-label">Distinct messages</div></div>
+        <div class="stat-card"><div class="stat-value">33</div><div class="stat-label">Console-source</div></div>
         <div class="stat-card"><div class="stat-value">10</div><div class="stat-label">Pages with errors (top)</div></div>
     </div>
     <div class="sev-summary">
         <h3>Error sources</h3>
-        <div class="pods-row"><span class="pod-chip">source<span class="pod-count">802</span></span><span class="pod-chip">console<span class="pod-count">38</span></span></div>
+        <div class="pods-row"><span class="pod-chip">source<span class="pod-count">804</span></span><span class="pod-chip">console<span class="pod-count">33</span></span></div>
     </div>
     <section class="slow-apis-section">
         <h2 class="section-title">🌐 Top frontend errors <span class="section-stats">RUM · prod-eulaerdallearning · grouped by message</span></h2>
         <div class="table-wrap">
             <table class="slow-table">
                 <thead><tr><th>Error message</th><th>Source</th><th class="num">Count</th><th>Sample page</th></tr></thead>
-                <tbody><tr><td><code>Cannot read properties of undefined (reading &#x27;skipSco&#x27;)</code></td><td>source</td><td class="num">800</td><td><a href="https://eu.learning.laerdal.com/lp/courses/9ee5f284-f864-4b5e-9bb1-246318ac8fde" target="_blank">https://eu.learning.laerdal.com/lp/courses/9ee5f284-f864-4b5e-9bb1-246</a></td></tr><tr><td><code>Failed to fetch announcements: {</code></td><td>console</td><td class="num">18</td><td><a href="https://eu.learning.laerdal.com/lp" target="_blank">https://eu.learning.laerdal.com/lp</a></td></tr><tr><td><code>Error caught: {</code></td><td>console</td><td class="num">13</td><td><a href="https://newlp.eu.learning.laerdal.com/lp/auth?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25JZCI6NDkzOCwiY291cnNlSWQiOjkwMiwidmRyU3Vic2NyaXB0aW9uSWQiOjU3MDgwLCJmaXJzdF9uYW1lIjoiU3VoYXMiLCJsYXN0X25hbWUiOiJLIiwiY291cnNlX25hbWUiOiJIZWFydENvZGXCriBCTFMgQ29tcGxldGUiLCJlbWFpbF9yZXF1aXJlZCI6dHJ1ZSwidW5pcXVlSWQiOiJsb2thc2VnMzE3QGR5c29uY2EuY29tIiwib3JnX25hbWUiOiJOZXcgTFAgLSBETkQiLCJ2YWxpZF9mcm9tIjoiMjAyNi0wNy0xNVQxMjoxNjozNi40MzRaIiwidmFsaWRfdG8iOiIyMDI4LTA3LTE1VDEyOjE2OjM2LjQzNFoiLCJ0eXBlIjoicmVnaXN0cmF0aW9uIiwib3R0Ijp0cnVlLCJpYXQiOjE3ODQxMTc3OTYsImV4cCI6MTc4NDExODM5Nn0.faTBNfcKFv5dY0Mf5J9IEnrQfzvpWT4Q4rrmb5BzNlw&amp;dispatchVersion=9.0&amp;skipSelfRegistration=1" target="_blank">https://newlp.eu.learning.laerdal.com/lp/auth?token=eyJhbGciOiJIUzI1Ni</a></td></tr><tr><td><code>[LaunchDarkly] network error (Error)</code></td><td>console</td><td class="num">4</td><td><a href="https://newlp.eu.learning.laerdal.com/lp" target="_blank">https://newlp.eu.learning.laerdal.com/lp</a></td></tr><tr><td><code>Uncaught &quot;Script error.&quot;</code></td><td>source</td><td class="num">2</td><td><a href="https://newlp.eu.learning.laerdal.com/lp" target="_blank">https://newlp.eu.learning.laerdal.com/lp</a></td></tr><tr><td><code>Failed to download certificate: {</code></td><td>console</td><td class="num">2</td><td><a href="https://eu.learning.laerdal.com/lp/courses/4129d8aa-102c-4982-9084-78c305423c55" target="_blank">https://eu.learning.laerdal.com/lp/courses/4129d8aa-102c-4982-9084-78c</a></td></tr><tr><td><code>[OneTrust] Failed to load script: https://cdn.cookielaw.org/scripttemplates/otSDKStub.js</code></td><td>console</td><td class="num">1</td><td><a href="https://dyta33v7dzby3.cloudfront.net/" target="_blank">https://dyta33v7dzby3.cloudfront.net/</a></td></tr></tbody>
+                <tbody><tr><td><code>Cannot read properties of undefined (reading &#x27;skipSco&#x27;)</code></td><td>source</td><td class="num">800</td><td><a href="https://eu.learning.laerdal.com/lp/courses/9ee5f284-f864-4b5e-9bb1-246318ac8fde" target="_blank">https://eu.learning.laerdal.com/lp/courses/9ee5f284-f864-4b5e-9bb1-246</a></td></tr><tr><td><code>Error caught: {</code></td><td>console</td><td class="num">14</td><td><a href="https://newlp.eu.learning.laerdal.com/lp/auth?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdhbml6YXRpb25JZCI6NDkzOCwiY291cnNlSWQiOjkwMiwidmRyU3Vic2NyaXB0aW9uSWQiOjU3MDgwLCJmaXJzdF9uYW1lIjoiU3VoYXMiLCJsYXN0X25hbWUiOiJLIiwiY291cnNlX25hbWUiOiJIZWFydENvZGXCriBCTFMgQ29tcGxldGUiLCJlbWFpbF9yZXF1aXJlZCI6dHJ1ZSwidW5pcXVlSWQiOiJsb2thc2VnMzE3QGR5c29uY2EuY29tIiwib3JnX25hbWUiOiJOZXcgTFAgLSBETkQiLCJ2YWxpZF9mcm9tIjoiMjAyNi0wNy0xNVQxMjoxNjozNi40MzRaIiwidmFsaWRfdG8iOiIyMDI4LTA3LTE1VDEyOjE2OjM2LjQzNFoiLCJ0eXBlIjoicmVnaXN0cmF0aW9uIiwib3R0Ijp0cnVlLCJpYXQiOjE3ODQxMTc3OTYsImV4cCI6MTc4NDExODM5Nn0.faTBNfcKFv5dY0Mf5J9IEnrQfzvpWT4Q4rrmb5BzNlw&amp;dispatchVersion=9.0&amp;skipSelfRegistration=1" target="_blank">https://newlp.eu.learning.laerdal.com/lp/auth?token=eyJhbGciOiJIUzI1Ni</a></td></tr><tr><td><code>Failed to fetch announcements: {</code></td><td>console</td><td class="num">12</td><td><a href="https://newlp.eu.learning.laerdal.com/lp" target="_blank">https://newlp.eu.learning.laerdal.com/lp</a></td></tr><tr><td><code>[LaunchDarkly] network error (Error)</code></td><td>console</td><td class="num">4</td><td><a href="https://newlp.eu.learning.laerdal.com/lp" target="_blank">https://newlp.eu.learning.laerdal.com/lp</a></td></tr><tr><td><code>Importing a module script failed.</code></td><td>source</td><td class="num">2</td><td><a href="https://nawberlin.eu.learning.laerdal.com/elearning/scorm_content/615/2.0_20230127060214/5210084-05052022_60-PALS-Precourse-Germanzip_20230127060214/1/6.html" target="_blank">https://nawberlin.eu.learning.laerdal.com/elearning/scorm_content/615/</a></td></tr><tr><td><code>Uncaught &quot;Script error.&quot;</code></td><td>source</td><td class="num">2</td><td><a href="https://newlp.eu.learning.laerdal.com/lp" target="_blank">https://newlp.eu.learning.laerdal.com/lp</a></td></tr><tr><td><code>Failed to download certificate: {</code></td><td>console</td><td class="num">2</td><td><a href="https://eu.learning.laerdal.com/lp/courses/4129d8aa-102c-4982-9084-78c305423c55" target="_blank">https://eu.learning.laerdal.com/lp/courses/4129d8aa-102c-4982-9084-78c</a></td></tr><tr><td><code>[OneTrust] Failed to load script: https://cdn.cookielaw.org/scripttemplates/otSDKStub.js</code></td><td>console</td><td class="num">1</td><td><a href="https://dyta33v7dzby3.cloudfront.net/" target="_blank">https://dyta33v7dzby3.cloudfront.net/</a></td></tr></tbody>
             </table>
         </div>
     </section></div>
 <footer>
 <p>Generated from Datadog Logs API for <code>service:rqillp-lp env:eu-learning-prod</code> over the last 1d.</p>
-<p style="margin-top:8px;">461 events across 28 patterns • 2 pods affected</p>
+<p style="margin-top:8px;">477 events across 29 patterns • 2 pods affected</p>
 </footer>
 </div>
 <script>
