@@ -139,33 +139,33 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 <div><span class="label">Datadog Site</span><span class="value">datadoghq.com</span></div>
 </div>
 </div>
-<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-07-22 05:33:12 UTC</strong></div>
+<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-07-23 05:38:12 UTC</strong></div>
 </div>
 </header>
 
 <div class="tabs"><button class="tab-btn active" data-tab="backend">🖥️ Backend · logs &amp; APM</button><button class="tab-btn" data-tab="frontend">🌐 Frontend · RUM</button></div>
 <div id="tab-backend" class="tab-pane active">
 <div class="stats-grid">
-<div class="stat-card"><div class="stat-value">292</div><div class="stat-label">Total events</div></div>
-<div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Distinct patterns</div></div>
-<div class="stat-card high"><div class="stat-value">0</div><div class="stat-label">High severity patterns</div></div>
+<div class="stat-card"><div class="stat-value">294</div><div class="stat-label">Total events</div></div>
+<div class="stat-card"><div class="stat-value">5</div><div class="stat-label">Distinct patterns</div></div>
+<div class="stat-card high"><div class="stat-value">1</div><div class="stat-label">High severity patterns</div></div>
 <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">Pods affected</div></div>
 </div>
 <div class="sev-summary">
 <h3>Severity distribution (by event count)</h3>
 
         <div class="sev-bar">
-            <div class="sev-segment sev-high" style="flex:0" title="High: 0"></div>
-            <div class="sev-segment sev-medium" style="flex:292" title="Medium: 292">292</div>
-            <div class="sev-segment sev-low" style="flex:0" title="Low: 0"></div>
+            <div class="sev-segment sev-high" style="flex:1" title="High: 1"></div>
+            <div class="sev-segment sev-medium" style="flex:291" title="Medium: 291">291</div>
+            <div class="sev-segment sev-low" style="flex:2" title="Low: 2"></div>
         </div>
 <div class="sev-legend">
-<span><span class="sev-dot sev-high"></span>High: 0</span>
-<span><span class="sev-dot sev-medium"></span>Medium: 292</span>
-<span><span class="sev-dot sev-low"></span>Low: 0</span>
+<span><span class="sev-dot sev-high"></span>High: 1</span>
+<span><span class="sev-dot sev-medium"></span>Medium: 291</span>
+<span><span class="sev-dot sev-low"></span>Low: 2</span>
 </div>
 </div>
-<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 18px;margin-bottom:20px;font-size:14px;color:#334155;"><strong>Status of 3 pattern(s):</strong> 🔴 <strong>1</strong> ongoing · ✅ <strong>2</strong> settled <span style="color:#94a3b8;">· “settled” = not seen recently (heuristic, not confirmed resolved)</span></div>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 18px;margin-bottom:20px;font-size:14px;color:#334155;"><strong>Status of 5 pattern(s):</strong> 🔴 <strong>1</strong> ongoing · ✅ <strong>4</strong> settled <span style="color:#94a3b8;">· “settled” = not seen recently (heuristic, not confirmed resolved)</span></div>
 
     
     <section class="slow-apis-section">
@@ -175,12 +175,28 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 <thead><tr><th>Endpoint</th><th class="num">Errors</th><th class="num">Total</th><th class="num">Rate</th><th>Codes</th><th>Status</th></tr></thead>
                 <tbody>
         <tr>
-            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22POST%20/lp-api/api/v1/auth/app/tokens%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784612026324&amp;to_ts=1784698426324&amp;paused=true" target="_blank"><code>POST /lp-api/api/v1/auth/app/tokens</code></a></td>
+            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22POST%20/lp-api/api/v1/auth/app/tokens%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784698726010&amp;to_ts=1784785126010&amp;paused=true" target="_blank"><code>POST /lp-api/api/v1/auth/app/tokens</code></a></td>
             <td class="num">2</td>
             <td class="num">2</td>
             <td class="num ">100%</td>
             <td>400×2</td>
-            <td>✅ Settled · last seen 5h 38m ago · active 12h</td>
+            <td>✅ Settled · last seen 5h 43m ago · active 11h 59m</td>
+        </tr>
+        <tr>
+            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22GET%20/production/%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784698726010&amp;to_ts=1784785126010&amp;paused=true" target="_blank"><code>GET /production/</code></a></td>
+            <td class="num">1</td>
+            <td class="num">235</td>
+            <td class="num ">0%</td>
+            <td></td>
+            <td>✅ Settled · last seen 11h 13m ago</td>
+        </tr>
+        <tr>
+            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22GET%20/lp-api/api/v1/announcements%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1784698726010&amp;to_ts=1784785126010&amp;paused=true" target="_blank"><code>GET /lp-api/api/v1/announcements</code></a></td>
+            <td class="num">1</td>
+            <td class="num">2</td>
+            <td class="num ">50%</td>
+            <td>401×1</td>
+            <td>✅ Settled · last seen 17h 4m ago</td>
         </tr></tbody>
             </table>
         </div>
@@ -198,6 +214,12 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
             <span class="toc-emoji">🔌</span>
             <span class="toc-name">AWS WebSocket</span>
             <span class="toc-count">286</span>
+            <span class="toc-high">1↑</span>
+        </a>
+        <a href="#cat-Authentication" class="toc-link">
+            <span class="toc-emoji">🔐</span>
+            <span class="toc-name">Authentication</span>
+            <span class="toc-count">2</span>
             
         </a>
         <a href="#cat-Other---Uncategorized" class="toc-link">
@@ -226,8 +248,8 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">warn: [LaunchDarkly] Received I/O error (the request completed unexpectedly) for streaming request - will retry</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 6h 48m ago · active 14h 7m <span style="color:#94a3b8;">(2026-07-21T08:36:58 → 2026-07-21T22:44:21 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">2</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 16h 45m ago · active 6h 57m <span style="color:#94a3b8;">(2026-07-22T05:55:55 → 2026-07-22T12:53:10 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">2</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">LaunchDarkly uses Server-Sent Events for real-time flag updates. The SDK is reporting that the long-lived stream connection drops periodically and reconnects. Likely cause: network proxy/NAT idle timeout terminating connections, firewall connection-timeout, or transient regional network glitches.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">During each disconnection window the pod won&#x27;t receive real-time flag updates. Once reconnected, it gets the latest state. Brief windows of slightly stale flag values.</div></div>
@@ -235,7 +257,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 2. Verify firewall is not intercepting long-lived TCP connections
 3. If using a proxy, ensure SSE/HTTP-streaming is supported
 4. Consider switching SDK to polling mode if streaming continues to be unreliable</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AReceived%2AI%2AO%2Aerror%2A&amp;from_ts=1784612026324&amp;to_ts=1784698426324">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AReceived%2AI%2AO%2Aerror%2A&amp;from_ts=1784698726010&amp;to_ts=1784785126010">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
@@ -243,7 +265,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
             <h2 class="category-title">
                 <span class="cat-emoji">🔌</span>
                 AWS WebSocket
-                <span class="cat-stats">1 pattern • 286 events</span>
+                <span class="cat-stats">2 patterns • 286 events</span>
             </h2>
             <div class="cards-grid">
             <div class="card sev-medium">
@@ -253,12 +275,12 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                         <span class="rec-badge rec-ongoing">🔴 Ongoing</span>
                         <h3 class="card-title">AWS WebSocket disconnect → reconnect loop</h3>
                     </div>
-                    <div class="card-count">286</div>
+                    <div class="card-count">285</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Disconnected from AWS - attempting reconnect 1/10 in 5000ms</code></div>
-                    <div class="timestamps">🔴 <strong>Ongoing</strong> · last seen 5m ago · active 23h 53m <span style="color:#94a3b8;">(2026-07-21T05:34:12 → 2026-07-22T05:27:31 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">143</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">143</span></span></div>
+                    <div class="timestamps">🔴 <strong>Ongoing</strong> · last seen 7m ago · active 23h 43m <span style="color:#94a3b8;">(2026-07-22T05:47:42 → 2026-07-23T05:31:07 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">143</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">142</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">AWS WebSocket client repeatedly disconnects and reconnects. Most disconnections recover on the first retry (5000ms backoff). High volume suggests this is constant background churn — likely server-side termination (AWS API Gateway WebSocket idle timeout, NAT gateway TCP idle timeout, or ALB connection settings) that the client recovers from.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">During each ~5s reconnect window, any push messages from AWS are missed. Sustained loss of real-time updates impacts users watching live course state.</div></div>
@@ -266,7 +288,57 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 2. Implement WebSocket-level keepalive pings to prevent idle timeout
 3. Add metrics tracking time-since-last-successful-message to detect silent drops
 4. Investigate if AWS API Gateway is in a degraded state during these intervals</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ADisconnected%2Afrom%2AAWS%2A&amp;from_ts=1784612026324&amp;to_ts=1784698426324">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ADisconnected%2Afrom%2AAWS%2A&amp;from_ts=1784698726010&amp;to_ts=1784785126010">🔍 View matching logs in Datadog →</a></div>
+                </div>
+            </div>
+            <div class="card sev-high">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <span class="sev-badge sev-high">HIGH</span>
+                        <span class="rec-badge rec-settled">✅ Settled</span>
+                        <h3 class="card-title">AWS WebSocket error</h3>
+                    </div>
+                    <div class="card-count">1</div>
+                </div>
+                <div class="card-body">
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">AWS WebSocket error: read ECONNRESET</code></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 11h 13m ago <span style="color:#94a3b8;">(2026-07-22T18:24:40 → 2026-07-22T18:24:40 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">The application maintains an AWS WebSocket connection (likely for real-time course/license state). Errors logged with empty or minimal message body — the error object likely contained an `AggregateError [ECONNREFUSED]` that didn&#x27;t serialize. Timestamps cluster with Valkey ECONNREFUSED errors, suggesting cascade: when Valkey went down, the WebSocket handler couldn&#x27;t read its state and the connection dropped.</div></div>
+                    
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Real-time course progress / WebSocket-pushed updates fail during the outage window. Users may not see live status updates until next poll/refresh.</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Improve error logging in the WebSocket error handler — serialize the full error including stack to the `msg` field
+2. Decouple WebSocket reconnection from Valkey availability (cache miss should not break WS)
+3. Add reconnection with exponential backoff</pre></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AAWS%2AWebSocket%2Aerror%2A&amp;from_ts=1784698726010&amp;to_ts=1784785126010">🔍 View matching logs in Datadog →</a></div>
+                </div>
+            </div></div>
+        </section>
+        <section class="category-section">
+            <h2 class="category-title">
+                <span class="cat-emoji">🔐</span>
+                Authentication
+                <span class="cat-stats">1 pattern • 2 events</span>
+            </h2>
+            <div class="cards-grid">
+            <div class="card sev-low">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <span class="sev-badge sev-low">LOW</span>
+                        <span class="rec-badge rec-settled">✅ Settled</span>
+                        <h3 class="card-title">Unauthorized</h3>
+                    </div>
+                    <div class="card-count">2</div>
+                </div>
+                <div class="card-body">
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Unauthorized</code></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 17h 4m ago · active 6h 12m <span style="color:#94a3b8;">(2026-07-22T06:21:26 → 2026-07-22T12:34:05 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">2</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Generic &#x27;Unauthorized&#x27; responses returned to clients. Most are expected: expired tokens, missing auth headers, or invalid credentials hitting protected endpoints. Without correlated request paths, hard to tell if any subset is anomalous.</div></div>
+                    
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Expected. Users with expired sessions get prompted to re-login. No action needed unless rate spikes anomalously.</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Not a bug. To improve observability: log the request URL alongside `Unauthorized` so you can distinguish normal expired-token cases from auth misconfiguration.</pre></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AUnauthorized%2A&amp;from_ts=1784698726010&amp;to_ts=1784785126010">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
@@ -288,40 +360,21 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Bad Request Exception</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 5h 38m ago · active 11h 59m <span style="color:#94a3b8;">(2026-07-21T11:55:01 → 2026-07-21T23:55:01 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">1</span></span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 5h 43m ago · active 11h 59m <span style="color:#94a3b8;">(2026-07-22T11:55:02 → 2026-07-22T23:55:01 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ABad%2ARequest%2AException%2A&amp;from_ts=1784612026324&amp;to_ts=1784698426324">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ABad%2ARequest%2AException%2A&amp;from_ts=1784698726010&amp;to_ts=1784785126010">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
 </div>
-<div id="tab-frontend" class="tab-pane">
-    <div class="stats-grid">
-        <div class="stat-card high"><div class="stat-value">1</div><div class="stat-label">Frontend errors</div></div>
-        <div class="stat-card"><div class="stat-value">1</div><div class="stat-label">Distinct messages</div></div>
-        <div class="stat-card"><div class="stat-value">1</div><div class="stat-label">Console-source</div></div>
-        <div class="stat-card"><div class="stat-value">1</div><div class="stat-label">Pages with errors (top)</div></div>
-    </div>
-    <div class="sev-summary">
-        <h3>Error sources</h3>
-        <div class="pods-row"><span class="pod-chip">console<span class="pod-count">1</span></span></div>
-    </div>
-    <section class="slow-apis-section">
-        <h2 class="section-title">🌐 Top frontend errors <span class="section-stats">RUM · prod-eulaerdallearning · grouped by message</span></h2>
-        <div class="table-wrap">
-            <table class="slow-table">
-                <thead><tr><th>Error message</th><th>Source</th><th class="num">Count</th><th>Sample page</th></tr></thead>
-                <tbody><tr><td><code>[LaunchDarkly] Error fetching flag settings: network error (Error)</code></td><td>console</td><td class="num">1</td><td><a href="https://heliosgesundheit.eu.learning.laerdal.com/elearning/scorm_content/678/4.0_20240110160641/PALSPCSAGerman/1/9.html" target="_blank">https://heliosgesundheit.eu.learning.laerdal.com/elearning/scorm_conte</a></td></tr></tbody>
-            </table>
-        </div>
-    </section></div>
+<div id="tab-frontend" class="tab-pane"><section class="category-section"><p style="color:#64748b;font-style:italic;">No RUM frontend errors found in this window.</p></section></div>
 <footer>
 <p>Generated from Datadog Logs API for <code>service:rqillp-lp env:eu-learning-prod</code> over the last 1d.</p>
-<p style="margin-top:8px;">292 events across 3 patterns • 2 pods affected</p>
+<p style="margin-top:8px;">294 events across 5 patterns • 2 pods affected</p>
 </footer>
 </div>
 <script>
