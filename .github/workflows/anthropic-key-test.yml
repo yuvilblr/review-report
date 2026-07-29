@@ -1,0 +1,52 @@
+name: Anthropic Key Test
+
+# One-off diagnostic: hits the Anthropic Messages API once with the repo's
+# ANTHROPIC_API_KEY secret and prints the raw status/headers/body. Isolates the
+# key from the dashboard logic to answer one question: does this key work?
+# Manual only. Safe to delete once the key question is settled.
+
+on:
+  workflow_dispatch: {}
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe Anthropic API with the repo secret
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          set +e
+
+          # 1. Is the secret even populated? (length + type prefix only — never the value)
+          if [ -z "$ANTHROPIC_API_KEY" ]; then
+            echo "::error::ANTHROPIC_API_KEY secret is EMPTY or not set on this repo/environment."
+            exit 1
+          fi
+          echo "secret length : ${#ANTHROPIC_API_KEY}"
+          echo "secret prefix : ${ANTHROPIC_API_KEY:0:12}...   (API keys start 'sk-ant-api03', OAuth tokens 'sk-ant-oat01')"
+          echo ""
+
+          # 2. One trivial Messages API call — smallest possible request.
+          echo "==== minimal call: model=claude-opus-4-8, max_tokens=8 ===="
+          curl -sS -D /tmp/headers.txt -o /tmp/body.json \
+            -w 'HTTP_STATUS=%{http_code}\n' \
+            https://api.anthropic.com/v1/messages \
+            -H "x-api-key: $ANTHROPIC_API_KEY" \
+            -H "anthropic-version: 2023-06-01" \
+            -H "content-type: application/json" \
+            -d '{"model":"claude-opus-4-8","max_tokens":8,"messages":[{"role":"user","content":"hi"}]}'
+
+          echo ""
+          echo "==== relevant response headers (which org, which limit, reset) ===="
+          grep -iE '^(HTTP/|request-id|anthropic-organization|anthropic-ratelimit|retry-after)' /tmp/headers.txt || echo "(no matching headers)"
+
+          echo ""
+          echo "==== response body ===="
+          cat /tmp/body.json; echo
+
+          echo ""
+          echo "Interpretation:"
+          echo "  200 -> key + account are fine (problem would be elsewhere)."
+          echo "  401 -> key is invalid/expired/wrong value in the secret."
+          echo "  429 -> account cannot make calls right now (credits/limits/tier), key itself is valid."
