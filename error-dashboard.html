@@ -139,7 +139,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 <div><span class="label">Datadog Site</span><span class="value">datadoghq.com</span></div>
 </div>
 </div>
-<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-07-29 07:59:51 UTC</strong></div>
+<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-07-29 08:11:34 UTC</strong></div>
 </div>
 </header>
 
@@ -175,12 +175,12 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 <thead><tr><th>Endpoint</th><th class="num">Errors</th><th class="num">Total</th><th class="num">Rate</th><th>Codes</th><th>Status</th></tr></thead>
                 <tbody>
         <tr>
-            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22POST%20/lp-api/api/v1/auth/app/tokens%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1785225625864&amp;to_ts=1785312025864&amp;paused=true" target="_blank"><code>POST /lp-api/api/v1/auth/app/tokens</code></a></td>
+            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22POST%20/lp-api/api/v1/auth/app/tokens%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1785226327347&amp;to_ts=1785312727347&amp;paused=true" target="_blank"><code>POST /lp-api/api/v1/auth/app/tokens</code></a></td>
             <td class="num">2</td>
             <td class="num">2</td>
             <td class="num ">100%</td>
             <td>400×2</td>
-            <td>✅ Settled · last seen 8h 4m ago · active 11h 59m</td>
+            <td>✅ Settled · last seen 8h 16m ago · active 11h 59m</td>
         </tr></tbody>
             </table>
         </div>
@@ -226,7 +226,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">warn: [LaunchDarkly] Received I/O error (the request completed unexpectedly) for streaming request - will retry</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 5h 15m ago · active 16h 26m <span style="color:#94a3b8;">(2026-07-28T10:17:38 → 2026-07-29T02:44:20 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 5h 27m ago · active 16h 26m <span style="color:#94a3b8;">(2026-07-28T10:17:38 → 2026-07-29T02:44:20 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">2</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">LaunchDarkly uses Server-Sent Events for real-time flag updates. The SDK is reporting that the long-lived stream connection drops periodically and reconnects. Likely cause: network proxy/NAT idle timeout terminating connections, firewall connection-timeout, or transient regional network glitches.</div></div>
                     
@@ -235,7 +235,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 2. Verify firewall is not intercepting long-lived TCP connections
 3. If using a proxy, ensure SSE/HTTP-streaming is supported
 4. Consider switching SDK to polling mode if streaming continues to be unreliable</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AReceived%2AI%2AO%2Aerror%2A&amp;from_ts=1785225625864&amp;to_ts=1785312025864">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AReceived%2AI%2AO%2Aerror%2A&amp;from_ts=1785226327347&amp;to_ts=1785312727347">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
@@ -257,7 +257,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Disconnected from AWS - attempting reconnect 1/10 in 5000ms</code></div>
-                    <div class="timestamps">🔴 <strong>Ongoing</strong> · last seen 3m ago · active 23h 53m <span style="color:#94a3b8;">(2026-07-28T08:03:01 → 2026-07-29T07:56:44 UTC)</span></div>
+                    <div class="timestamps">🔴 <strong>Ongoing</strong> · last seen 4m ago · active 23h 53m <span style="color:#94a3b8;">(2026-07-28T08:13:06 → 2026-07-29T08:06:49 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">143</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">143</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">AWS WebSocket client repeatedly disconnects and reconnects. Most disconnections recover on the first retry (5000ms backoff). High volume suggests this is constant background churn — likely server-side termination (AWS API Gateway WebSocket idle timeout, NAT gateway TCP idle timeout, or ALB connection settings) that the client recovers from.</div></div>
                     
@@ -266,7 +266,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 2. Implement WebSocket-level keepalive pings to prevent idle timeout
 3. Add metrics tracking time-since-last-successful-message to detect silent drops
 4. Investigate if AWS API Gateway is in a degraded state during these intervals</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ADisconnected%2Afrom%2AAWS%2A&amp;from_ts=1785225625864&amp;to_ts=1785312025864">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ADisconnected%2Afrom%2AAWS%2A&amp;from_ts=1785226327347&amp;to_ts=1785312727347">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
@@ -288,13 +288,13 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Bad Request Exception</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 8h 4m ago · active 12h <span style="color:#94a3b8;">(2026-07-28T11:55:01 → 2026-07-28T23:55:01 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 8h 16m ago · active 12h <span style="color:#94a3b8;">(2026-07-28T11:55:01 → 2026-07-28T23:55:01 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ABad%2ARequest%2AException%2A&amp;from_ts=1785225625864&amp;to_ts=1785312025864">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ABad%2ARequest%2AException%2A&amp;from_ts=1785226327347&amp;to_ts=1785312727347">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
