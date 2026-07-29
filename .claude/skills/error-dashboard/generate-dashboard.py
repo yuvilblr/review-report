@@ -1439,7 +1439,7 @@ def classify_recency(first_seen, last_seen, now, ongoing_max=1800, tapering_max=
 # Best-effort: any failure prints a warning and the dashboard still renders.
 
 def anthropic_message(prompt, api_key, model='claude-opus-4-8', max_tokens=1024, system=None,
-                      max_retries=4):
+                      effort=None, max_retries=4):
     """One Claude call via raw HTTP (stdlib urllib, mirroring dd_post). Retries transient
     errors (429 rate-limit / 5xx overload), honoring Retry-After. Returns the concatenated
     text blocks, or None on persistent failure (the AI layer is non-blocking)."""
@@ -1450,6 +1450,7 @@ def anthropic_message(prompt, api_key, model='claude-opus-4-8', max_tokens=1024,
         'model': model, 'max_tokens': max_tokens,
         'messages': [{'role': 'user', 'content': prompt}],
         **({'system': system} if system else {}),
+        **({'output_config': {'effort': effort}} if effort else {}),
     }).encode()
     headers = {'x-api-key': api_key, 'anthropic-version': '2023-06-01',
                'content-type': 'application/json'}
@@ -1485,7 +1486,7 @@ def anthropic_message(prompt, api_key, model='claude-opus-4-8', max_tokens=1024,
     return None
 
 
-def ai_exec_summary(matched, slow_apis, four_xx, meta, total, api_key, model):
+def ai_exec_summary(matched, slow_apis, four_xx, meta, total, api_key, model, effort=None):
     """A 2-3 sentence on-call executive summary of tonight's findings."""
     high = [m for m in matched if m['rule']['severity'] == 'high']
     spikes = [r for r in (four_xx or []) if r.get('spike')]
@@ -1512,7 +1513,7 @@ def ai_exec_summary(matched, slow_apis, four_xx, meta, total, api_key, model):
         "endpoints/patterns that matter. Plain prose only: no preamble, no bullet points, no headers.\n\n"
         f"Findings:\n{json.dumps(facts, indent=2)}"
     )
-    return anthropic_message(prompt, api_key, model=model, max_tokens=400)
+    return anthropic_message(prompt, api_key, model=model, max_tokens=2000, effort=effort)
 
 
 # ---- aggressive redaction: nothing sensitive leaves for the model ----------
@@ -1559,7 +1560,7 @@ def _redact(obj, depth=0):
     return obj
 
 
-def ai_deep_rca(matched, meta, api_key, model, max_patterns=20, samples_per=2):
+def ai_deep_rca(matched, meta, api_key, model, max_patterns=20, samples_per=2, effort=None):
     """Evidence-based RCA + auto-categorisation from REDACTED sample log records.
     Uncatalogued -> fills rule.rca AND auto-assigns rule.category + rule.fix (so the pattern
     leaves 'Other / Uncategorized'); catalogued -> adds deep_rca (curated RCA/category kept).
@@ -1607,7 +1608,7 @@ def ai_deep_rca(matched, meta, api_key, model, max_patterns=20, samples_per=2):
         "(category and fix are only needed for 'Other / Uncategorized' items).\n\n"
         f"Failure patterns:\n{json.dumps(items, ensure_ascii=False, indent=2)}"
     )
-    resp = anthropic_message(prompt, api_key, model=model, max_tokens=3000)
+    resp = anthropic_message(prompt, api_key, model=model, max_tokens=8000, effort=effort)
     if not resp:
         return 0
     try:
@@ -1800,6 +1801,8 @@ def main():
     p.add_argument('--rum-env', default='preprod-eulaerdallearning', help='RUM env tag used to filter frontend errors')
     p.add_argument('--ai-model', default='claude-opus-4-8',
                    help='Claude model for the optional AI narrative (exec summary + auto-RCA). Only used when ANTHROPIC_API_KEY is set.')
+    p.add_argument('--ai-effort', default=None,
+                   help="Effort for the AI narrative calls (low/medium/high/xhigh/max). Omit to use the model default.")
     args = p.parse_args()
 
     api_key = os.environ.get('DD_API_KEY')
@@ -1887,11 +1890,11 @@ def main():
     anthropic_key = os.environ.get('ANTHROPIC_API_KEY')
     if anthropic_key:
         print(f"Generating AI narrative with {args.ai_model} ...", file=sys.stderr)
-        n_rca = ai_deep_rca(matched, meta, anthropic_key, args.ai_model)
+        n_rca = ai_deep_rca(matched, meta, anthropic_key, args.ai_model, effort=args.ai_effort)
         if n_rca:
             print(f"  AI deep RCA (from redacted logs) for {n_rca} failure pattern(s)", file=sys.stderr)
         ai_summary = ai_exec_summary(matched, slow_apis, four_xx, meta, total,
-                                     anthropic_key, args.ai_model)
+                                     anthropic_key, args.ai_model, effort=args.ai_effort)
         print(f"  AI exec summary: {'generated' if ai_summary else 'unavailable'}", file=sys.stderr)
     else:
         print("  (ANTHROPIC_API_KEY not set — skipping AI narrative layer)", file=sys.stderr)

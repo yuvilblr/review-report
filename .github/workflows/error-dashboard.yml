@@ -51,6 +51,8 @@ jobs:
           DD_APP_KEY: ${{ secrets.DD_APP_KEY }}
           # Optional: enables the AI exec summary + auto-RCA. Skipped cleanly if unset.
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # Cosmetic parity with lp-gate-keeper — no-op for this raw-API script.
+          DISABLE_PROMPT_CACHING: "1"
         run: |
           set +e
           python3 .claude/skills/error-dashboard/generate-dashboard.py \
@@ -58,7 +60,8 @@ jobs:
             --service rqillp-lp \
             --env eu-learning-prod \
             --span-operation express.request,http.request \
-            --ai-model claude-opus-4-8 \
+            --ai-model claude-opus-5 \
+            --ai-effort xhigh \
             --output error-dashboard.html \
             --teams-card teams-card.json \
             --rum-app-id 435b9647-49ef-4d7b-95e4-fb95c31626e9 \
