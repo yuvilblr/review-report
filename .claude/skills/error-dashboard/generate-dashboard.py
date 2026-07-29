@@ -1513,7 +1513,7 @@ def ai_exec_summary(matched, slow_apis, four_xx, meta, total, api_key, model, ef
         "endpoints/patterns that matter. Plain prose only: no preamble, no bullet points, no headers.\n\n"
         f"Findings:\n{json.dumps(facts, indent=2)}"
     )
-    return anthropic_message(prompt, api_key, model=model, max_tokens=2000, effort=effort)
+    return anthropic_message(prompt, api_key, model=model, max_tokens=400, effort=effort)
 
 
 # ---- aggressive redaction: nothing sensitive leaves for the model ----------
@@ -1608,7 +1608,7 @@ def ai_deep_rca(matched, meta, api_key, model, max_patterns=20, samples_per=2, e
         "(category and fix are only needed for 'Other / Uncategorized' items).\n\n"
         f"Failure patterns:\n{json.dumps(items, ensure_ascii=False, indent=2)}"
     )
-    resp = anthropic_message(prompt, api_key, model=model, max_tokens=8000, effort=effort)
+    resp = anthropic_message(prompt, api_key, model=model, max_tokens=3000, effort=effort)
     if not resp:
         return 0
     try:
