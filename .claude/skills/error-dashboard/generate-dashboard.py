@@ -1468,6 +1468,10 @@ def anthropic_message(prompt, api_key, model='claude-opus-4-8', max_tokens=1024,
                 detail = ' — ' + e.read().decode()[:200]
             except Exception:
                 pass
+            if e.code == 429 and attempt == 0:
+                rl = {k: v for k, v in e.headers.items()
+                      if k.lower().startswith('anthropic-ratelimit') or k.lower() == 'retry-after'}
+                print(f"  ⚠️  429 rate-limit headers: {rl or '(none present)'}", file=sys.stderr)
             if e.code in (429, 500, 503, 529) and attempt < max_retries:
                 try:
                     wait = float(e.headers.get('retry-after'))
