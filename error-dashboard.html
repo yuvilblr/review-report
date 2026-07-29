@@ -139,15 +139,15 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 <div><span class="label">Datadog Site</span><span class="value">datadoghq.com</span></div>
 </div>
 </div>
-<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-07-29 09:45:51 UTC</strong></div>
+<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-07-29 12:34:02 UTC</strong></div>
 </div>
 </header>
-
+<div style="background:#eef2ff;border:1px solid #c7d2fe;border-left:4px solid #4f46e5;border-radius:12px;padding:16px 20px;margin-bottom:24px;"><div style="font-weight:700;color:#3730a3;margin-bottom:6px;font-size:14px;">🧠 AI summary</div><div style="color:#1e293b;line-height:1.55;">Start with the single `ongoing` pattern — it&#x27;s the only thing still generating errors — but be aware this payload doesn&#x27;t say what it is: `high_severity_patterns`, `slow_apis`, and `error_spikes` are all empty and there&#x27;s no per-pattern breakdown, so there&#x27;s no endpoint or error signature to name until you re-pull the dashboard detail or the underlying Datadog query. Everything else is on the way down — one pattern has settled and three are tapering — so none of that needs attention tonight. Overall rqillp-lp in eu-learning-prod looks healthy: 296 events across a full 24-hour window with no high-severity patterns, no slow APIs, and no error spikes, which makes this a triage-the-one-open-pattern situation rather than an incident.</div></div>
 <div class="tabs"><button class="tab-btn active" data-tab="backend">🖥️ Backend · logs &amp; APM</button><button class="tab-btn" data-tab="frontend">🌐 Frontend · RUM</button></div>
 <div id="tab-backend" class="tab-pane active">
 <div class="stats-grid">
-<div class="stat-card"><div class="stat-value">292</div><div class="stat-label">Total events</div></div>
-<div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Distinct patterns</div></div>
+<div class="stat-card"><div class="stat-value">296</div><div class="stat-label">Total events</div></div>
+<div class="stat-card"><div class="stat-value">5</div><div class="stat-label">Distinct patterns</div></div>
 <div class="stat-card high"><div class="stat-value">0</div><div class="stat-label">High severity patterns</div></div>
 <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">Pods affected</div></div>
 </div>
@@ -157,15 +157,15 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
         <div class="sev-bar">
             <div class="sev-segment sev-high" style="flex:0" title="High: 0"></div>
             <div class="sev-segment sev-medium" style="flex:292" title="Medium: 292">292</div>
-            <div class="sev-segment sev-low" style="flex:0" title="Low: 0"></div>
+            <div class="sev-segment sev-low" style="flex:4" title="Low: 4"></div>
         </div>
 <div class="sev-legend">
 <span><span class="sev-dot sev-high"></span>High: 0</span>
 <span><span class="sev-dot sev-medium"></span>Medium: 292</span>
-<span><span class="sev-dot sev-low"></span>Low: 0</span>
+<span><span class="sev-dot sev-low"></span>Low: 4</span>
 </div>
 </div>
-<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 18px;margin-bottom:20px;font-size:14px;color:#334155;"><strong>Status of 3 pattern(s):</strong> 🔴 <strong>2</strong> ongoing · ✅ <strong>1</strong> settled <span style="color:#94a3b8;">· “settled” = not seen recently (heuristic, not confirmed resolved)</span></div>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 18px;margin-bottom:20px;font-size:14px;color:#334155;"><strong>Status of 5 pattern(s):</strong> 🔴 <strong>1</strong> ongoing · 🟠 <strong>3</strong> tapering · ✅ <strong>1</strong> settled <span style="color:#94a3b8;">· “settled” = not seen recently (heuristic, not confirmed resolved)</span></div>
 
     
     <section class="slow-apis-section">
@@ -175,12 +175,20 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 <thead><tr><th>Endpoint</th><th class="num">Errors</th><th class="num">Total</th><th class="num">Rate</th><th>Codes</th><th>Status</th></tr></thead>
                 <tbody>
         <tr>
-            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22POST%20/lp-api/api/v1/auth/app/tokens%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1785231984155&amp;to_ts=1785318384155&amp;paused=true" target="_blank"><code>POST /lp-api/api/v1/auth/app/tokens</code></a></td>
-            <td class="num">1</td>
-            <td class="num">1</td>
+            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22POST%20/lp-api/api/v1/auth/app/tokens%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1785242098382&amp;to_ts=1785328498382&amp;paused=true" target="_blank"><code>POST /lp-api/api/v1/auth/app/tokens</code></a></td>
+            <td class="num">2</td>
+            <td class="num">2</td>
             <td class="num ">100%</td>
-            <td>400×1</td>
-            <td>✅ Settled · last seen 9h 50m ago</td>
+            <td>400×2</td>
+            <td>🟠 Tapering · last seen 39m ago · active 12h</td>
+        </tr>
+        <tr>
+            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22GET%20/lp-api/api/v1/announcements%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1785242098382&amp;to_ts=1785328498382&amp;paused=true" target="_blank"><code>GET /lp-api/api/v1/announcements</code></a></td>
+            <td class="num">2</td>
+            <td class="num">2</td>
+            <td class="num ">100%</td>
+            <td>401×2</td>
+            <td>🟠 Tapering · last seen 2h 8m ago · active 12m</td>
         </tr></tbody>
             </table>
         </div>
@@ -191,19 +199,19 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
         <a href="#cat-LaunchDarkly-Connectivity" class="toc-link">
             <span class="toc-emoji">🌐</span>
             <span class="toc-name">LaunchDarkly Connectivity</span>
-            <span class="toc-count">6</span>
+            <span class="toc-count">4</span>
             
         </a>
         <a href="#cat-AWS-WebSocket" class="toc-link">
             <span class="toc-emoji">🔌</span>
             <span class="toc-name">AWS WebSocket</span>
-            <span class="toc-count">284</span>
+            <span class="toc-count">286</span>
             
         </a>
-        <a href="#cat-Other---Uncategorized" class="toc-link">
-            <span class="toc-emoji">❓</span>
-            <span class="toc-name">Other / Uncategorized</span>
-            <span class="toc-count">2</span>
+        <a href="#cat-Authentication" class="toc-link">
+            <span class="toc-emoji">🔐</span>
+            <span class="toc-name">Authentication</span>
+            <span class="toc-count">6</span>
             
         </a></div>
 </div>
@@ -212,30 +220,30 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
             <h2 class="category-title">
                 <span class="cat-emoji">🌐</span>
                 LaunchDarkly Connectivity
-                <span class="cat-stats">1 pattern • 6 events</span>
+                <span class="cat-stats">1 pattern • 4 events</span>
             </h2>
             <div class="cards-grid">
             <div class="card sev-medium">
                 <div class="card-header">
                     <div class="card-title-row">
                         <span class="sev-badge sev-medium">MEDIUM</span>
-                        <span class="rec-badge rec-ongoing">🔴 Ongoing</span>
+                        <span class="rec-badge rec-settled">✅ Settled</span>
                         <h3 class="card-title">LaunchDarkly streaming I/O errors</h3>
                     </div>
-                    <div class="card-count">6</div>
+                    <div class="card-count">4</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">warn: [LaunchDarkly] Received I/O error (the request completed unexpectedly) for streaming request - will retry</code></div>
-                    <div class="timestamps">🔴 <strong>Ongoing</strong> · last seen 12m ago · active 23h 15m <span style="color:#94a3b8;">(2026-07-28T10:17:38 → 2026-07-29T09:33:32 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">3</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">3</span></span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 3h ago · active 6h 56m <span style="color:#94a3b8;">(2026-07-29T02:36:43 → 2026-07-29T09:33:32 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">2</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">LaunchDarkly uses Server-Sent Events for real-time flag updates. The SDK is reporting that the long-lived stream connection drops periodically and reconnects. Likely cause: network proxy/NAT idle timeout terminating connections, firewall connection-timeout, or transient regional network glitches.</div></div>
-                    
+                    <div class="rca-block" style="background:#faf5ff;border-left-color:#7c3aed;"><div class="rca-label">🔎 Evidence-based analysis (AI)</div><div class="rca-text">The single record is only the LaunchDarkly SDK&#x27;s own warn line — `Received I/O error (the request completed unexpectedly) for streaming request - will retry` — i.e. the long-lived SSE flag stream was closed mid-response and the SDK is self-healing; with 4 occurrences and automatic retry, flag evaluation continues from the in-memory cache, so impact is a short staleness window rather than an outage. The stated cause (proxy/NAT idle timeout, firewall connection cap, or transient network glitch) is consistent with &#x27;completed unexpectedly&#x27; but is not actually supported by this evidence: the record has no timestamp, hostname, service, or env, so the 4 events cannot be correlated in time or attributed to a pod or egress path. First check the raw Datadog records for timestamp/host to see whether the 4 errors cluster (one bad egress path or LD-side incident) or spread evenly at a fixed interval (idle-timeout signature), and cross-reference the LaunchDarkly status history for that window.  🤖 AI, from redacted sample logs — verify before acting.</div></div>
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">During each disconnection window the pod won&#x27;t receive real-time flag updates. Once reconnected, it gets the latest state. Brief windows of slightly stale flag values.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Check NAT gateway TCP idle timeout (default 350s on AWS) — may need keepalive
 2. Verify firewall is not intercepting long-lived TCP connections
 3. If using a proxy, ensure SSE/HTTP-streaming is supported
 4. Consider switching SDK to polling mode if streaming continues to be unreliable</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AReceived%2AI%2AO%2Aerror%2A&amp;from_ts=1785231984154&amp;to_ts=1785318384154">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AReceived%2AI%2AO%2Aerror%2A&amp;from_ts=1785242098381&amp;to_ts=1785328498381">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
@@ -243,7 +251,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
             <h2 class="category-title">
                 <span class="cat-emoji">🔌</span>
                 AWS WebSocket
-                <span class="cat-stats">1 pattern • 284 events</span>
+                <span class="cat-stats">1 pattern • 286 events</span>
             </h2>
             <div class="cards-grid">
             <div class="card sev-medium">
@@ -253,56 +261,115 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                         <span class="rec-badge rec-ongoing">🔴 Ongoing</span>
                         <h3 class="card-title">AWS WebSocket disconnect → reconnect loop</h3>
                     </div>
-                    <div class="card-count">284</div>
+                    <div class="card-count">286</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Disconnected from AWS - attempting reconnect 1/10 in 5000ms</code></div>
-                    <div class="timestamps">🔴 <strong>Ongoing</strong> · last seen 8m ago · active 23h 43m <span style="color:#94a3b8;">(2026-07-28T09:53:59 → 2026-07-29T09:37:37 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">142</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">142</span></span></div>
+                    <div class="timestamps">🔴 <strong>Ongoing</strong> · last seen 4m ago · active 23h 53m <span style="color:#94a3b8;">(2026-07-28T12:35:24 → 2026-07-29T12:29:08 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">143</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">143</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">AWS WebSocket client repeatedly disconnects and reconnects. Most disconnections recover on the first retry (5000ms backoff). High volume suggests this is constant background churn — likely server-side termination (AWS API Gateway WebSocket idle timeout, NAT gateway TCP idle timeout, or ALB connection settings) that the client recovers from.</div></div>
-                    
+                    <div class="rca-block" style="background:#faf5ff;border-left-color:#7c3aed;"><div class="rca-label">🔎 Evidence-based analysis (AI)</div><div class="rca-text">Confirmed with a refinement: every sample is the same `LicenseController` warn `&quot;Disconnected from AWS - attempting reconnect 1/10 in 5000ms&quot;` and always at attempt 1/10, so the socket is dropped and recovered on the first retry — this is churn, not an outage, and the client-side retry logic is working. The refinement is that two different pods (`rqillp-lp-db557bcc5-p9mph` and `-rw2d5`) disconnect within ~360ms of each other (12:29:08.031Z vs 12:29:07.672Z), which argues for a common server-side/path-level termination (API Gateway WebSocket idle or max-connection-duration limit, or NAT/ALB idle timeout) rather than independent per-pod network flakes. First check whether the connection sends any application-level ping/heartbeat and how its interval compares to the API Gateway 10-minute idle timeout, then plot the 286 disconnect timestamps for a fixed period (~10min idle vs ~2h max duration) — note the records carry no WebSocket close code or reason, which is what would settle idle-timeout vs forced close definitively.  🤖 AI, from redacted sample logs — verify before acting.</div></div>
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">During each ~5s reconnect window, any push messages from AWS are missed. Sustained loss of real-time updates impacts users watching live course state.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Check AWS API Gateway WebSocket idle timeout (default 10 min), NAT gateway TCP idle timeout, ALB connection settings
 2. Implement WebSocket-level keepalive pings to prevent idle timeout
 3. Add metrics tracking time-since-last-successful-message to detect silent drops
 4. Investigate if AWS API Gateway is in a degraded state during these intervals</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ADisconnected%2Afrom%2AAWS%2A&amp;from_ts=1785231984154&amp;to_ts=1785318384154">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ADisconnected%2Afrom%2AAWS%2A&amp;from_ts=1785242098381&amp;to_ts=1785328498381">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
         <section class="category-section">
             <h2 class="category-title">
-                <span class="cat-emoji">❓</span>
-                Other / Uncategorized
-                <span class="cat-stats">1 pattern • 2 events</span>
+                <span class="cat-emoji">🔐</span>
+                Authentication
+                <span class="cat-stats">3 patterns • 6 events</span>
             </h2>
             <div class="cards-grid">
+            <div class="card sev-low">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <span class="sev-badge sev-low">LOW</span>
+                        <span class="rec-badge rec-tapering">🟠 Tapering</span>
+                        <h3 class="card-title">Unauthorized</h3>
+                    </div>
+                    <div class="card-count">2</div>
+                </div>
+                <div class="card-body">
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Unauthorized</code></div>
+                    <div class="timestamps">🟠 <strong>Tapering</strong> · last seen 2h 8m ago · active 12m <span style="color:#94a3b8;">(2026-07-29T10:12:39 → 2026-07-29T10:25:25 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Generic &#x27;Unauthorized&#x27; responses returned to clients. Most are expected: expired tokens, missing auth headers, or invalid credentials hitting protected endpoints. Without correlated request paths, hard to tell if any subset is anomalous.</div></div>
+                    
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Expected. Users with expired sessions get prompted to re-login. No action needed unless rate spikes anomalously.</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Not a bug. To improve observability: log the request URL alongside `Unauthorized` so you can distinguish normal expired-token cases from auth misconfiguration.</pre></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AUnauthorized%2A&amp;from_ts=1785242098382&amp;to_ts=1785328498382">🔍 View matching logs in Datadog →</a></div>
+                </div>
+            </div>
+            <div class="card sev-low">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <span class="sev-badge sev-low">LOW</span>
+                        <span class="rec-badge rec-tapering">🟠 Tapering</span>
+                        <h3 class="card-title">Refresh token required / expired</h3>
+                    </div>
+                    <div class="card-count">2</div>
+                </div>
+                <div class="card-body">
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Refresh token is required</code></div>
+                    <div class="timestamps">🟠 <strong>Tapering</strong> · last seen 2h 8m ago · active 12m <span style="color:#94a3b8;">(2026-07-29T10:12:40 → 2026-07-29T10:25:25 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">1</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Normal session-lifecycle response — when an access token expires, the client should send a refresh token; if it doesn&#x27;t or the refresh token itself expired, the app responds with these warnings.</div></div>
+                    
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Expected. User is prompted to re-login.</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">No fix needed. Could downgrade these from warn to info to reduce noise.</pre></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ARefresh%2Atoken%2Ais%2Arequired%2A&amp;from_ts=1785242098382&amp;to_ts=1785328498382">🔍 View matching logs in Datadog →</a></div>
+                </div>
+            </div>
             <div class="card sev-medium">
                 <div class="card-header">
                     <div class="card-title-row">
                         <span class="sev-badge sev-medium">MEDIUM</span>
-                        <span class="rec-badge rec-settled">✅ Settled</span>
+                        <span class="rec-badge rec-tapering">🟠 Tapering</span>
                         <h3 class="card-title">Bad Request Exception</h3>
                     </div>
                     <div class="card-count">2</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Bad Request Exception</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 9h 50m ago · active 12h <span style="color:#94a3b8;">(2026-07-28T11:55:01 → 2026-07-28T23:55:01 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
+                    <div class="timestamps">🟠 <strong>Tapering</strong> · last seen 39m ago · active 12h <span style="color:#94a3b8;">(2026-07-28T23:55:01 → 2026-07-29T11:55:02 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">1</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">NestJS&#x27;s global `AllExceptionsFilter` logged a `BadRequestException` (statusCode 400, empty `err.stack` — a ValidationPipe rejection, not a crash) on `POST /lp-api/api/v1/auth/app/tokens`, and the response body names the exact fault: `grant_type must be a string` plus `grant_type should not be empty`, meaning both validators fired, so `grant_type` arrived as `undefined` — the field was absent from the parsed body, not merely malformed. The strongest clue is the timing: the two occurrences are 2026-07-28T23:55:01.240Z and 2026-07-29T11:55:01.487Z — exactly 12 hours apart, both at :55:01, on different pods — so this is a scheduled client (cron/synthetic monitor/integration doing a client-credentials token refresh) posting a request whose body never reaches the DTO, most likely because `grant_type` is omitted or the caller sends the wrong Content-Type (e.g. form-encoded or empty body against a JSON handler). First check the access/ingress logs for `reqId` 416505 and 403499 to identify the caller&#x27;s source IP, user-agent, and Content-Type, which will tell you whether it is an internal 12-hourly job to fix or an external integration to notify.  🤖 AI-categorised + RCA from redacted logs — verify before acting.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ABad%2ARequest%2AException%2A&amp;from_ts=1785231984155&amp;to_ts=1785318384155">🔍 View matching logs in Datadog →</a></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Trace reqId 416505/403499 to the 12-hourly caller and make it POST a complete client-credentials body (`grant_type=client_credentials`) with the Content-Type the endpoint&#x27;s DTO expects — or repoint it at a health endpoint if it is only a liveness probe.</pre></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ABad%2ARequest%2AException%2A&amp;from_ts=1785242098382&amp;to_ts=1785328498382">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
 </div>
-<div id="tab-frontend" class="tab-pane"><section class="category-section"><p style="color:#64748b;font-style:italic;">No RUM frontend errors found in this window.</p></section></div>
+<div id="tab-frontend" class="tab-pane">
+    <div class="stats-grid">
+        <div class="stat-card high"><div class="stat-value">2</div><div class="stat-label">Frontend errors</div></div>
+        <div class="stat-card"><div class="stat-value">1</div><div class="stat-label">Distinct messages</div></div>
+        <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">Console-source</div></div>
+        <div class="stat-card"><div class="stat-value">1</div><div class="stat-label">Pages with errors (top)</div></div>
+    </div>
+    <div class="sev-summary">
+        <h3>Error sources</h3>
+        <div class="pods-row"><span class="pod-chip">console<span class="pod-count">2</span></span></div>
+    </div>
+    <section class="slow-apis-section">
+        <h2 class="section-title">🌐 Top frontend errors <span class="section-stats">RUM · prod-eulaerdallearning · grouped by message</span></h2>
+        <div class="table-wrap">
+            <table class="slow-table">
+                <thead><tr><th>Error message</th><th>Source</th><th class="num">Count</th><th>Sample page</th></tr></thead>
+                <tbody><tr><td><code>Failed to fetch announcements: {</code></td><td>console</td><td class="num">2</td><td><a href="https://eu.learning.laerdal.com/lp" target="_blank">https://eu.learning.laerdal.com/lp</a></td></tr></tbody>
+            </table>
+        </div>
+    </section></div>
 <footer>
 <p>Generated from Datadog Logs API for <code>service:rqillp-lp env:eu-learning-prod</code> over the last 1d.</p>
-<p style="margin-top:8px;">292 events across 3 patterns • 2 pods affected</p>
+<p style="margin-top:8px;">296 events across 5 patterns • 2 pods affected</p>
 </footer>
 </div>
 <script>
