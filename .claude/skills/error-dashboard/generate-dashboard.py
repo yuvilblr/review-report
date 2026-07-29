@@ -1440,53 +1440,43 @@ def classify_recency(first_seen, last_seen, now, ongoing_max=1800, tapering_max=
 
 def anthropic_message(prompt, api_key, model='claude-opus-4-8', max_tokens=1024, system=None,
                       effort=None, max_retries=4):
-    """One Claude call via raw HTTP (stdlib urllib, mirroring dd_post). Retries transient
-    errors (429 rate-limit / 5xx overload), honoring Retry-After. Returns the concatenated
-    text blocks, or None on persistent failure (the AI layer is non-blocking)."""
-    import urllib.request
-    import urllib.error
+    """One Claude call via the Claude Code CLI (`claude -p`). On this account the raw
+    Messages API (x-api-key) is rate-limited, but the Claude Code lane works — so the CLI
+    is the transport. Reads ANTHROPIC_API_KEY from the environment. Returns the response
+    text, or None on failure (the AI layer is non-blocking). `api_key` and `max_tokens`
+    are accepted for signature compatibility but unused — the CLI manages auth + output."""
+    import subprocess
     import time
-    payload = json.dumps({
-        'model': model, 'max_tokens': max_tokens,
-        'messages': [{'role': 'user', 'content': prompt}],
-        **({'system': system} if system else {}),
-        **({'output_config': {'effort': effort}} if effort else {}),
-    }).encode()
-    headers = {'x-api-key': api_key, 'anthropic-version': '2023-06-01',
-               'content-type': 'application/json'}
+    cmd = ['claude', '-p', '--output-format', 'json', '--model', model]
+    if effort:
+        cmd += ['--effort', effort]
+    full = f"{system}\n\n{prompt}" if system else prompt
     for attempt in range(max_retries + 1):
         try:
-            req = urllib.request.Request('https://api.anthropic.com/v1/messages',
-                                         data=payload, headers=headers)
-            with urllib.request.urlopen(req, timeout=120) as resp:
-                data = json.load(resp)
-            return ''.join(b.get('text', '') for b in data.get('content', [])
-                           if b.get('type') == 'text').strip()
-        except urllib.error.HTTPError as e:
-            detail = ''
-            try:
-                detail = ' — ' + e.read().decode()[:200]
-            except Exception:
-                pass
-            if e.code == 429 and attempt == 0:
-                rl = {k: v for k, v in e.headers.items()
-                      if k.lower().startswith('anthropic-ratelimit') or k.lower() == 'retry-after'}
-                print(f"  ⚠️  429 rate-limit headers: {rl or '(none present)'}", file=sys.stderr)
-            if e.code in (429, 500, 503, 529) and attempt < max_retries:
-                try:
-                    wait = float(e.headers.get('retry-after'))
-                except (TypeError, ValueError, AttributeError):
-                    wait = 2 ** attempt  # 1, 2, 4, 8 s
-                wait = min(wait, 60)
-                print(f"  ⚠️  AI call HTTP {e.code}; retry {attempt + 1}/{max_retries} "
-                      f"in {wait:.0f}s{detail}", file=sys.stderr)
-                time.sleep(wait)
-                continue
-            print(f"  ⚠️  AI call failed: HTTP {e.code}{detail}", file=sys.stderr)
-            return None
+            proc = subprocess.run(cmd, input=full, capture_output=True,
+                                  text=True, timeout=300)
         except Exception as e:
-            print(f"  ⚠️  AI call failed: {e}", file=sys.stderr)
+            print(f"  ⚠️  claude -p failed to run: {e}", file=sys.stderr)
             return None
+        if proc.returncode == 0:
+            try:
+                data = json.loads(proc.stdout)
+            except Exception as e:
+                print(f"  ⚠️  claude -p: unparseable output: {e}", file=sys.stderr)
+                return None
+            if data.get('is_error'):
+                print(f"  ⚠️  claude -p error: {str(data.get('result'))[:200]}", file=sys.stderr)
+                return None
+            return (data.get('result') or '').strip()
+        err = (proc.stderr or proc.stdout or '').strip()[:200]
+        if attempt < max_retries:
+            wait = min(2 ** attempt, 30)
+            print(f"  ⚠️  claude -p exit {proc.returncode}; retry {attempt + 1}/{max_retries} "
+                  f"in {wait}s — {err}", file=sys.stderr)
+            time.sleep(wait)
+            continue
+        print(f"  ⚠️  claude -p failed (exit {proc.returncode}): {err}", file=sys.stderr)
+        return None
     return None
 
 
