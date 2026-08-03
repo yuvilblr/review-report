@@ -1502,6 +1502,14 @@ def ai_exec_summary(matched, slow_apis, four_xx, meta, total, api_key, model, ef
                       for s in (slow_apis or [])[:8]],
         'error_spikes': [f"{r['resource']} {r['rate']:.0%} errors ({r['errs']}/{r['total']})"
                          for r in spikes[:8]],
+        # Every matched pattern (all severities), top by count — so the summary can NAME the
+        # actual error/endpoint + category instead of hinting. This is the key detail source.
+        'patterns': [
+            (f"{m['rule']['title']} — category: {m['rule'].get('category', 'Uncategorized')}, "
+             f"severity: {m['rule'].get('severity', 'n/a')}, {m['count']} events"
+             + (f", {m['recency']['label'].lower()}, last seen {m['recency']['ago']} ago"
+                if m.get('recency') else ""))
+            for m in sorted(matched, key=lambda x: x.get('count', 0), reverse=True)[:10]],
     }
     prompt = (
         "You are the on-call SRE for the Learner Portal (NestJS API 'rqillp-lp' + React UI 'lp-ui'). "
@@ -1512,9 +1520,11 @@ def ai_exec_summary(matched, slow_apis, four_xx, meta, total, api_key, model, ef
         "Watch — anything active but lower priority (omit this line if there is nothing).\n"
         "Settled — issues that appear to have self-healed; note if 'settled' only means between firings, not fixed.\n"
         "Overall — is the service healthy? high-severity count, slow APIs, error spikes over the window.\n"
-        "Use recency + status_rollup so you don't alarm about things that stopped hours ago. Be specific — name "
-        "the endpoints/patterns that matter. Keep each section to 1-3 sentences. Plain text only: no markdown, "
-        "no bullet characters, no backticks.\n\n"
+        "Use recency + status_rollup so you don't alarm about things that stopped hours ago. BE SPECIFIC: name "
+        "the actual pattern(s) from the 'patterns' list — the real error/endpoint, its category, and event count "
+        "— e.g. 'the LicenseController AWS-reconnect churn (WebSocket, 284 events)'. You HAVE the pattern list, so "
+        "state which one it is; never tell the reader to go find out which pattern or endpoint it maps to. "
+        "Keep each section to 1-3 sentences. Plain text only: no markdown, no bullet characters, no backticks.\n\n"
         f"Findings:\n{json.dumps(facts, indent=2)}"
     )
     return anthropic_message(prompt, api_key, model=model, max_tokens=400, effort=effort)
