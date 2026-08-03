@@ -1119,7 +1119,7 @@ def render_html(matched, unmatched, slow_apis, meta, rum_html='', four_xx=None, 
             '<div style="font-weight:700;color:#3730a3;margin-bottom:6px;font-size:14px;">'
             '🧠 AI summary'
             '</div>'
-            f'<div style="color:#1e293b;line-height:1.55;">{esc(ai_summary)}</div>'
+            f'<div style="color:#1e293b;line-height:1.55;white-space:pre-line;">{esc(ai_summary)}</div>'
             '</div>')
 
     rec_counts = Counter(m['recency']['key'] for m in matched if m.get('recency'))
@@ -1447,7 +1447,12 @@ def anthropic_message(prompt, api_key, model='claude-opus-4-8', max_tokens=1024,
     are accepted for signature compatibility but unused — the CLI manages auth + output."""
     import subprocess
     import time
-    cmd = ['claude', '-p', '--output-format', 'json', '--model', model]
+    cmd = ['claude', '-p', '--output-format', 'json', '--model', model,
+           '--allowedTools', '',
+           '--append-system-prompt',
+           ("Output only what the user's message asks for. Plain text — no markdown, "
+            "no backticks or code fences. Do not use any tools or read any files. Do not "
+            "comment on the input, its data sources, or how you produced the answer.")]
     if effort:
         cmd += ['--effort', effort]
     full = f"{system}\n\n{prompt}" if system else prompt
@@ -1500,11 +1505,16 @@ def ai_exec_summary(matched, slow_apis, four_xx, meta, total, api_key, model, ef
     }
     prompt = (
         "You are the on-call SRE for the Learner Portal (NestJS API 'rqillp-lp' + React UI 'lp-ui'). "
-        "Below are tonight's error-dashboard findings as JSON. Write a 2-3 sentence executive summary "
-        "for the engineer who was just paged: the single most important thing to look at first, WHICH "
-        "issues are still active vs. appear to have settled (use recency + status_rollup — don't alarm "
-        "about things that stopped hours ago), and whether the service is overall healthy. Be specific — name the "
-        "endpoints/patterns that matter. Plain prose only: no preamble, no bullet points, no headers.\n\n"
+        "Below are tonight's error-dashboard findings as JSON. Write a short on-call summary for the "
+        "engineer who was just paged, formatted as 2-4 short sections — EACH on its own line, separated "
+        "by a blank line, each starting with a plain-text label and an em dash. Use these labels:\n"
+        "Top issue — the single most important thing to look at first, and what to check.\n"
+        "Watch — anything active but lower priority (omit this line if there is nothing).\n"
+        "Settled — issues that appear to have self-healed; note if 'settled' only means between firings, not fixed.\n"
+        "Overall — is the service healthy? high-severity count, slow APIs, error spikes over the window.\n"
+        "Use recency + status_rollup so you don't alarm about things that stopped hours ago. Be specific — name "
+        "the endpoints/patterns that matter. Keep each section to 1-3 sentences. Plain text only: no markdown, "
+        "no bullet characters, no backticks.\n\n"
         f"Findings:\n{json.dumps(facts, indent=2)}"
     )
     return anthropic_message(prompt, api_key, model=model, max_tokens=400, effort=effort)
