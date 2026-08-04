@@ -139,21 +139,21 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 <div><span class="label">Datadog Site</span><span class="value">datadoghq.com</span></div>
 </div>
 </div>
-<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-08-03 12:50:51 UTC</strong></div>
+<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-08-04 05:29:45 UTC</strong></div>
 </div>
 </header>
-<div style="background:#eef2ff;border:1px solid #c7d2fe;border-left:4px solid #4f46e5;border-radius:12px;padding:16px 20px;margin-bottom:24px;"><div style="font-weight:700;color:#3730a3;margin-bottom:6px;font-size:14px;">🧠 AI summary</div><div style="color:#1e293b;line-height:1.55;white-space:pre-line;">Top issue — The one ongoing pattern in rqillp-lp is the thing to look at first, but nothing in tonight&#x27;s data marks it as high severity, so treat it as investigate-not-firefight: pull the recent events for that pattern, confirm which endpoint and error class it maps to, and check whether its rate is flat or climbing over the last hour.
+<div style="background:#eef2ff;border:1px solid #c7d2fe;border-left:4px solid #4f46e5;border-radius:12px;padding:16px 20px;margin-bottom:24px;"><div style="font-weight:700;color:#3730a3;margin-bottom:6px;font-size:14px;">🧠 AI summary</div><div style="color:#1e293b;line-height:1.55;white-space:pre-line;">Top issue — The AWS WebSocket disconnect to reconnect loop is the only ongoing pattern and accounts for 283 of tonight&#x27;s 289 events, last seen 6 minutes ago at medium severity in the AWS WebSocket category. Check whether rqillp-lp is holding a stable AWS WebSocket connection or churning, and confirm the reconnect backoff is not hammering the endpoint; look for a single bad pod or task versus fleet-wide churn.
 
-Watch — One pattern is tapering, meaning it is still firing but at a declining rate. Leave it alone unless it reverses direction; re-check the trend before you hand off.
+Watch — Nothing else is active right now; the remaining three patterns have all gone quiet.
 
-Settled — One pattern has gone quiet with no recent firings. Worth knowing that settled here only means no events in the recent part of the window, not that a fix landed, so it can return under the same conditions that triggered it.
+Settled — LaunchDarkly streaming I/O errors (LaunchDarkly Connectivity, 3 events, last seen 4h 5m ago), a Bad Request Exception in Authentication (2 events, 5h 34m ago), and one Cannot GET /lp-api/api Application error (1 event, 22h 31m ago). All three are low volume and settled only in the sense that they have stopped firing, not that a fix landed, so they can recur.
 
-Overall — The service looks healthy: 287 events over 24 hours with zero high-severity patterns, zero slow APIs flagged, and no error spikes in the window. Nothing here justifies a page on its own; the only live item is the single ongoing pattern.</div></div>
+Overall — Service looks broadly healthy: zero high-severity patterns, no slow APIs, and no error spikes over the 1 day window. The 289 event total is almost entirely the one WebSocket reconnect loop, so this is noise volume rather than a user-facing outage unless the loop is degrading learner sessions.</div></div>
 <div class="tabs"><button class="tab-btn active" data-tab="backend">🖥️ Backend · logs &amp; APM</button><button class="tab-btn" data-tab="frontend">🌐 Frontend · RUM</button></div>
 <div id="tab-backend" class="tab-pane active">
 <div class="stats-grid">
-<div class="stat-card"><div class="stat-value">287</div><div class="stat-label">Total events</div></div>
-<div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Distinct patterns</div></div>
+<div class="stat-card"><div class="stat-value">289</div><div class="stat-label">Total events</div></div>
+<div class="stat-card"><div class="stat-value">4</div><div class="stat-label">Distinct patterns</div></div>
 <div class="stat-card high"><div class="stat-value">0</div><div class="stat-label">High severity patterns</div></div>
 <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">Pods affected</div></div>
 </div>
@@ -162,16 +162,16 @@ Overall — The service looks healthy: 287 events over 24 hours with zero high-s
 
         <div class="sev-bar">
             <div class="sev-segment sev-high" style="flex:0" title="High: 0"></div>
-            <div class="sev-segment sev-medium" style="flex:287" title="Medium: 287">287</div>
+            <div class="sev-segment sev-medium" style="flex:289" title="Medium: 289">289</div>
             <div class="sev-segment sev-low" style="flex:0" title="Low: 0"></div>
         </div>
 <div class="sev-legend">
 <span><span class="sev-dot sev-high"></span>High: 0</span>
-<span><span class="sev-dot sev-medium"></span>Medium: 287</span>
+<span><span class="sev-dot sev-medium"></span>Medium: 289</span>
 <span><span class="sev-dot sev-low"></span>Low: 0</span>
 </div>
 </div>
-<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 18px;margin-bottom:20px;font-size:14px;color:#334155;"><strong>Status of 3 pattern(s):</strong> 🔴 <strong>1</strong> ongoing · 🟠 <strong>1</strong> tapering · ✅ <strong>1</strong> settled <span style="color:#94a3b8;">· “settled” = not seen recently (heuristic, not confirmed resolved)</span></div>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:12px 18px;margin-bottom:20px;font-size:14px;color:#334155;"><strong>Status of 4 pattern(s):</strong> 🔴 <strong>1</strong> ongoing · ✅ <strong>3</strong> settled <span style="color:#94a3b8;">· “settled” = not seen recently (heuristic, not confirmed resolved)</span></div>
 
     
     <section class="slow-apis-section">
@@ -181,20 +181,12 @@ Overall — The service looks healthy: 287 events over 24 hours with zero high-s
                 <thead><tr><th>Endpoint</th><th class="num">Errors</th><th class="num">Total</th><th class="num">Rate</th><th>Codes</th><th>Status</th></tr></thead>
                 <tbody>
         <tr>
-            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22POST%20/lp-api/api/v1/auth/app/tokens%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1785675105950&amp;to_ts=1785761505950&amp;paused=true" target="_blank"><code>POST /lp-api/api/v1/auth/app/tokens</code></a></td>
+            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22POST%20/lp-api/api/v1/auth/app/tokens%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1785735025681&amp;to_ts=1785821425681&amp;paused=true" target="_blank"><code>POST /lp-api/api/v1/auth/app/tokens</code></a></td>
             <td class="num">2</td>
-            <td class="num">2</td>
-            <td class="num ">100%</td>
+            <td class="num">4</td>
+            <td class="num ">50%</td>
             <td>400×2</td>
-            <td>🟠 Tapering · last seen 55m ago · active 12h</td>
-        </tr>
-        <tr>
-            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22GET%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1785675105950&amp;to_ts=1785761505950&amp;paused=true" target="_blank"><code>GET</code></a></td>
-            <td class="num">1</td>
-            <td class="num">1</td>
-            <td class="num ">100%</td>
-            <td>404×1</td>
-            <td>✅ Settled · last seen 5h 52m ago</td>
+            <td>✅ Settled · last seen 5h 34m ago · active 11h 59m</td>
         </tr></tbody>
             </table>
         </div>
@@ -202,10 +194,16 @@ Overall — The service looks healthy: 287 events over 24 hours with zero high-s
 <div class="toc">
 <h3>Jump to category</h3>
 <div class="toc-links">
+        <a href="#cat-LaunchDarkly-Connectivity" class="toc-link">
+            <span class="toc-emoji">🌐</span>
+            <span class="toc-name">LaunchDarkly Connectivity</span>
+            <span class="toc-count">3</span>
+            
+        </a>
         <a href="#cat-AWS-WebSocket" class="toc-link">
             <span class="toc-emoji">🔌</span>
             <span class="toc-name">AWS WebSocket</span>
-            <span class="toc-count">284</span>
+            <span class="toc-count">283</span>
             
         </a>
         <a href="#cat-Authentication" class="toc-link">
@@ -224,9 +222,40 @@ Overall — The service looks healthy: 287 events over 24 hours with zero high-s
 
         <section class="category-section">
             <h2 class="category-title">
+                <span class="cat-emoji">🌐</span>
+                LaunchDarkly Connectivity
+                <span class="cat-stats">1 pattern • 3 events</span>
+            </h2>
+            <div class="cards-grid">
+            <div class="card sev-medium">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <span class="sev-badge sev-medium">MEDIUM</span>
+                        <span class="rec-badge rec-settled">✅ Settled</span>
+                        <h3 class="card-title">LaunchDarkly streaming I/O errors</h3>
+                    </div>
+                    <div class="card-count">3</div>
+                </div>
+                <div class="card-body">
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">warn: [LaunchDarkly] Received I/O error (the request completed unexpectedly) for streaming request - will retry</code></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 4h 5m ago · active 1h 14m <span style="color:#94a3b8;">(2026-08-04T00:08:58 → 2026-08-04T01:23:58 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">LaunchDarkly uses Server-Sent Events for real-time flag updates. The SDK is reporting that the long-lived stream connection drops periodically and reconnects. Likely cause: network proxy/NAT idle timeout terminating connections, firewall connection-timeout, or transient regional network glitches.</div></div>
+                    <div class="rca-block" style="background:#faf5ff;border-left-color:#7c3aed;"><div class="rca-label">🔎 Evidence-based analysis (AI)</div><div class="rca-text">The only evidence is the LaunchDarkly SDK&#x27;s own warn line: &#x27;Received I/O error (the request completed unexpectedly) for streaming request - will retry&#x27; — the SSE stream ended without an HTTP error status, so there is no 401/403/429 and no application stack frame, ruling out bad SDK key or rate limiting. With count 3 and the SDK auto-retrying, this is consistent with the stated RCA of an idle-timeout or transient network drop on the long-lived connection to stream.launchdarkly.com; the flag store keeps serving cached values across the gap, so impact is bounded unless retries fail. First check the egress proxy/NAT idle-timeout setting and whether any evaluations logged fallback/default flag values in the same seconds — the records lack timestamps and correlation IDs, so tying these three events to any user-visible flag misbehavior isn&#x27;t possible from this evidence alone.  🤖 AI, from redacted sample logs — verify before acting.</div></div>
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">During each disconnection window the pod won&#x27;t receive real-time flag updates. Once reconnected, it gets the latest state. Brief windows of slightly stale flag values.</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Check NAT gateway TCP idle timeout (default 350s on AWS) — may need keepalive
+2. Verify firewall is not intercepting long-lived TCP connections
+3. If using a proxy, ensure SSE/HTTP-streaming is supported
+4. Consider switching SDK to polling mode if streaming continues to be unreliable</pre></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AReceived%2AI%2AO%2Aerror%2A&amp;from_ts=1785735025680&amp;to_ts=1785821425680">🔍 View matching logs in Datadog →</a></div>
+                </div>
+            </div></div>
+        </section>
+        <section class="category-section">
+            <h2 class="category-title">
                 <span class="cat-emoji">🔌</span>
                 AWS WebSocket
-                <span class="cat-stats">1 pattern • 284 events</span>
+                <span class="cat-stats">1 pattern • 283 events</span>
             </h2>
             <div class="cards-grid">
             <div class="card sev-medium">
@@ -236,20 +265,20 @@ Overall — The service looks healthy: 287 events over 24 hours with zero high-s
                         <span class="rec-badge rec-ongoing">🔴 Ongoing</span>
                         <h3 class="card-title">AWS WebSocket disconnect → reconnect loop</h3>
                     </div>
-                    <div class="card-count">284</div>
+                    <div class="card-count">283</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Disconnected from AWS - attempting reconnect 1/10 in 5000ms</code></div>
-                    <div class="timestamps">🔴 <strong>Ongoing</strong> · last seen 7m ago · active 23h 44m <span style="color:#94a3b8;">(2026-08-02T12:59:31 → 2026-08-03T12:43:41 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">142</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">142</span></span></div>
+                    <div class="timestamps">🔴 <strong>Ongoing</strong> · last seen 6m ago · active 23h 43m <span style="color:#94a3b8;">(2026-08-03T05:39:45 → 2026-08-04T05:23:18 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">142</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">141</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">AWS WebSocket client repeatedly disconnects and reconnects. Most disconnections recover on the first retry (5000ms backoff). High volume suggests this is constant background churn — likely server-side termination (AWS API Gateway WebSocket idle timeout, NAT gateway TCP idle timeout, or ALB connection settings) that the client recovers from.</div></div>
-                    <div class="rca-block" style="background:#faf5ff;border-left-color:#7c3aed;"><div class="rca-label">🔎 Evidence-based analysis (AI)</div><div class="rca-text">The only evidence is a repeated level-40 warning from LicenseController, &#x27;Disconnected from AWS - attempting reconnect 1/10 in 5000ms&#x27;, always at attempt 1/10 and across both pods (p9mph, rw2d5) within seconds of each other — so each drop is recovered on the first retry rather than escalating through the 10-attempt ladder, which matches the known RCA&#x27;s read of constant background churn rather than an AWS outage. The most probable cause is server-side/intermediary idle-timeout termination of an otherwise healthy long-lived WebSocket (API Gateway 10-minute idle / NAT or ALB TCP idle timeout) with no application-level keepalive, so the socket is silently closed and the client immediately re-establishes it. First thing to check: the interval between successive disconnects per hostname against the API Gateway and NAT/ALB idle-timeout values, and whether the client sends any ping/heartbeat frame; the records carry no close code or reason, so add that to the log line to confirm which hop is closing the connection.  🤖 AI, from redacted sample logs — verify before acting.</div></div>
+                    <div class="rca-block" style="background:#faf5ff;border-left-color:#7c3aed;"><div class="rca-label">🔎 Evidence-based analysis (AI)</div><div class="rca-text">No stack trace or error code is present — only a repeated warn-level &#x27;Disconnected from AWS - attempting reconnect 1/10 in 5000ms&#x27; from LicenseController, always at attempt 1/10, across at least two pods (p9mph, rw2d5) within ~11 seconds of each other. The &#x27;reconnect 1/10&#x27; counter never advancing past 1 confirms each reconnect succeeds immediately, so this is a healthy client reconnecting after the peer closes the socket, not a client-side or auth failure; the clustered timing across independent pods points to a shared server/network-side idle or max-connection-age cutoff rather than per-pod instability. First check the AWS API Gateway WebSocket idle timeout (and the NAT/ALB idle timeout on the egress path) against the LicenseController&#x27;s keepalive/ping interval — if the app sends no ping inside that window, the disconnects are expected and the fix is a heartbeat, not a retry.  🤖 AI, from redacted sample logs — verify before acting.</div></div>
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">During each ~5s reconnect window, any push messages from AWS are missed. Sustained loss of real-time updates impacts users watching live course state.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Check AWS API Gateway WebSocket idle timeout (default 10 min), NAT gateway TCP idle timeout, ALB connection settings
 2. Implement WebSocket-level keepalive pings to prevent idle timeout
 3. Add metrics tracking time-since-last-successful-message to detect silent drops
 4. Investigate if AWS API Gateway is in a degraded state during these intervals</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ADisconnected%2Afrom%2AAWS%2A&amp;from_ts=1785675105950&amp;to_ts=1785761505950">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ADisconnected%2Afrom%2AAWS%2A&amp;from_ts=1785735025680&amp;to_ts=1785821425680">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
@@ -264,20 +293,20 @@ Overall — The service looks healthy: 287 events over 24 hours with zero high-s
                 <div class="card-header">
                     <div class="card-title-row">
                         <span class="sev-badge sev-medium">MEDIUM</span>
-                        <span class="rec-badge rec-tapering">🟠 Tapering</span>
+                        <span class="rec-badge rec-settled">✅ Settled</span>
                         <h3 class="card-title">Bad Request Exception</h3>
                     </div>
                     <div class="card-count">2</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Bad Request Exception</code></div>
-                    <div class="timestamps">🟠 <strong>Tapering</strong> · last seen 55m ago · active 12h <span style="color:#94a3b8;">(2026-08-02T23:55:02 → 2026-08-03T11:55:02 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">class-validator rejected the request body at POST /lp-api/api/v1/auth/app/tokens with a 400 BadRequestException surfaced by AllExceptionsFilter; the response message array is explicit — &#x27;grant_type must be a string&#x27; and &#x27;grant_type should not be empty&#x27; — so the DTO field grant_type was absent or non-string, and err.stack is empty because this is a validation-pipe rejection, not a thrown runtime error. Most probable cause is a client calling the app-token (client-credentials) endpoint without the grant_type parameter, or sending it in a body encoding the pipe cannot read (e.g. form-urlencoded/query instead of the expected JSON body); with only 2 occurrences, roughly 12 hours apart (23:55:01Z and 11:55:02Z, both at :55:0x past the hour), a scheduled job or health/integration probe is the likelier caller than interactive users. First thing to check: correlate reqId 546085 and 533170 to the caller&#x27;s user-agent/source IP and Content-Type to identify which integration or cron is posting the token request, then compare its payload to the app-tokens DTO.  🤖 AI-categorised + RCA from redacted logs — verify before acting.</div></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 5h 34m ago · active 11h 59m <span style="color:#94a3b8;">(2026-08-03T11:55:02 → 2026-08-03T23:55:01 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">2</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">This is a client-side contract violation, not a server fault: NestJS&#x27;s ValidationPipe rejected POST /lp-api/api/v1/auth/app/tokens with a 400 and response.message [&#x27;grant_type must be a string&#x27;, &#x27;grant_type should not be empty&#x27;], meaning the request body reached the DTO with grant_type absent or non-string. The empty err.stack and the AllExceptionsFilter context confirm the request never got past validation into the token-issuing logic. The two occurrences are 12 hours apart (2026-08-03T11:55:02Z and 23:55:01Z) on the same pod at the same minute-and-second — that :55:0x cadence strongly suggests a scheduled job or integration cron posting a malformed token request, most likely sending form-encoded credentials without the grant_type field or with the wrong Content-Type so the field is dropped during body parsing. First check what client calls /auth/app/tokens on a 12-hour schedule and capture its actual Content-Type and body keys.  🤖 AI-categorised + RCA from redacted logs — verify before acting.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Identify the caller behind reqId 533170/546085 and correct its app-token request to send grant_type as a non-empty string in the JSON body the DTO expects (and confirm the endpoint&#x27;s body parser matches the Content-Type it sends).</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ABad%2ARequest%2AException%2A&amp;from_ts=1785675105950&amp;to_ts=1785761505950">🔍 View matching logs in Datadog →</a></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Identify the twice-daily client-credentials caller and correct its request to send grant_type=client_credentials with a Content-Type the API&#x27;s body parser accepts.</pre></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ABad%2ARequest%2AException%2A&amp;from_ts=1785735025680&amp;to_ts=1785821425680">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
@@ -299,13 +328,13 @@ Overall — The service looks healthy: 287 events over 24 hours with zero high-s
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Cannot GET /lp-api/api&#x27;</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 5h 52m ago <span style="color:#94a3b8;">(2026-08-03T06:57:55 → 2026-08-03T06:57:55 UTC)</span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 22h 31m ago <span style="color:#94a3b8;">(2026-08-03T06:57:55 → 2026-08-03T06:57:55 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">A single GET returned 404 NotFoundException from Nest&#x27;s default route handler, and the give-away is in the url field itself: &#x27;/lp-api/api&#x27;&#x27; — a trailing apostrophe is part of the requested path, so no controller route matched and AllExceptionsFilter logged &#x27;Cannot GET /lp-api/api&#x27;&#x27;. Most probable cause is a malformed URL from outside the app — a stray quote left in a copy-pasted link, a shell/curl command with an unclosed quote, or a scanner/crawler probing the base path — not a broken route or deployment, since count is 1 and the correct path prefix &#x27;/lp-api/api/v1/...&#x27; is serving traffic in pattern 1. First thing to check: reqId 540784&#x27;s user-agent and referrer to see whether it came from a human-pasted link, an internal script, or a bot; if it is a bot or one-off paste, this is benign noise and needs no code change.  🤖 AI-categorised + RCA from redacted logs — verify before acting.</div></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">A single GET to the literal URL /lp-api/api&#x27; — note the trailing apostrophe captured in both the url field and the NotFoundException message — matched no route, so Nest&#x27;s default handler returned 404 through AllExceptionsFilter with an empty stack. Nothing failed server-side; the path itself is malformed, and a stray quote at the end of a base URL is the classic signature of an unquoted shell command, a copy-paste from a curl example, or a scanner/probe, especially at a single occurrence overnight (06:57Z). First check the access log for the user-agent and source IP on reqId 540784 to tell an internal health-check or script with a broken URL variable apart from external noise; if it is internal, fix the caller&#x27;s URL, and if external, no action is needed.  🤖 AI-categorised + RCA from redacted logs — verify before acting.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Treat as benign malformed-URL noise — confirm via reqId 540784&#x27;s user-agent/referrer, then downgrade unmatched-route 404s from warn to info (or sample them) so they stop surfacing as error patterns.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2AGET%2Alp%2Aapi%2Aapi%2A&amp;from_ts=1785675105950&amp;to_ts=1785761505950">🔍 View matching logs in Datadog →</a></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Trace reqId 540784 to its caller via user-agent/source IP and strip the trailing apostrophe from the hardcoded base URL, or ignore it as external probe noise if no internal client owns it.</pre></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ACannot%2AGET%2Alp%2Aapi%2Aapi%2A&amp;from_ts=1785735025681&amp;to_ts=1785821425681">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
@@ -313,7 +342,7 @@ Overall — The service looks healthy: 287 events over 24 hours with zero high-s
 <div id="tab-frontend" class="tab-pane"><section class="category-section"><p style="color:#64748b;font-style:italic;">No RUM frontend errors found in this window.</p></section></div>
 <footer>
 <p>Generated from Datadog Logs API for <code>service:rqillp-lp env:eu-learning-prod</code> over the last 1d.</p>
-<p style="margin-top:8px;">287 events across 3 patterns • 2 pods affected</p>
+<p style="margin-top:8px;">289 events across 4 patterns • 2 pods affected</p>
 </footer>
 </div>
 <script>
