@@ -139,20 +139,18 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 <div><span class="label">Datadog Site</span><span class="value">datadoghq.com</span></div>
 </div>
 </div>
-<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-08-11 03:59:11 UTC</strong></div>
+<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-08-12 04:21:18 UTC</strong></div>
 </div>
 </header>
-<div style="background:#eef2ff;border:1px solid #c7d2fe;border-left:4px solid #4f46e5;border-radius:12px;padding:16px 20px;margin-bottom:24px;"><div style="font-weight:700;color:#3730a3;margin-bottom:6px;font-size:14px;">🧠 AI summary</div><div style="color:#1e293b;line-height:1.55;white-space:pre-line;">Top issue — The AWS WebSocket disconnect to reconnect loop is the only active pattern and accounts for nearly all traffic tonight: 284 of 286 events, category AWS WebSocket, severity medium, ongoing, last seen 8 minutes ago. Check whether the reconnect loop is a single client or backend socket stuck retrying versus broad learner impact, and look at the reconnect backoff and credential or token expiry on the AWS socket connection.
+<div style="background:#eef2ff;border:1px solid #c7d2fe;border-left:4px solid #4f46e5;border-radius:12px;padding:16px 20px;margin-bottom:24px;"><div style="font-weight:700;color:#3730a3;margin-bottom:6px;font-size:14px;">🧠 AI summary</div><div style="color:#1e293b;line-height:1.55;white-space:pre-line;">Top issue — The AWS WebSocket disconnect to reconnect loop is the only ongoing pattern and accounts for 284 of tonight&#x27;s 292 events, last seen 6 minutes ago in eu-learning-prod. It&#x27;s rated medium severity, so treat it as churn rather than an outage: check whether learner sessions are actually losing live updates, and look at the WebSocket gateway&#x27;s connection lifecycle and any AWS-side idle timeout or load balancer connection draining that would force clients into a repeated reconnect cycle.
 
-Watch — Nothing else is currently active; the reconnect loop is the sole ongoing pattern.
+Settled — The LaunchDarkly streaming I/O errors (LaunchDarkly Connectivity, medium, 8 events) stopped firing and were last seen 3 hours 38 minutes ago. Settled here only means the pattern quieted between firings, not that anything was fixed, so if flag evaluation went to fallback defaults during that stretch it could resurface on the next stream drop.
 
-Settled — The LaunchDarkly streaming I/O errors (LaunchDarkly Connectivity, 2 events) last fired 14 hours 36 minutes ago and have not recurred. That pattern is intermittent by nature, so settled here means quiet between firings rather than confirmed fixed, and the low volume suggests no flag-delivery impact.
-
-Overall — The service is broadly healthy: zero high-severity patterns, no slow APIs, and no error spikes across the 1 day window. The 286 total events are almost entirely the medium-severity reconnect churn, so this is a noise and durability issue rather than a user-facing outage.</div></div>
+Overall — The service looks broadly healthy: zero high-severity patterns, no slow APIs, and no error spikes across the 1 day window. Volume is essentially one noisy reconnect loop plus a small settled LaunchDarkly blip, so nothing here justifies an emergency escalation tonight.</div></div>
 <div class="tabs"><button class="tab-btn active" data-tab="backend">🖥️ Backend · logs &amp; APM</button><button class="tab-btn" data-tab="frontend">🌐 Frontend · RUM</button></div>
 <div id="tab-backend" class="tab-pane active">
 <div class="stats-grid">
-<div class="stat-card"><div class="stat-value">286</div><div class="stat-label">Total events</div></div>
+<div class="stat-card"><div class="stat-value">292</div><div class="stat-label">Total events</div></div>
 <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">Distinct patterns</div></div>
 <div class="stat-card high"><div class="stat-value">0</div><div class="stat-label">High severity patterns</div></div>
 <div class="stat-card"><div class="stat-value">2</div><div class="stat-label">Pods affected</div></div>
@@ -162,12 +160,12 @@ Overall — The service is broadly healthy: zero high-severity patterns, no slow
 
         <div class="sev-bar">
             <div class="sev-segment sev-high" style="flex:0" title="High: 0"></div>
-            <div class="sev-segment sev-medium" style="flex:286" title="Medium: 286">286</div>
+            <div class="sev-segment sev-medium" style="flex:292" title="Medium: 292">292</div>
             <div class="sev-segment sev-low" style="flex:0" title="Low: 0"></div>
         </div>
 <div class="sev-legend">
 <span><span class="sev-dot sev-high"></span>High: 0</span>
-<span><span class="sev-dot sev-medium"></span>Medium: 286</span>
+<span><span class="sev-dot sev-medium"></span>Medium: 292</span>
 <span><span class="sev-dot sev-low"></span>Low: 0</span>
 </div>
 </div>
@@ -180,7 +178,7 @@ Overall — The service is broadly healthy: zero high-severity patterns, no slow
         <a href="#cat-LaunchDarkly-Connectivity" class="toc-link">
             <span class="toc-emoji">🌐</span>
             <span class="toc-name">LaunchDarkly Connectivity</span>
-            <span class="toc-count">2</span>
+            <span class="toc-count">8</span>
             
         </a>
         <a href="#cat-AWS-WebSocket" class="toc-link">
@@ -195,7 +193,7 @@ Overall — The service is broadly healthy: zero high-severity patterns, no slow
             <h2 class="category-title">
                 <span class="cat-emoji">🌐</span>
                 LaunchDarkly Connectivity
-                <span class="cat-stats">1 pattern • 2 events</span>
+                <span class="cat-stats">1 pattern • 8 events</span>
             </h2>
             <div class="cards-grid">
             <div class="card sev-medium">
@@ -205,20 +203,20 @@ Overall — The service is broadly healthy: zero high-severity patterns, no slow
                         <span class="rec-badge rec-settled">✅ Settled</span>
                         <h3 class="card-title">LaunchDarkly streaming I/O errors</h3>
                     </div>
-                    <div class="card-count">2</div>
+                    <div class="card-count">8</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">warn: [LaunchDarkly] Received I/O error (the request completed unexpectedly) for streaming request - will retry</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 14h 36m ago · active 3m <span style="color:#94a3b8;">(2026-08-10T13:19:21 → 2026-08-10T13:22:45 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">1</span></span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 3h 38m ago · active 18h 33m <span style="color:#94a3b8;">(2026-08-11T06:09:34 → 2026-08-12T00:42:44 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">5</span></span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">3</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">LaunchDarkly uses Server-Sent Events for real-time flag updates. The SDK is reporting that the long-lived stream connection drops periodically and reconnects. Likely cause: network proxy/NAT idle timeout terminating connections, firewall connection-timeout, or transient regional network glitches.</div></div>
-                    <div class="rca-block" style="background:#faf5ff;border-left-color:#7c3aed;"><div class="rca-label">🔎 Evidence-based analysis (AI)</div><div class="rca-text">The LaunchDarkly SDK logged a warn-level &#x27;Received I/O error (the request completed unexpectedly) for streaming request - will retry&#x27;, i.e. the SSE flag-update stream was closed by the far end mid-request and the SDK fell back to its own reconnect, not a failure to authenticate or resolve the endpoint. With only 2 occurrences and no status code, timing, or per-host context in the record, this reads as an idle-connection reap on the path to stream.launchdarkly.com — proxy/NAT/firewall idle timeout or a transient regional blip — consistent with the known RCA, though the evidence is too thin to distinguish those from an LD-side connection recycle. First check whether flag evaluations went stale or defaulted around those two timestamps, and compare the drop cadence against the egress proxy/NAT idle timeout; a fixed interval would confirm the timeout theory. Missing: timestamps, host/pod, and whether a matching &#x27;stream reconnected&#x27; event followed.  🤖 AI, from redacted sample logs — verify before acting.</div></div>
+                    <div class="rca-block" style="background:#faf5ff;border-left-color:#7c3aed;"><div class="rca-label">🔎 Evidence-based analysis (AI)</div><div class="rca-text">The single record is only the LaunchDarkly SDK&#x27;s own warn text, &#x27;Received I/O error (the request completed unexpectedly) for streaming request - will retry&#x27; — no stack frame, status code, host, or timestamp survived, so there is no evidence of a flag-evaluation failure or a fallback to defaults. The message is the SDK&#x27;s SSE stream being closed mid-request and self-healing on retry; at count 8 versus 284 for the WebSocket pattern, this is low-rate background churn consistent with the known RCA (proxy/NAT/firewall idle timeout or transient network glitch on the long-lived connection to stream.launchdarkly.com), and the parallel WebSocket disconnect pattern in the same environment suggests one shared egress path rather than a LaunchDarkly-side problem. What&#x27;s missing to go further: timestamps, pod hostname, and any accompanying &#x27;stream closed&#x27;/HTTP status line — first thing to check is whether these 8 events share timestamps with the id-0 disconnects and whether egress traverses the same NAT gateway or proxy.  🤖 AI, from redacted sample logs — verify before acting.</div></div>
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">During each disconnection window the pod won&#x27;t receive real-time flag updates. Once reconnected, it gets the latest state. Brief windows of slightly stale flag values.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Check NAT gateway TCP idle timeout (default 350s on AWS) — may need keepalive
 2. Verify firewall is not intercepting long-lived TCP connections
 3. If using a proxy, ensure SSE/HTTP-streaming is supported
 4. Consider switching SDK to polling mode if streaming continues to be unreliable</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AReceived%2AI%2AO%2Aerror%2A&amp;from_ts=1786334375232&amp;to_ts=1786420775232">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AReceived%2AI%2AO%2Aerror%2A&amp;from_ts=1786422102683&amp;to_ts=1786508502683">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
@@ -240,24 +238,43 @@ Overall — The service is broadly healthy: zero high-severity patterns, no slow
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Disconnected from AWS - attempting reconnect 1/10 in 5000ms</code></div>
-                    <div class="timestamps">🔴 <strong>Ongoing</strong> · last seen 8m ago · active 23h 43m <span style="color:#94a3b8;">(2026-08-10T04:06:50 → 2026-08-11T03:50:37 UTC)</span></div>
+                    <div class="timestamps">🔴 <strong>Ongoing</strong> · last seen 6m ago · active 23h 43m <span style="color:#94a3b8;">(2026-08-11T04:31:02 → 2026-08-12T04:14:46 UTC)</span></div>
                     <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-db557bcc5-rw2d5<span class="pod-count">142</span></span><span class="pod-chip">rqillp-lp-db557bcc5-p9mph<span class="pod-count">142</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">AWS WebSocket client repeatedly disconnects and reconnects. Most disconnections recover on the first retry (5000ms backoff). High volume suggests this is constant background churn — likely server-side termination (AWS API Gateway WebSocket idle timeout, NAT gateway TCP idle timeout, or ALB connection settings) that the client recovers from.</div></div>
-                    <div class="rca-block" style="background:#faf5ff;border-left-color:#7c3aed;"><div class="rca-label">🔎 Evidence-based analysis (AI)</div><div class="rca-text">The API pods are not crashing — this is client-side reconnect logging from LicenseController (level 40/warn, msg &#x27;Disconnected from AWS - attempting reconnect 1/10 in 5000ms&#x27;), and the counter always reads 1/10, meaning every drop is recovered on the first retry rather than escalating through the backoff ladder. That pattern, plus near-simultaneous drops on two distinct pods (rqillp-lp-db557bcc5-rw2d5 and -p9mph within ~1s at 03:50:35–36Z) across 284 events, points to server-side/idle-timeout termination of the long-lived socket rather than an application fault — an API Gateway WebSocket idle timeout, NAT gateway TCP idle timeout, or ALB connection timeout firing when no frames flow. First check the configured idle timeout on the AWS WebSocket endpoint (API Gateway idle/route timeout and any NAT/ALB idle setting) against the client&#x27;s heartbeat/ping interval in LicenseController, and confirm whether the drop interval is a fixed constant, which would confirm a timeout rather than network loss.  🤖 AI, from redacted sample logs — verify before acting.</div></div>
+                    <div class="rca-block" style="background:#faf5ff;border-left-color:#7c3aed;"><div class="rca-label">🔎 Evidence-based analysis (AI)</div><div class="rca-text">Not an application fault: the only evidence is a repeated LicenseController warn &#x27;Disconnected from AWS - attempting reconnect 1/10 in 5000ms&#x27; at level 40, always at attempt 1/10, from multiple pods (rqillp-lp-db557bcc5-rw2d5, -p9mph) within ~2s of each other at 04:14 in eu-learning-prod. Attempt counter never advancing past 1 means each reconnect succeeds immediately, which is the signature of periodic server-side idle termination of the long-lived socket rather than client instability or an outage; the near-simultaneous drop across two pods points at a shared network path (API Gateway WebSocket idle timeout, NAT/ALB TCP idle timeout). This confirms the known RCA. First thing to check: the configured idle timeout on the AWS API Gateway WebSocket route / NAT gateway (default 350s) versus the client&#x27;s keepalive-ping interval, and whether the 284 events cluster at a fixed interval matching that timeout — if so, add or shorten an application-level ping so the socket is never idle.  🤖 AI, from redacted sample logs — verify before acting.</div></div>
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">During each ~5s reconnect window, any push messages from AWS are missed. Sustained loss of real-time updates impacts users watching live course state.</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">1. Check AWS API Gateway WebSocket idle timeout (default 10 min), NAT gateway TCP idle timeout, ALB connection settings
 2. Implement WebSocket-level keepalive pings to prevent idle timeout
 3. Add metrics tracking time-since-last-successful-message to detect silent drops
 4. Investigate if AWS API Gateway is in a degraded state during these intervals</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ADisconnected%2Afrom%2AAWS%2A&amp;from_ts=1786334375232&amp;to_ts=1786420775232">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ADisconnected%2Afrom%2AAWS%2A&amp;from_ts=1786422102683&amp;to_ts=1786508502683">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
 </div>
-<div id="tab-frontend" class="tab-pane"><section class="category-section"><p style="color:#64748b;font-style:italic;">No RUM frontend errors found in this window.</p></section></div>
+<div id="tab-frontend" class="tab-pane">
+    <div class="stats-grid">
+        <div class="stat-card high"><div class="stat-value">7</div><div class="stat-label">Frontend errors</div></div>
+        <div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Distinct messages</div></div>
+        <div class="stat-card"><div class="stat-value">4</div><div class="stat-label">Console-source</div></div>
+        <div class="stat-card"><div class="stat-value">5</div><div class="stat-label">Pages with errors (top)</div></div>
+    </div>
+    <div class="sev-summary">
+        <h3>Error sources</h3>
+        <div class="pods-row"><span class="pod-chip">console<span class="pod-count">4</span></span><span class="pod-chip">source<span class="pod-count">3</span></span></div>
+    </div>
+    <section class="slow-apis-section">
+        <h2 class="section-title">🌐 Top frontend errors <span class="section-stats">RUM · prod-eulaerdallearning · grouped by message</span></h2>
+        <div class="table-wrap">
+            <table class="slow-table">
+                <thead><tr><th>Error message</th><th>Source</th><th class="num">Count</th><th>Sample page</th></tr></thead>
+                <tbody><tr><td><code>Transition was skipped</code></td><td>source</td><td class="num">3</td><td><a href="https://ihf.eu.learning.laerdal.com/elearning/scorm_content/906/1.0_20251103014414/20251015_012-CPRAED-IVE/7/2.html" target="_blank">https://ihf.eu.learning.laerdal.com/elearning/scorm_content/906/1.0_20</a></td></tr><tr><td><code>[LaunchDarkly] Error fetching flag settings: network error (Error)</code></td><td>console</td><td class="num">2</td><td><a href="https://kssg.eu.learning.laerdal.com/elearning/scorm_content/647/5.0_20260310102803/ACLSGermanPCSA/1/16.html" target="_blank">https://kssg.eu.learning.laerdal.com/elearning/scorm_content/647/5.0_2</a></td></tr><tr><td><code>[LaunchDarkly] network error (Error)</code></td><td>console</td><td class="num">2</td><td><a href="https://kssg.eu.learning.laerdal.com/elearning/scorm_content/647/5.0_20260310102803/ACLSGermanPCSA/1/16.html" target="_blank">https://kssg.eu.learning.laerdal.com/elearning/scorm_content/647/5.0_2</a></td></tr></tbody>
+            </table>
+        </div>
+    </section></div>
 <footer>
 <p>Generated from Datadog Logs API for <code>service:rqillp-lp env:eu-learning-prod</code> over the last 1d.</p>
-<p style="margin-top:8px;">286 events across 2 patterns • 2 pods affected</p>
+<p style="margin-top:8px;">292 events across 2 patterns • 2 pods affected</p>
 </footer>
 </div>
 <script>
