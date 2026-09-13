@@ -139,7 +139,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 <div><span class="label">Datadog Site</span><span class="value">datadoghq.com</span></div>
 </div>
 </div>
-<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-09-12 07:16:40 UTC</strong></div>
+<div style="text-align:right;font-size:12px;color:rgba(255,255,255,0.7);">Generated<br><strong style="color:white;font-size:14px;">2026-09-13 07:35:55 UTC</strong></div>
 </div>
 </header>
 
@@ -149,7 +149,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 <div class="stat-card"><div class="stat-value">290</div><div class="stat-label">Total events</div></div>
 <div class="stat-card"><div class="stat-value">4</div><div class="stat-label">Distinct patterns</div></div>
 <div class="stat-card high"><div class="stat-value">0</div><div class="stat-label">High severity patterns</div></div>
-<div class="stat-card"><div class="stat-value">5</div><div class="stat-label">Pods affected</div></div>
+<div class="stat-card"><div class="stat-value">3</div><div class="stat-label">Pods affected</div></div>
 </div>
 <div class="sev-summary">
 <h3>Severity distribution (by event count)</h3>
@@ -175,12 +175,12 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 <thead><tr><th>Endpoint</th><th class="num">Errors</th><th class="num">Total</th><th class="num">Rate</th><th>Codes</th><th>Status</th></tr></thead>
                 <tbody>
         <tr>
-            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22POST%20/lp-api/api/v1/auth/app/tokens%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1789112821441&amp;to_ts=1789199221441&amp;paused=true" target="_blank"><code>POST /lp-api/api/v1/auth/app/tokens</code></a></td>
+            <td class="api-name"><a href="https://app.datadoghq.com/apm/traces?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20resource_name%3A%22POST%20/lp-api/api/v1/auth/app/tokens%22%20%40http.status_code%3A%5B400%20TO%20599%5D&amp;from_ts=1789200376161&amp;to_ts=1789286776161&amp;paused=true" target="_blank"><code>POST /lp-api/api/v1/auth/app/tokens</code></a></td>
             <td class="num">2</td>
             <td class="num">2</td>
             <td class="num ">100%</td>
             <td>400×2</td>
-            <td>✅ Settled · last seen 7h 21m ago · active 12h</td>
+            <td>✅ Settled · last seen 7h 40m ago · active 12h</td>
         </tr></tbody>
             </table>
         </div>
@@ -197,13 +197,13 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
         <a href="#cat-AWS-WebSocket" class="toc-link">
             <span class="toc-emoji">🔌</span>
             <span class="toc-name">AWS WebSocket</span>
-            <span class="toc-count">283</span>
+            <span class="toc-count">285</span>
             
         </a>
         <a href="#cat-Other---Uncategorized" class="toc-link">
             <span class="toc-emoji">❓</span>
             <span class="toc-name">Other / Uncategorized</span>
-            <span class="toc-count">5</span>
+            <span class="toc-count">3</span>
             
         </a></div>
 </div>
@@ -226,8 +226,8 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">warn: [LaunchDarkly] Received I/O error (the request completed unexpectedly) for streaming request - will retry</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 4h 12m ago · active 17m <span style="color:#94a3b8;">(2026-09-12T02:47:19 → 2026-09-12T03:04:21 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-9cbf87487-k59vx<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-9cbf87487-prvkf<span class="pod-count">1</span></span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 21h 29m ago · active 18m <span style="color:#94a3b8;">(2026-09-12T09:47:47 → 2026-09-12T10:06:43 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-9cbf87487-59g7p<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-9cbf87487-prvkf<span class="pod-count">1</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">LaunchDarkly uses Server-Sent Events for real-time flag updates. The SDK is reporting that the long-lived stream connection drops periodically and reconnects. Likely cause: network proxy/NAT idle timeout terminating connections, firewall connection-timeout, or transient regional network glitches.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">During each disconnection window the pod won&#x27;t receive real-time flag updates. Once reconnected, it gets the latest state. Brief windows of slightly stale flag values.</div></div>
@@ -235,7 +235,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 2. Verify firewall is not intercepting long-lived TCP connections
 3. If using a proxy, ensure SSE/HTTP-streaming is supported
 4. Consider switching SDK to polling mode if streaming continues to be unreliable</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AReceived%2AI%2AO%2Aerror%2A&amp;from_ts=1789112821441&amp;to_ts=1789199221441">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AReceived%2AI%2AO%2Aerror%2A&amp;from_ts=1789200376160&amp;to_ts=1789286776160">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
@@ -243,7 +243,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
             <h2 class="category-title">
                 <span class="cat-emoji">🔌</span>
                 AWS WebSocket
-                <span class="cat-stats">1 pattern • 283 events</span>
+                <span class="cat-stats">1 pattern • 285 events</span>
             </h2>
             <div class="cards-grid">
             <div class="card sev-medium">
@@ -253,12 +253,12 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                         <span class="rec-badge rec-ongoing">🔴 Ongoing</span>
                         <h3 class="card-title">AWS WebSocket disconnect → reconnect loop</h3>
                     </div>
-                    <div class="card-count">283</div>
+                    <div class="card-count">285</div>
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Disconnected from AWS - attempting reconnect 1/10 in 5000ms</code></div>
-                    <div class="timestamps">🔴 <strong>Ongoing</strong> · last seen 7m ago · active 23h 48m <span style="color:#94a3b8;">(2026-09-11T07:20:52 → 2026-09-12T07:09:29 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-9cbf87487-prvkf<span class="pod-count">117</span></span><span class="pod-chip">rqillp-lp-9cbf87487-k59vx<span class="pod-count">83</span></span><span class="pod-chip">rqillp-lp-9cbf87487-lc7lm<span class="pod-count">39</span></span><span class="pod-chip">rqillp-lp-9cbf87487-hn8rn<span class="pod-count">25</span></span><span class="pod-chip">rqillp-lp-9cbf87487-59g7p<span class="pod-count">19</span></span></div>
+                    <div class="timestamps">🔴 <strong>Ongoing</strong> · last seen 3m ago · active 23h 53m <span style="color:#94a3b8;">(2026-09-12T07:38:57 → 2026-09-13T07:32:33 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-9cbf87487-prvkf<span class="pod-count">143</span></span><span class="pod-chip">rqillp-lp-9cbf87487-59g7p<span class="pod-count">98</span></span><span class="pod-chip">rqillp-lp-9cbf87487-8hl99<span class="pod-count">44</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">AWS WebSocket client repeatedly disconnects and reconnects. Most disconnections recover on the first retry (5000ms backoff). High volume suggests this is constant background churn — likely server-side termination (AWS API Gateway WebSocket idle timeout, NAT gateway TCP idle timeout, or ALB connection settings) that the client recovers from.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">During each ~5s reconnect window, any push messages from AWS are missed. Sustained loss of real-time updates impacts users watching live course state.</div></div>
@@ -266,7 +266,7 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
 2. Implement WebSocket-level keepalive pings to prevent idle timeout
 3. Add metrics tracking time-since-last-successful-message to detect silent drops
 4. Investigate if AWS API Gateway is in a degraded state during these intervals</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ADisconnected%2Afrom%2AAWS%2A&amp;from_ts=1789112821441&amp;to_ts=1789199221441">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ADisconnected%2Afrom%2AAWS%2A&amp;from_ts=1789200376160&amp;to_ts=1789286776160">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
@@ -274,29 +274,9 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
             <h2 class="category-title">
                 <span class="cat-emoji">❓</span>
                 Other / Uncategorized
-                <span class="cat-stats">2 patterns • 5 events</span>
+                <span class="cat-stats">2 patterns • 3 events</span>
             </h2>
             <div class="cards-grid">
-            <div class="card sev-medium">
-                <div class="card-header">
-                    <div class="card-title-row">
-                        <span class="sev-badge sev-medium">MEDIUM</span>
-                        <span class="rec-badge rec-settled">✅ Settled</span>
-                        <h3 class="card-title">snsTopicArn is not configured. All SNS publish calls will fail until this enviro</h3>
-                    </div>
-                    <div class="card-count">3</div>
-                </div>
-                <div class="card-body">
-                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">snsTopicArn is not configured. All SNS publish calls will fail until this environment variable is set.</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 3h 18m ago · active 16h 30m <span style="color:#94a3b8;">(2026-09-11T11:27:37 → 2026-09-12T03:57:52 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-9cbf87487-59g7p<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-9cbf87487-k59vx<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-9cbf87487-prvkf<span class="pod-count">1</span></span></div>
-                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
-                    
-                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
-                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AsnsTopicArn%2Ais%2Anot%2Aconfigured%2AAll%2ASNS%2Apublish%2Acalls%2Awill%2Afail%2Auntil%2Athis%2A&amp;from_ts=1789112821441&amp;to_ts=1789199221441">🔍 View matching logs in Datadog →</a></div>
-                </div>
-            </div>
             <div class="card sev-medium">
                 <div class="card-header">
                     <div class="card-title-row">
@@ -308,13 +288,33 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
                 </div>
                 <div class="card-body">
                     <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">Bad Request Exception</code></div>
-                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 7h 21m ago · active 12h <span style="color:#94a3b8;">(2026-09-11T11:55:01 → 2026-09-11T23:55:01 UTC)</span></div>
-                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-9cbf87487-k59vx<span class="pod-count">1</span></span><span class="pod-chip">rqillp-lp-9cbf87487-lc7lm<span class="pod-count">1</span></span></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 7h 40m ago · active 12h <span style="color:#94a3b8;">(2026-09-12T11:55:02 → 2026-09-12T23:55:02 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-9cbf87487-prvkf<span class="pod-count">2</span></span></div>
                     <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
                     
                     <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
                     <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
-                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ABad%2ARequest%2AException%2A&amp;from_ts=1789112821441&amp;to_ts=1789199221441">🔍 View matching logs in Datadog →</a></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2ABad%2ARequest%2AException%2A&amp;from_ts=1789200376160&amp;to_ts=1789286776160">🔍 View matching logs in Datadog →</a></div>
+                </div>
+            </div>
+            <div class="card sev-medium">
+                <div class="card-header">
+                    <div class="card-title-row">
+                        <span class="sev-badge sev-medium">MEDIUM</span>
+                        <span class="rec-badge rec-settled">✅ Settled</span>
+                        <h3 class="card-title">snsTopicArn is not configured. All SNS publish calls will fail until this enviro</h3>
+                    </div>
+                    <div class="card-count">1</div>
+                </div>
+                <div class="card-body">
+                    <div class="pattern-row"><span class="meta-label">Pattern:</span><code class="pattern">snsTopicArn is not configured. All SNS publish calls will fail until this environment variable is set.</code></div>
+                    <div class="timestamps">✅ <strong>Settled</strong> · last seen 7h 29m ago <span style="color:#94a3b8;">(2026-09-13T00:06:12 → 2026-09-13T00:06:12 UTC)</span></div>
+                    <div class="pods-row"><span class="meta-label">Pods:</span><span class="pod-chip">rqillp-lp-9cbf87487-8hl99<span class="pod-count">1</span></span></div>
+                    <div class="rca-block"><div class="rca-label">📊 Root Cause Analysis</div><div class="rca-text">Error/warn-level log with no failing (5xx) request behind it — likely handled / business logic. Add a CATALOG entry to classify it.</div></div>
+                    
+                    <div class="impact-block"><div class="impact-label">💥 Impact</div><div class="impact-text">Likely none (request did not 5xx).</div></div>
+                    <div class="fix-block"><div class="fix-label">🔧 Recommended Fix</div><pre class="fix-text">Add this pattern to CATALOG in generate-dashboard.py.</pre></div>
+                    <div class="investigate"><a target="_blank" style="font-size:12px;color:#2563eb;text-decoration:none;font-weight:600;" href="https://app.datadoghq.com/logs?query=service%3Arqillp-lp%20env%3Aeu-learning-prod%20%40msg%3A%2AsnsTopicArn%2Ais%2Anot%2Aconfigured%2AAll%2ASNS%2Apublish%2Acalls%2Awill%2Afail%2Auntil%2Athis%2A&amp;from_ts=1789200376161&amp;to_ts=1789286776161">🔍 View matching logs in Datadog →</a></div>
                 </div>
             </div></div>
         </section>
@@ -335,13 +335,13 @@ footer code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius
         <div class="table-wrap">
             <table class="slow-table">
                 <thead><tr><th>Error message</th><th>Source</th><th class="num">Count</th><th>Sample page</th></tr></thead>
-                <tbody><tr><td><code>Transition was skipped</code></td><td>source</td><td class="num">1</td><td><a href="https://ihf.eu.learning.laerdal.com/elearning/scorm_content/906/1.0_20251103014414/20251015_017-ChildOnlyCPRAED-IVE/11/1.html" target="_blank">https://ihf.eu.learning.laerdal.com/elearning/scorm_content/906/1.0_20</a></td></tr></tbody>
+                <tbody><tr><td><code>Transition was skipped</code></td><td>source</td><td class="num">1</td><td><a href="https://ihf.eu.learning.laerdal.com/elearning/scorm_content/906/1.0_20251103014414/20251015_012-CPRAED-IVE/2/2.html" target="_blank">https://ihf.eu.learning.laerdal.com/elearning/scorm_content/906/1.0_20</a></td></tr></tbody>
             </table>
         </div>
     </section></div>
 <footer>
 <p>Generated from Datadog Logs API for <code>service:rqillp-lp env:eu-learning-prod</code> over the last 1d.</p>
-<p style="margin-top:8px;">290 events across 4 patterns • 5 pods affected</p>
+<p style="margin-top:8px;">290 events across 4 patterns • 3 pods affected</p>
 </footer>
 </div>
 <script>
